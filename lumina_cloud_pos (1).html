@@ -1,0 +1,2221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumina — Sistema de Ventas en la Nube</title>
+<!-- Fuentes Tipográficas Modernas -->
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Tailwind CSS para utilidades de diseño responsivo -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+:root {
+  --ink:     #111d26;
+  --ink2:    #1b3241;
+  --ink3:    #4a677a;
+  --bg:      #f0f6fa;
+  --bg2:     #dcecf5;
+  --bg3:     #ffffff;
+  --accent:  #007ea7;
+  --accent2: #00a8e8;
+  --gold:    #b27000;
+  --gold-l:  #fef3c7;
+  --green:   #0d9488;
+  --green-l: #ccfbf1;
+  --orange:  #ea580c;
+  --orange-l:#ffedd5;
+  --red:     #e11d48;
+  --red-l:   #ffe4e6;
+  --blue:    #0284c7;
+  --blue-l:  #e0f2fe;
+  --border:  #b9daf1;
+  --shadow:  0 4px 20px rgba(0, 126, 167, 0.08);
+  --r:       12px;
+  --r2:      20px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+
+/* NAV */
+nav{background:var(--ink2);padding:0 1.5rem;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:100;box-shadow:0 4px 25px rgba(0,0,0,.2)}
+.logo{font-family:'DM Serif Display',serif;font-size:1.6rem;color:#fff;letter-spacing:-.02em;padding:1rem 1.5rem 1rem 0;border-right:1px solid rgba(255,255,255,.15);margin-right:1.5rem}
+.logo span{color:var(--accent2)}
+.nav-tabs{display:flex;gap:0;flex:1;overflow-x:auto;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.tab{padding:1.1rem 1.1rem;color:rgba(255,255,255,.65);font-size:.85rem;font-weight:500;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+.tab:hover{color:rgba(255,255,255,.95)}
+.tab.active{color:#fff;border-bottom-color:var(--accent2);background:rgba(255,255,255,0.05)}
+.nav-right{display:flex;align-items:center;gap:.75rem;margin-left:auto}
+.btn-export{background:var(--accent);color:#fff;border:none;padding:.5rem 1rem;border-radius:var(--r);font-size:.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem;transition:background .2s}
+.btn-export:hover{background:var(--accent2)}
+.cloud-indicator{width:10px;height:10px;border-radius:50%;background:var(--red);transition:background 0.3s}
+.cloud-indicator.online{background:var(--green);box-shadow:0 0 8px var(--green)}
+
+/* MAIN */
+main{max-width:1200px;margin:0 auto;padding:1.5rem}
+.page{display:none}
+.page.active{display:block}
+
+/* CARDS */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.kpi{background:var(--bg3);border-radius:var(--r2);padding:1.25rem 1.5rem;border:1px solid var(--border);box-shadow:var(--shadow)}
+.kpi-label{font-size:.75rem;font-weight:500;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+.kpi-val{font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:500;color:var(--ink)}
+.kpi-val.green{color:var(--green)}
+.kpi-val.accent{color:var(--accent)}
+.kpi-sub{font-size:.75rem;color:var(--ink3);margin-top:.25rem}
+
+/* SECCIONES */
+.section{background:var(--bg3);border-radius:var(--r2);border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:1.25rem;overflow:hidden}
+.section-head{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
+.section-head h3{font-size:1rem;font-weight:600;color:var(--ink)}
+.section-body{padding:1.5rem}
+
+/* FORMULARIO VENTA */
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:.4rem}
+.form-group.full{grid-column:1/-1}
+.form-group.half{grid-column:span 2}
+label{font-size:.78rem;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
+input,select,textarea{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:.6rem .85rem;font-family:'Outfit',sans-serif;font-size:.9rem;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,126,167,.12)}
+input[type=number]{text-align:right}
+.calculated{background:var(--green-l);border-color:#5cd1c5;color:var(--green);font-family:'DM Mono',monospace;font-weight:500}
+
+/* BOTONES */
+.btn{padding:.65rem 1.25rem;border-radius:var(--r);border:none;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;font-size:.9rem;transition:all .2s;display:inline-flex;align-items:center;gap:.5rem;justify-content:center}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,126,167,.3)}
+.btn-secondary{background:var(--bg2);color:var(--ink2)}
+.btn-secondary:hover{background:var(--border)}
+.btn-danger{background:var(--red-l);color:var(--red)}
+.btn-danger:hover{background:var(--red);color:#fff}
+.btn-green{background:var(--green-l);color:var(--green)}
+.btn-gold{background:var(--gold-l);color:var(--gold)}
+
+/* TABLA */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--border);background:var(--bg)}
+td{padding:.65rem 1rem;border-bottom:1px solid var(--bg2);vertical-align:middle}
+tr:hover td{background:var(--bg)}
+.badge{display:inline-block;padding:.2rem .6rem;border-radius:100px;font-size:.72rem;font-weight:600}
+.badge-green{background:var(--green-l);color:var(--green)}
+.badge-blue{background:var(--blue-l);color:var(--accent)}
+.badge-gold{background:var(--gold-l);color:var(--gold)}
+.badge-orange{background:var(--orange-l);color:var(--orange)}
+.badge-red{background:var(--red-l);color:var(--red)}
+.badge-purple{background:var(--bg2);color:var(--ink2)}
+
+/* CARRITO */
+.cart-area{border:2px dashed var(--border);border-radius:var(--r);padding:1rem;margin-top:1rem;background:#fff}
+.cart-title{font-size:.85rem;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center}
+.cart-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.cart-item{display:flex;justify-content:space-between;align-items:center;background:var(--bg);padding:.5rem .75rem;border-radius:var(--r);font-size:.85rem}
+
+/* PROMOS & PRECIOS */
+.promo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.slider-wrap{display:flex;align-items:center;gap:.75rem;padding:.5rem 0}
+.slider-wrap label{font-size:.78rem;color:var(--ink3);min-width:100px}
+input[type=range]{flex:1;accent-color:var(--accent);height:4px}
+.slider-wrap .val-show{font-family:'DM Mono',monospace;font-weight:600;color:var(--accent);min-width:40px;text-align:right}
+
+/* CONSIGNACIONES */
+.consignatario-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+.consig-tag{font-size:.75rem;font-weight:700;padding:.15rem .4rem;background:var(--bg2);border-radius:4px;color:var(--accent)}
+
+/* CLIENTES */
+.cliente-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:1rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;box-shadow:var(--shadow)}
+.cliente-info h4{font-size:.9rem;font-weight:600;color:var(--ink)}
+.cliente-info p{font-size:.78rem;color:var(--ink3);margin-top:.2rem}
+.cliente-stats{text-align:right}
+.cliente-stats .total{font-family:'DM Mono',monospace;font-weight:600;color:var(--green);font-size:1rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--ink);color:#fff;padding:.85rem 1.25rem;border-radius:var(--r);font-size:.85rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.25);transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);z-index:999;display:flex;align-items:center;gap:.6rem}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.green{background:var(--green)}
+.toast.red{background:var(--red)}
+
+/* MODAL TICKETS / DETAILS */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(27,50,65,0.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+.modal-overlay.active{display:flex}
+.modal-card{background:#fff;border-radius:var(--r2);width:100%;max-width:500px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.3);animation:modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)}
+@keyframes modalIn{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-hdr{background:var(--ink2);color:#fff;padding:1.25rem;display:flex;justify-content:space-between;align-items:center}
+.modal-body{padding:1.5rem;max-height:75vh;overflow-y:auto}
+
+/* TICKET STYLING */
+.ticket{border:1px dashed var(--border);padding:1rem;font-family:'Outfit',sans-serif;background:#fafafa;border-radius:var(--r)}
+.ticket-row{display:flex;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid #eee;font-size:.85rem}
+.ticket-row:last-child{border-bottom:none}
+
+/* STOCKS MONITOREO */
+.stock-monitor-item{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:0.75rem;box-shadow:var(--shadow)}
+.sm-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem}
+.sm-title{font-weight:600;font-size:.9rem;color:var(--ink2)}
+.sm-bar-bg{background:var(--bg);height:10px;border-radius:100px;overflow:hidden;width:100%}
+.sm-bar-fill{height:100%;transition:width 0.4s ease}
+
+/* LOADER SCREEN */
+#app-loader{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg3);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999}
+.spinner{width:50px;height:50px;border:5px solid var(--bg2);border-top:5px solid var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+@media(max-width:768px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .form-grid{grid-template-columns:1fr}
+  .form-group.half,.form-group.full{grid-column:1}
+  .promo-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="app-loader">
+  <div class="spinner"></div>
+  <p style="margin-top:1.5rem;font-weight:500;color:var(--accent)">Conectando con Lumina Cloud...</p>
+</div>
+
+<nav>
+  <div class="logo">Lumin<span>a</span></div>
+  <div class="nav-tabs">
+    <div class="tab active" onclick="showPage('ventas')">💰 Caja/Ventas</div>
+    <div class="tab" onclick="showPage('historial')">📋 Historial</div>
+    <div class="tab" onclick="showPage('clientes')">👤 Clientes</div>
+    <div class="tab" onclick="showPage('consignaciones')">🤝 Consignaciones</div>
+    <div class="tab" onclick="showPage('promos')">🏷️ Precios & Promos</div>
+    <div class="tab" onclick="showPage('compras')">📥 Compras & Gastos</div>
+    <div class="tab" onclick="showPage('dashboard')">📊 Stock & Resumen</div>
+  </div>
+  <div class="nav-right">
+    <div class="cloud-indicator" id="cloud-status" title="Desconectado"></div>
+    <button class="btn-export" onclick="exportarExcel()">⬇ Exportar</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ═══════════ STREAMING_CHUNK: Structuring sales terminal section... ═══════════ -->
+<!-- ═══════════ CAJA / VENTAS ═══════════ -->
+<div id="page-ventas" class="page active">
+  <div class="section">
+    <div class="section-head">
+      <h3>Nueva Operación de Venta</h3>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <span id="pos-price-source" class="badge" style="display:none"></span>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Fecha</label>
+          <input type="date" id="v_fecha">
+        </div>
+        <div class="form-group">
+          <label>Cliente</label>
+          <input type="text" id="v_cliente" list="lista-clientes" placeholder="Nombre o buscar..." onchange="autocompletarCliente(this.value)">
+          <datalist id="lista-clientes"></datalist>
+        </div>
+        <div class="form-group">
+          <label>Canal de Venta</label>
+          <div style="display:flex;gap:.25rem">
+            <select id="v_canal" style="flex:1">
+              <option value="Venta Directa">Venta Directa</option>
+              <option value="Pedido WhatsApp">Pedido WhatsApp</option>
+              <option value="Feria / Evento">Feria / Evento</option>
+              <option value="Recomendación / Vecino">Recomendación / Vecino</option>
+            </select>
+            <button class="btn btn-secondary" style="padding:.5rem" onclick="crearCanalPersonalizado()">➕</button>
+          </div>
+        </div>
+        
+        <div class="form-group" id="cliente-datos-extra" style="grid-column:1/-1; display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; background:var(--bg); padding:1rem; border-radius:var(--r)">
+          <div>
+            <label style="font-size:.7rem">Dirección</label>
+            <input type="text" id="v_cliente_dir" placeholder="Calle y N°" style="width:100%;margin-top:.2rem">
+          </div>
+          <div>
+            <label style="font-size:.7rem">Teléfono</label>
+            <input type="text" id="v_cliente_tel" placeholder="2901..." style="width:100%;margin-top:.2rem">
+          </div>
+          <div>
+            <label style="font-size:.7rem">Envío a Domicilio</label>
+            <select id="v_cliente_envio" style="width:100%;margin-top:.2rem">
+              <option value="No">No requiere</option>
+              <option value="Sí">Sí, coordinar envío</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group half">
+          <label>Elegir Producto / Combo</label>
+          <select id="v_producto" onchange="seleccionarProductoPOS()">
+            <option value="">— elegí un producto o combo promocional —</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Formato / Fraccionamiento</label>
+          <select id="v_formato" onchange="calcularPreciosFormatosPOS()">
+            <option value="5">Bidón 5 Litros</option>
+            <option value="3">Botella 3 Litros</option>
+            <option value="1">Botella 1 Litro</option>
+            <option value="0.5">Botella 500ml</option>
+            <option value="2">Botella 2 Litros</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Cantidad</label>
+          <input type="number" id="v_cantidad" value="1" min="1" oninput="calcularPreciosFormatosPOS()">
+        </div>
+        <div class="form-group">
+          <label>Precio Unitario Cobrado ($)</label>
+          <input type="number" id="v_precio" oninput="calcularPreciosFormatosPOS()" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label>¿Devuelve Envase?</label>
+          <select id="v_envase" onchange="calcularPreciosFormatosPOS()">
+            <option value="no">No</option>
+            <option value="si">Sí — Devolución de envase</option>
+          </select>
+        </div>
+      </div>
+      
+      <div style="margin-top:1.25rem;display:flex;gap:.75rem">
+        <button class="btn btn-primary" onclick="agregarAlCarrito()">🛒 Añadir al Carrito</button>
+        <button class="btn btn-secondary" onclick="limpiarFormularioPOS()">✕ Limpiar Selección</button>
+      </div>
+
+      <!-- Carrito Virtual -->
+      <div class="cart-area">
+        <div class="cart-title">
+          <span>🛒 Carrito de Compras</span>
+          <span style="font-size:.75rem" id="cart-item-count">0 artículos</span>
+        </div>
+        <div class="cart-list" id="cart-items-render">
+          <p style="color:var(--ink3);font-size:.85rem;text-align:center;padding:1rem">El carrito está vacío. Agregá algún producto arriba.</p>
+        </div>
+        
+        <div style="background:var(--bg);padding:1rem;border-radius:var(--r);margin-top:1rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+          <div class="form-group">
+            <label>Descuento General %</label>
+            <input type="number" id="v_dto_global" value="0" min="0" max="90" oninput="aplicarFinanzasCarrito()">
+          </div>
+          <div class="form-group">
+            <label>Suma Total Estimada ($)</label>
+            <input type="number" id="v_total_calculado" class="calculated" readonly>
+          </div>
+          <div class="form-group">
+            <label>Total Final a Cobrar ($)</label>
+            <input type="number" id="v_total_manual" style="font-weight:700;background:#fff" oninput="aplicarTotalManual()">
+          </div>
+        </div>
+
+        <div style="margin-top:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem">
+          <button class="btn btn-primary" style="background:var(--green)" onclick="procesarVentaCarrito()">✓ Confirmar y Registrar Venta</button>
+          <button class="btn btn-danger" onclick="vaciarCarrito()">🗑 Vaciar Carrito</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h3>Referencia Rápida de Precios</h3>
+    </div>
+    <div class="section-body" style="padding:0">
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Producto / Insumo</th>
+              <th style="color:var(--accent)">Venta Fijo</th>
+              <th>Costo Est.</th>
+              <th style="color:var(--green)">Margen 40%</th>
+              <th style="color:var(--blue)">Margen 60%</th>
+              <th style="color:var(--orange)">Margen 140%</th>
+              <th>Envase Retorno</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-precios-ref"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ STREAMING_CHUNK: Structuring transactional history tab... ═══════════ -->
+<!-- ═══════════ HISTORIAL DE OPERACIONES ═══════════ -->
+<div id="page-historial" class="page">
+  <div class="section">
+    <div class="section-head">
+      <h3>Historial de Movimientos e Ingresos</h3>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <input type="text" id="filtro-historial" placeholder="Buscar cliente o producto..." oninput="renderHistorial()">
+        <button class="btn btn-secondary" onclick="eliminarHistorialCompleto()">🗑 Borrar Todo</button>
+      </div>
+    </div>
+    <div class="section-body" style="padding:0">
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th># ID</th>
+              <th>Fecha</th>
+              <th>Cliente / Destinatario</th>
+              <th>Detalle de Productos</th>
+              <th>Canal</th>
+              <th>Total Cobrado</th>
+              <th>Ganancia Est.</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-historial"></tbody>
+        </table>
+      </div>
+      <div id="historial-vacio" style="padding:2.5rem;text-align:center;color:var(--ink3)">No hay operaciones registradas aún.</div>
+    </div>
+  </div>
+  
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Ingresos Totales</div>
+      <div class="kpi-val green" id="kpi-ingresos">$0</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Ganancia Acumulada</div>
+      <div class="kpi-val accent" id="kpi-ganancias">$0</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Operaciones</div>
+      <div class="kpi-val" id="kpi-ventas-cant">0</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Retornos de Envases</div>
+      <div class="kpi-val gold" id="kpi-envases-cant">0</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ STREAMING_CHUNK: Structuring customer directory section... ═══════════ -->
+<!-- ═══════════ CLIENTES ═══════════ -->
+<div id="page-clientes" class="page">
+  <div class="section">
+    <div class="section-head">
+      <h3>Directorio de Clientes</h3>
+      <button class="btn btn-primary" onclick="abrirModalClienteNuevo()">👤 Nuevo Cliente</button>
+    </div>
+    <div class="section-body" id="lista-clientes-render">
+      <!-- Se inyecta dinámicamente -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ STREAMING_CHUNK: Structuring active consignments tab... ═══════════ -->
+<!-- ═══════════ CONSIGNACIONES ═══════════ -->
+<div id="page-consignaciones" class="page">
+  <div class="section">
+    <div class="section-head">
+      <h3>Armar Entrega para Consignación</h3>
+    </div>
+    <div class="section-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Fecha de Entrega</label>
+          <input type="date" id="con_fecha">
+        </div>
+        <div class="form-group">
+          <label>Consignatario (Local / Revendedor)</label>
+          <input type="text" id="con_nombre" placeholder="Ej: Kiosco Don Pedro">
+        </div>
+        <div class="form-group">
+          <label>Tipo de Comercio / Canal</label>
+          <select id="con_tipo">
+            <option>Kiosco / Almacén de barrio</option>
+            <option>Peluquería / Estética</option>
+            <option>Hospedaje / Turístico</option>
+            <option>Revendedora Particular</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        
+        <div class="form-group half">
+          <label>Producto a Consignar</label>
+          <select id="con_producto" onchange="calcularPreciosFormatosConsig()">
+            <option value="">— seleccionar —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Formato</label>
+          <select id="con_formato" onchange="calcularPreciosFormatosConsig()">
+            <option value="5">Bidón 5 Litros</option>
+            <option value="3">Botella 3 Litros</option>
+            <option value="1">Botella 1 Litro</option>
+            <option value="0.5">Botella 500ml</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Cantidad Entregada</label>
+          <input type="number" id="con_cantidad" value="5" min="1" oninput="calcularPreciosFormatosConsig()">
+        </div>
+        <div class="form-group">
+          <label>Precio de Venta Acordado ($)</label>
+          <input type="number" id="con_precio_vta" oninput="calcularPreciosFormatosConsig()">
+        </div>
+        <div class="form-group">
+          <label>Comisión de Comercio (%)</label>
+          <input type="number" id="con_comision" value="15" min="0" max="100" oninput="calcularPreciosFormatosConsig()">
+        </div>
+      </div>
+      
+      <div style="margin-top:1.25rem;display:flex;gap:.75rem">
+        <button class="btn btn-primary" onclick="agregarAlCarritoConsig()">🛒 Añadir al Borrador</button>
+      </div>
+
+      <!-- Borrador Consignación -->
+      <div class="cart-area" style="border-color:var(--gold)">
+        <div class="cart-title" style="color:var(--gold)">
+          <span>🤝 Productos en este Envío</span>
+        </div>
+        <div class="cart-list" id="consig-cart-items">
+          <p style="color:var(--ink3);font-size:.85rem;text-align:center;padding:1rem">El borrador está vacío.</p>
+        </div>
+        <div style="text-align:right;font-weight:600;font-size:1rem;color:var(--gold);margin-top:0.5rem" id="consig-cart-total">
+          Total Potencial de Ingreso: $0
+        </div>
+        <div style="margin-top:1rem">
+          <button class="btn btn-primary" style="background:var(--accent)" onclick="confirmarConsignacionCompleta()">✓ Confirmar Entrega y Restar Stock</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h3>Seguimiento de Consignaciones Activas</h3>
+    </div>
+    <div class="section-body" id="consignaciones-activas-render">
+      <!-- Se inyecta dinámicamente -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ STREAMING_CHUNK: Structuring prices, promotions and combos section... ═══════════ -->
+<!-- ═══════════ CATALOGO, PRECIOS & PROMOS ═══════════ -->
+<div id="page-promos" class="page">
+  <div class="section">
+    <div class="section-head">
+      <h3>Configuración de Precios de Venta Fijos</h3>
+      <span style="font-size:.8rem;color:var(--ink3)">Modificá tus precios fijos. Si los dejas en 0 o vacío, el sistema calculará con el margen sugerido.</span>
+    </div>
+    <div class="section-body">
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Insumo / Producto</th>
+              <th>Costo Base Unitario</th>
+              <th>Precio de Venta Fijo ($)</th>
+              <th>Depósito de Envase ($)</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-config-precios">
+            <!-- Se inyecta dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h3>Administración de Combos y Promociones</h3>
+      <button class="btn btn-primary" onclick="abrirModalComboNuevo()">🎁 Crear Combo</button>
+    </div>
+    <div class="section-body" id="lista-combos-render">
+      <!-- Se inyecta dinámicamente -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ STREAMING_CHUNK: Structuring purchases and expenses module... ═══════════ -->
+<!-- ═══════════ COMPRAS, GASTOS & INSUMOS ═══════════ -->
+<div id="page-compras" class="page">
+  <div class="section">
+    <div class="section-head">
+      <h3>Creación de Nuevos Productos / Insumos en Caliente</h3>
+      <span style="font-size:.8rem;color:var(--ink3)">Dá de alta productos que no estén en la lista para venderlos en cualquier formato.</span>
+    </div>
+    <div class="section-body">
+      <div class="form-grid" style="grid-template-columns: 2fr 1fr 1fr">
+        <div class="form-group">
+          <label>Nombre del Producto / Insumo</label>
+          <input type="text" id="ins_nombre" placeholder="Ej: Detergente de Manzana">
+        </div>
+        <div class="form-group">
+          <label>Estilo de Formatos</label>
+          <select id="ins_estilo_formatos">
+            <option value="estandar">Bidón de 5L únicamente</option>
+            <option value="lavandinas">Formatos Lavandina (1L, 3L, 5L)</option>
+            <option value="detergentes">Formatos Detergentes (500ml, 1L, 2L)</option>
+          </select>
+        </div>
+        <div class="form-group" style="justify-content:flex-end">
+          <button class="btn btn-primary" style="width:100%" onclick="crearInsumoNuevo()">＋ Agregar Insumo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h3>Registrar Compra / Carga de Stock</h3>
+      <span style="font-size:.8rem;color:var(--ink3)">Calculador de costo con prorrateo de flete por litro.</span>
+    </div>
+    <div class="section-body">
+      <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr">
+        <div class="form-group">
+          <label>Flete General del Pedido ($)</label>
+          <input type="number" id="fac_flete" value="0" min="0" oninput="calcularProrrateoCompra()">
+        </div>
+        <div class="form-group">
+          <label>Descuentos o Reintegros ($)</label>
+          <input type="number" id="fac_descuentos" value="0" min="0" oninput="calcularProrrateoCompra()">
+        </div>
+        <div class="form-group">
+          <label>Otros Gastos Variables ($)</label>
+          <input type="number" id="fac_otros" value="0" min="0" oninput="calcularProrrateoCompra()">
+        </div>
+      </div>
+
+      <!-- Añadir Productos a la Factura -->
+      <div style="background:var(--bg);padding:1rem;border-radius:var(--r);margin-top:1.25rem">
+        <h4 style="font-size:.85rem;margin-bottom:0.75rem;color:var(--accent)">Agregar Línea de Compra</h4>
+        <div class="form-grid" style="grid-template-columns: 2fr 1fr 1.5fr">
+          <div class="form-group">
+            <label>Insumo Adquirido</label>
+            <select id="fac_prod">
+              <!-- Dinámico -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Litros Totales Comprados</label>
+            <input type="number" id="fac_litros" value="50" min="1">
+          </div>
+          <div class="form-group">
+            <label>Costo de Lista Total ($)</label>
+            <input type="number" id="fac_costo_lista" value="74100" min="0">
+          </div>
+        </div>
+        <div style="margin-top:0.75rem;text-align:right">
+          <button class="btn btn-secondary" onclick="agregarLineaFactura()">＋ Añadir al Pedido</button>
+        </div>
+      </div>
+
+      <!-- Detalle de la factura armada -->
+      <div class="tbl-wrap" style="margin-top:1.25rem">
+        <h4 style="font-size:.85rem;margin-bottom:0.5rem;color:var(--accent)">Líneas de la Compra actual</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Litros</th>
+              <th>Costo Lista</th>
+              <th>Costo Neto Prorrateado ($/Litro)</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-lineas-compra">
+            <!-- Dinámico -->
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:1.25rem;display:flex;justify-content:space-between;align-items:center;background:var(--bg);padding:1rem;border-radius:var(--r)">
+        <span style="font-weight:600;color:var(--ink2)">Total del Pedido: <span id="compra-total-final">$0</span></span>
+        <button class="btn btn-primary" onclick="guardarPedidoCompletoStock()">✓ Confirmar Pedido y Registrar Ingreso de Stock</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ STREAMING_CHUNK: Structuring stock monitoring dashboard... ═══════════ -->
+<!-- ═══════════ MONITOREO DE STOCK & DASHBOARD ═══════════ -->
+<div id="page-dashboard" class="page">
+  <div class="section">
+    <div class="section-head">
+      <h3>Inversión vs. Retorno Financiero</h3>
+    </div>
+    <div class="section-body">
+      <div class="kpi-grid" style="margin-bottom:0">
+        <div class="kpi">
+          <div class="kpi-label">Inversión Histórica</div>
+          <div class="kpi-val" id="dash-inversion-total">$0</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Retorno Obtenido</div>
+          <div class="kpi-val green" id="dash-ingresos-total">$0</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Ganancia Real Neta</div>
+          <div class="kpi-val accent" id="dash-ganancias-total">$0</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Recupero de Inversión</div>
+          <div class="kpi-val gold" id="dash-recupero-porc">0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h3>Monitoreo de Stock Actual (Litros Disponibles)</h3>
+      <span style="font-size:.8rem;color:var(--ink3)">Niveles en tanques calculados a granel en tiempo real.</span>
+    </div>
+    <div class="section-body">
+      <div id="panel-monitoreo-stock">
+        <!-- Inyección dinámica con escala de colores -->
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ═══════════ STREAMING_CHUNK: Adding functional interactive modals... ═══════════ -->
+<!-- ═══════════ MODALES INTERACTIVOS ═══════════ -->
+<!-- Recibo de Venta (Ticket) -->
+<div class="modal-overlay" id="modal-ticket">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <h3 style="font-family:'DM Serif Display',serif">Ticket de Venta — Lumina</h3>
+      <button onclick="cerrarModal('modal-ticket')" style="background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer">✕</button>
+    </div>
+    <div class="modal-body" id="modal-ticket-content">
+      <!-- Se llena dinámicamente -->
+    </div>
+  </div>
+</div>
+
+<!-- Creación/Edición Cliente -->
+<div class="modal-overlay" id="modal-cliente">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <h3>Datos de Cliente</h3>
+      <button onclick="cerrarModal('modal-cliente')" style="background:none;border:none;color:#fff;cursor:pointer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div class="form-group">
+          <label>Nombre y Apellido</label>
+          <input type="text" id="cl_nombre" placeholder="Juan Pérez">
+        </div>
+        <div class="form-group">
+          <label>Dirección</label>
+          <input type="text" id="cl_direccion" placeholder="Calle ... N° ...">
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="text" id="cl_telefono" placeholder="2901...">
+        </div>
+        <div class="form-group">
+          <label>Envío Predeterminado</label>
+          <select id="cl_envio">
+            <option value="No">Retira / No requiere envío</option>
+            <option value="Sí">Requiere envío a domicilio</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="guardarClienteFicha()">Guardar Cliente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Creación Combo -->
+<div class="modal-overlay" id="modal-combo">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <h3>Crear Nuevo Combo de Promoción</h3>
+      <button onclick="cerrarModal('modal-combo')" style="background:none;border:none;color:#fff;cursor:pointer">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div class="form-group">
+          <label>Nombre Comercial de la Promo</label>
+          <input type="text" id="comb_nombre" placeholder="Ej: Combo Limpieza Finde">
+        </div>
+        
+        <h4 style="font-size:.8rem;color:var(--accent);text-transform:uppercase">Seleccionar Componentes</h4>
+        <div id="combo-componentes-list" style="display:flex;flex-direction:column;gap:0.5rem">
+          <!-- Dinámico -->
+        </div>
+        <button class="btn btn-secondary" style="font-size:.8rem;padding:.4rem" onclick="agregarLineaCombo()">＋ Añadir Producto al Combo</button>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label>Tipo de Descuento</label>
+            <select id="comb_tipo_desc" onchange="calcularPrevisualizacionCombo()">
+              <option value="porc">% Porcentual</option>
+              <option value="fijo">$ Monto Fijo en Pesos</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Descuento a Aplicar</label>
+            <input type="number" id="comb_descuento" value="10" min="0" oninput="calcularPrevisualizacionCombo()">
+          </div>
+        </div>
+
+        <div style="background:var(--bg);padding:0.75rem;border-radius:var(--r);font-size:.85rem">
+          <div>Suma de precios individuales: <span id="comb-previsualizacion-suma">$0</span></div>
+          <div style="font-weight:700;color:var(--green)">Precio Final del Combo: <span id="comb-previsualizacion-final">$0</span></div>
+        </div>
+
+        <button class="btn btn-primary" onclick="guardarComboPromocional()">Crear Combo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmación Estilo Lumina (Sin Alerts) -->
+<div class="modal-overlay" id="modal-confirmacion">
+  <div class="modal-card" style="max-width:350px">
+    <div class="modal-hdr" style="background:var(--accent)">
+      <h3>Confirmar Acción</h3>
+    </div>
+    <div class="modal-body">
+      <p id="confirmacion-mensaje" style="font-size:.9rem;color:var(--ink2);margin-bottom:1.5rem">¿Estás seguro de realizar esta acción?</p>
+      <div style="display:flex;gap:0.5rem">
+        <button class="btn btn-primary" style="flex:1" id="confirm-btn-si">Sí, Continuar</button>
+        <button class="btn btn-secondary" style="flex:1" onclick="cerrarModal('modal-confirmacion')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- ═══════════ SCRIPT LOGIC: INTEGRACIÓN FIREBASE ═══════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+// Configuraciones Globales Entorno
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'lumina-v5-cloud';
+const firebaseConfig = {
+  apiKey: "AIzaSyBWOe2ieEEGuB-t-IhL8QZhwqqORkqVYJI",
+  authDomain: "lumina-sistema-cloud.firebaseapp.com",
+  projectId: "lumina-sistema-cloud",
+  storageBucket: "lumina-sistema-cloud.firebasestorage.app",
+  messagingSenderId: "840497272146",
+  appId: "1:840497272146:web:bfbf0b8774218bdda1968b"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+
+// Inicialización de Autenticación Invisible para evitar alertas del sistema
+const iniciarAutenticacion = async () => {
+  try {
+    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+      await signInWithCustomToken(auth, __initial_auth_token);
+    } else {
+      await signInAnonymously(auth);
+    }
+  } catch (error) {
+    console.error("Error al autenticar con la nube: ", error);
+    toast("⚠️ Error de conexión con la nube", "red");
+  }
+};
+
+iniciarAutenticacion();
+
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  const indicador = document.getElementById("cloud-status");
+  if (user) {
+    indicador.classList.add("online");
+    indicador.title = "Sincronizado con Lumina Cloud (" + user.uid + ")";
+    document.getElementById("app-loader").style.display = "none";
+    escucharCambiosNube();
+  } else {
+    indicador.classList.remove("online");
+    indicador.title = "Desconectado de la nube";
+  }
+});
+
+// ═══════════════════════════════════════════════════════════
+// BASE DE DATOS Y ESTADO DE LA APLICACIÓN
+// ═══════════════════════════════════════════════════════════
+const DATOS_INICIALES = {
+  insumos: {
+    "Pisos Lavanda": { costoL: 180, stockL: 120, estilo: "estandar", fleteAsignado: 25 },
+    "Pisos Bebé": { costoL: 195, stockL: 80, estilo: "estandar", fleteAsignado: 25 },
+    "Jabón Verde": { costoL: 450, stockL: 100, estilo: "estandar", fleteAsignado: 25 },
+    "Jabón Azul": { costoL: 450, stockL: 90, estilo: "estandar", fleteAsignado: 25 },
+    "Suavizante Celeste": { costoL: 430, stockL: 100, estilo: "estandar", fleteAsignado: 25 },
+    "Suavizante Lila": { costoL: 430, stockL: 100, estilo: "estandar", fleteAsignado: 25 },
+    "Lavandina": { costoL: 110, stockL: 200, estilo: "lavandinas", fleteAsignado: 25 },
+    "Detergente Manzana": { costoL: 1482, stockL: 50, estilo: "detergentes", fleteAsignado: 0 }
+  },
+  preciosFijos: {
+    "Pisos Lavanda_5": { venta: 4500, envase: 800 },
+    "Pisos Bebé_5": { venta: 4800, envase: 800 },
+    "Jabón Verde_5": { venta: 7800, envase: 800 },
+    "Jabón Azul_5": { venta: 7800, envase: 800 },
+    "Suavizante Celeste_5": { venta: 7500, envase: 800 },
+    "Suavizante Lila_5": { venta: 7500, envase: 800 },
+    "Lavandina_5": { venta: 2200, envase: 800 },
+    "Lavandina_1": { venta: 700, envase: 150 },
+    "Detergente Manzana_1": { venta: 2800, envase: 200 },
+    "Detergente Manzana_0.5": { venta: 1500, envase: 100 }
+  },
+  combos: [
+    { id: "c1", nombre: "Combo Lavandería Eco", items: [{ prod: "Jabón Verde", form: 5, cant: 1 }, { prod: "Suavizante Celeste", form: 5, cant: 1 }], tipo: "porc", desc: 10 },
+    { id: "c2", nombre: "Pack Limpieza Completa", items: [{ prod: "Pisos Lavanda", form: 5, cant: 1 }, { prod: "Lavandina", form: 5, cant: 1 }], tipo: "fijo", desc: 500 }
+  ],
+  ventas: [],
+  consignaciones: [],
+  clientes: [
+    { nombre: "Consumidor Final", direccion: "Retira en local", telefono: "", envio: "No" }
+  ],
+  canales: ["Venta Directa", "Pedido WhatsApp", "Feria / Evento", "Recomendación / Vecino"],
+  inversionHistorica: 169657
+};
+
+let appState = JSON.parse(JSON.stringify(DATOS_INICIALES));
+
+// Sincronizar lectura con Firebase Cloud (Alineado con Reglas de Paths)
+const escucharCambiosNube = () => {
+  if (!currentUser) return;
+  // Corrección crítica: Se utiliza una ruta con número PAR de segmentos (6 en total) agregando el ID 'main'
+  const stateDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'appState', 'main');
+  
+  onSnapshot(stateDocRef, (snap) => {
+    if (snap.exists()) {
+      const dbState = snap.data();
+      appState.insumos = { ...appState.insumos, ...dbState.insumos };
+      appState.preciosFijos = { ...appState.preciosFijos, ...dbState.preciosFijos };
+      appState.combos = dbState.combos || appState.combos;
+      appState.ventas = dbState.ventas || appState.ventas;
+      appState.consignaciones = dbState.consignaciones || appState.consignaciones;
+      appState.clientes = dbState.clientes || appState.clientes;
+      appState.canales = dbState.canales || appState.canales;
+      appState.inversionHistorica = dbState.inversionHistorica || dbState.inversionHistorica;
+    } else {
+      // Inicializar base de datos vacía en la nube con valores estándar
+      guardarEstadoEnNube();
+    }
+    
+    // Regenerar renders
+    inicializarCombosSelects();
+    renderHistorial();
+    renderClientes();
+    renderConsig();
+    renderConfigPrecios();
+    renderCombosDisponibles();
+    renderCompras();
+    renderDashboard();
+    renderTablaReferencias();
+  }, (error) => {
+    console.error("Error al sincronizar desde Firebase: ", error);
+  });
+};
+
+const guardarEstadoEnNube = async () => {
+  if (!currentUser) return;
+  try {
+    // Corrección crítica: Guardar utilizando la ruta par de 6 segmentos
+    const stateDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'appState', 'main');
+    await setDoc(stateDocRef, {
+      insumos: appState.insumos,
+      preciosFijos: appState.preciosFijos,
+      combos: appState.combos,
+      ventas: appState.ventas,
+      consignaciones: appState.consignaciones,
+      clientes: appState.clientes,
+      canales: appState.canales,
+      inversionHistorica: appState.inversionHistorica
+    });
+  } catch (err) {
+    console.error("No se pudo guardar la información en Firebase: ", err);
+    toast("⚠️ Error de sincronización remota", "red");
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
+// NAVEGACIÓN Y CONFIGURACIÓN INICIAL
+// ═══════════════════════════════════════════════════════════
+window.showPage = (id) => {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  
+  const currentTab = Array.from(document.querySelectorAll('.tab')).find(t => t.textContent.includes(id.charAt(0).toUpperCase() + id.slice(1)) || t.onclick.toString().includes(id));
+  if (currentTab) currentTab.classList.add('active');
+  
+  if (id === 'ventas') renderTablaReferencias();
+  if (id === 'historial') renderHistorial();
+  if (id === 'clientes') renderClientes();
+  if (id === 'consignaciones') renderConsig();
+  if (id === 'promos') { renderConfigPrecios(); renderCombosDisponibles(); }
+  if (id === 'compras') renderCompras();
+  if (id === 'dashboard') renderDashboard();
+};
+
+document.getElementById('v_fecha').value = new Date().toISOString().slice(0, 10);
+document.getElementById('con_fecha').value = new Date().toISOString().slice(0, 10);
+
+// SISTEMA DE CONFIRMACIONES PERSONALIZADO (Evita alerts e iFrame Blocks)
+let callbackConfirmacion = null;
+
+const pedirConfirmacion = (mensaje, accion) => {
+  document.getElementById('confirmacion-mensaje').textContent = mensaje;
+  document.getElementById('modal-confirmacion').classList.add('active');
+  callbackConfirmacion = accion;
+};
+
+document.getElementById('confirm-btn-si').onclick = () => {
+  if (callbackConfirmacion) callbackConfirmacion();
+  cerrarModal('modal-confirmacion');
+  callbackConfirmacion = null;
+};
+
+// ═══════════════════════════════════════════════════════════
+// MÓDULO CAJA / VENTAS CON CARRITO (POS)
+// ═══════════════════════════════════════════════════════════
+let carritoActual = [];
+
+const inicializarCombosSelects = () => {
+  const selectPOS = document.getElementById('v_producto');
+  const selectConsig = document.getElementById('con_producto');
+  const selectFactura = document.getElementById('fac_prod');
+  const datalist = document.getElementById('lista-clientes');
+  
+  selectPOS.innerHTML = '<option value="">— elegí un producto o combo promocional —</option>';
+  selectConsig.innerHTML = '<option value="">— seleccionar —</option>';
+  selectFactura.innerHTML = '';
+  
+  // Insumos
+  Object.keys(appState.insumos).forEach(ins => {
+    selectPOS.innerHTML += `<option value="prod_${ins}">📦 ${ins}</option>`;
+    selectConsig.innerHTML += `<option value="${ins}">${ins}</option>`;
+    selectFactura.innerHTML += `<option value="${ins}">${ins}</option>`;
+  });
+  
+  // Combos
+  appState.combos.forEach(c => {
+    selectPOS.innerHTML += `<option value="combo_${c.id}">🎁 Combo: ${c.nombre}</option>`;
+  });
+  
+  // Canales
+  const selectCanal = document.getElementById('v_canal');
+  selectCanal.innerHTML = '';
+  appState.canales.forEach(canal => {
+    selectCanal.innerHTML += `<option value="${canal}">${canal}</option>`;
+  });
+
+  // Clientes
+  datalist.innerHTML = appState.clientes.map(c => `<option value="${c.nombre}">`).join('');
+};
+
+window.seleccionarProductoPOS = () => {
+  const val = document.getElementById('v_producto').value;
+  const formatSelector = document.getElementById('v_formato');
+  
+  if (!val) return;
+  
+  if (val.startsWith('combo_')) {
+    formatSelector.style.display = 'none';
+    formatSelector.value = "0";
+  } else {
+    formatSelector.style.display = 'block';
+    const insumoNombre = val.replace('prod_', '');
+    const insumo = appState.insumos[insumoNombre];
+    
+    formatSelector.innerHTML = '';
+    if (insumo.estilo === 'lavandinas') {
+      formatSelector.innerHTML = `<option value="5">Bidón 5 Litros</option><option value="3">Botella 3 Litros</option><option value="1">Botella 1 Litro</option>`;
+    } else if (insumo.estilo === 'detergentes') {
+      formatSelector.innerHTML = `<option value="0.5">Botella 500ml</option><option value="1">Botella 1 Litro</option><option value="2">Botella 2 Litros</option>`;
+    } else {
+      formatSelector.innerHTML = `<option value="5">Bidón 5 Litros</option>`;
+    }
+  }
+  calcularPreciosFormatosPOS();
+};
+
+window.calcularPreciosFormatosPOS = () => {
+  const val = document.getElementById('v_producto').value;
+  if (!val) return;
+  
+  const cant = parseFloat(document.getElementById('v_cantidad').value) || 1;
+  const retEnvase = document.getElementById('v_envase').value === 'si';
+  const priceSourceTag = document.getElementById('pos-price-source');
+  
+  let precioUnitarioCalculado = 0;
+  
+  if (val.startsWith('combo_')) {
+    // Corrección crítica de reemplazo de string para parseo correcto del combo
+    const comboId = val.replace('combo_', '').trim();
+    const combo = appState.combos.find(c => c.id === comboId);
+    if (combo) {
+      let sumaBase = 0;
+      combo.items.forEach(item => {
+        const key = `${item.prod}_${item.form}`;
+        const costoBase = appState.insumos[item.prod] ? appState.insumos[item.prod].costoL * item.form : 0;
+        const precioFijo = appState.preciosFijos[key] ? appState.preciosFijos[key].venta : (costoBase * 1.8);
+        sumaBase += (precioFijo * item.cant);
+      });
+      
+      if (combo.tipo === 'porc') {
+        precioUnitarioCalculado = sumaBase * (1 - combo.desc / 100);
+      } else {
+        precioUnitarioCalculado = Math.max(0, sumaBase - combo.desc);
+      }
+      
+      priceSourceTag.style.display = 'inline-block';
+      priceSourceTag.className = 'badge badge-green';
+      priceSourceTag.textContent = `🎁 PRECIO COMBO APLICADO`;
+    }
+  } else {
+    // Producto Unitario
+    const insNombre = val.replace('prod_', '');
+    const formVol = parseFloat(document.getElementById('v_formato').value);
+    const key = `${insNombre}_${formVol}`;
+    const insumo = appState.insumos[insNombre];
+    
+    const costoL = insumo ? insumo.costoL : 0;
+    const costoFormato = costoL * formVol;
+    
+    if (appState.preciosFijos[key] && appState.preciosFijos[key].venta > 0) {
+      precioUnitarioCalculado = appState.preciosFijos[key].venta;
+      priceSourceTag.style.display = 'inline-block';
+      priceSourceTag.className = 'badge badge-blue';
+      priceSourceTag.textContent = `🏷️ PRECIO FIJO APLICADO`;
+    } else {
+      precioUnitarioCalculado = Math.round(costoFormato * 1.80);
+      priceSourceTag.style.display = 'inline-block';
+      priceSourceTag.className = 'badge badge-purple';
+      priceSourceTag.textContent = `💡 MARGEN RECOMENDADO (80%)`;
+    }
+  }
+  
+  if (document.activeElement.id !== 'v_precio') {
+    document.getElementById('v_precio').value = Math.round(precioUnitarioCalculado);
+  }
+};
+
+window.crearCanalPersonalizado = () => {
+  const nuevoCanal = prompt("Escribí el nombre del nuevo canal de venta (ej: Instagram):");
+  if (nuevoCanal && nuevoCanal.trim()) {
+    if (!appState.canales.includes(nuevoCanal.trim())) {
+      appState.canales.push(nuevoCanal.trim());
+      guardarEstadoEnNube();
+      toast("✓ Nuevo canal añadido", "green");
+    }
+  }
+};
+
+window.autocompletarCliente = (nombre) => {
+  const cl = appState.clientes.find(c => c.nombre.toLowerCase() === nombre.toLowerCase());
+  if (cl) {
+    document.getElementById('v_cliente_dir').value = cl.direccion;
+    document.getElementById('v_cliente_tel').value = cl.telefono;
+    document.getElementById('v_cliente_envio').value = cl.envio;
+    toast("👤 Cliente encontrado, datos cargados");
+  }
+};
+
+window.agregarAlCarrito = () => {
+  const val = document.getElementById('v_producto').value;
+  const cant = parseFloat(document.getElementById('v_cantidad').value) || 1;
+  const precioUnit = parseFloat(document.getElementById('v_precio').value) || 0;
+  const envaseDevuelto = document.getElementById('v_envase').value === 'si';
+  
+  if (!val) { toast("⚠️ Elegí un producto antes de añadir", "red"); return; }
+  
+  let labelItem = "";
+  let idReferencia = "";
+  let litrosDescuento = 0;
+  let descuentoFijoEnvase = 0;
+  
+  if (val.startsWith('combo_')) {
+    const comboId = val.replace('combo_', '').trim();
+    const combo = appState.combos.find(c => c.id === comboId);
+    labelItem = `Combo: ${combo.nombre}`;
+    idReferencia = combo.id;
+    
+    combo.items.forEach(it => {
+      litrosDescuento += (it.form * it.cant) * cant;
+    });
+  } else {
+    const insNombre = val.replace('prod_', '');
+    const formVol = parseFloat(document.getElementById('v_formato').value);
+    labelItem = `${insNombre} (${formVol >= 1 ? formVol+'L' : '500ml'})`;
+    idReferencia = insNombre;
+    litrosDescuento = formVol * cant;
+    
+    if (envaseDevuelto) {
+      const key = `${insNombre}_${formVol}`;
+      descuentoFijoEnvase = appState.preciosFijos[key] ? (appState.preciosFijos[key].envase || 0) : 0;
+    }
+  }
+  
+  carritoActual.push({
+    nombre: labelItem,
+    idRef: idReferencia,
+    cantidad: cant,
+    precioUnitario: precioUnit,
+    litros: litrosDescuento,
+    descuentoEnvase: descuentoFijoEnvase,
+    tipo: val.startsWith('combo_') ? 'combo' : 'unitario',
+    envaseDevuelto
+  });
+  
+  toast("🛒 Añadido al carrito con éxito", "green");
+  renderCarrito();
+  limpiarFormularioPOS();
+};
+
+const renderCarrito = () => {
+  const container = document.getElementById('cart-items-render');
+  const countSpan = document.getElementById('cart-item-count');
+  
+  if (carritoActual.length === 0) {
+    container.innerHTML = '<p style="color:var(--ink3);font-size:.85rem;text-align:center;padding:1rem">El carrito está vacío. Agregá algún producto arriba.</p>';
+    countSpan.textContent = "0 artículos";
+    document.getElementById('v_total_calculado').value = 0;
+    document.getElementById('v_total_manual').value = 0;
+    return;
+  }
+  
+  countSpan.textContent = `${carritoActual.length} artículo${carritoActual.length > 1 ? 's' : ''}`;
+  
+  container.innerHTML = carritoActual.map((item, i) => `
+    <div class="cart-item">
+      <div>
+        <strong>${item.nombre}</strong> <span style="color:var(--ink3)">x${item.cantidad}</span>
+        ${item.envaseDevuelto ? `<br><small style="color:var(--gold)">✓ Retorna Envase (-$${item.descuentoEnvase * item.cantidad})</small>` : ''}
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <span style="font-family:'DM Mono',monospace;font-weight:600">$${((item.precioUnitario * item.cantidad) - (item.descuentoEnvase * item.cantidad)).toLocaleString('es-AR')}</span>
+        <button class="btn btn-danger" style="padding:.2rem .5rem;font-size:.75rem" onclick="removerItemCarrito(${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+  
+  aplicarFinanzasCarrito();
+};
+
+window.removerItemCarrito = (index) => {
+  carritoActual.splice(index, 1);
+  renderCarrito();
+};
+
+window.vaciarCarrito = () => {
+  carritoActual = [];
+  renderCarrito();
+};
+
+const aplicarFinanzasCarrito = () => {
+  const dtoGlobal = parseFloat(document.getElementById('v_dto_global').value) || 0;
+  let suma = 0;
+  carritoActual.forEach(item => {
+    suma += (item.precioUnitario * item.cantidad) - (item.descuentoEnvase * item.cantidad);
+  });
+  
+  const totalConDto = suma * (1 - dtoGlobal / 100);
+  document.getElementById('v_total_calculado').value = Math.round(totalConDto);
+  
+  if (document.activeElement.id !== 'v_total_manual') {
+    document.getElementById('v_total_manual').value = Math.round(totalConDto);
+  }
+};
+
+window.aplicarTotalManual = () => {
+  // Manejo reactivo de cambios manuales por parte del usuario en el total final cobrado
+};
+
+window.limpiarFormularioPOS = () => {
+  document.getElementById('v_producto').value = '';
+  document.getElementById('v_cantidad').value = 1;
+  document.getElementById('v_precio').value = '';
+  document.getElementById('v_envase').value = 'no';
+  document.getElementById('pos-price-source').style.display = 'none';
+};
+
+window.procesarVentaCarrito = () => {
+  const cliente = document.getElementById('v_cliente').value.trim();
+  const fecha = document.getElementById('v_fecha').value;
+  const canal = document.getElementById('v_canal').value;
+  const totalCobrado = parseFloat(document.getElementById('v_total_manual').value) || 0;
+  
+  const direccion = document.getElementById('v_cliente_dir').value.trim();
+  const telefono = document.getElementById('v_cliente_tel').value.trim();
+  const envio = document.getElementById('v_cliente_envio').value;
+  
+  if (carritoActual.length === 0) { toast("⚠️ Carrito vacío", "red"); return; }
+  if (!cliente) { toast("⚠️ El nombre de cliente es obligatorio", "red"); return; }
+  
+  // Registrar cliente
+  let clExistente = appState.clientes.find(c => c.nombre.toLowerCase() === cliente.toLowerCase());
+  if (!clExistente) {
+    appState.clientes.push({ nombre: cliente, direccion, telefono, envio });
+  } else {
+    clExistente.direccion = direccion;
+    clExistente.telefono = telefono;
+    clExistente.envio = envio;
+  }
+  
+  // Calcular ganancias y descontar stock
+  let costoTotalOperacion = 0;
+  carritoActual.forEach(item => {
+    if (item.tipo === 'combo') {
+      const combo = appState.combos.find(c => c.id === item.idRef);
+      if (combo) {
+        combo.items.forEach(ci => {
+          const costoLitro = appState.insumos[ci.prod] ? appState.insumos[ci.prod].costoL : 0;
+          costoTotalOperacion += (costoLitro * ci.form * ci.cant) * item.cantidad;
+          
+          const insumo = appState.insumos[ci.prod];
+          if (insumo) {
+            const lDesc = (ci.form * ci.cant) * item.cantidad;
+            insumo.stockL = Math.max(0, insumo.stockL - lDesc);
+          }
+        });
+      }
+    } else {
+      const costoLitro = appState.insumos[item.idRef] ? appState.insumos[item.idRef].costoL : 0;
+      costoTotalOperacion += (costoLitro * item.litros);
+      
+      const insumo = appState.insumos[item.idRef];
+      if (insumo) {
+        insumo.stockL = Math.max(0, insumo.stockL - item.litros);
+      }
+    }
+  });
+  
+  const gananciaNeta = totalCobrado - costoTotalOperacion;
+  
+  const nuevaVenta = {
+    id: Date.now(),
+    fecha,
+    cliente,
+    canal,
+    items: JSON.parse(JSON.stringify(carritoActual)),
+    total: Math.round(totalCobrado),
+    ganancia: Math.round(gananciaNeta),
+    envio,
+    telefono,
+    direccion
+  };
+  
+  appState.ventas.unshift(nuevaVenta);
+  
+  // Limpiar POS
+  carritoActual = [];
+  renderCarrito();
+  document.getElementById('v_cliente').value = '';
+  document.getElementById('v_cliente_dir').value = '';
+  document.getElementById('v_cliente_tel').value = '';
+  document.getElementById('v_cliente_envio').value = 'No';
+  document.getElementById('v_dto_global').value = 0;
+  
+  guardarEstadoEnNube();
+  toast("✓ Venta registrada con éxito", "green");
+};
+
+window.renderTablaReferencias = () => {
+  const tbody = document.getElementById('tabla-precios-ref');
+  if (!tbody) return;
+  tbody.innerHTML = Object.entries(appState.insumos).map(([nombre, ins]) => {
+    const key = `${nombre}_5`;
+    const costoEst = Math.round(ins.costoL * 5);
+    const precioFijo = appState.preciosFijos[key] ? appState.preciosFijos[key].venta : 0;
+    const retorno = appState.preciosFijos[key] ? appState.preciosFijos[key].envase : 0;
+    
+    return `
+      <tr>
+        <td><strong>${nombre} (5 Litros)</strong></td>
+        <td style="color:var(--accent);font-weight:700;font-family:'DM Mono',monospace">
+          ${precioFijo > 0 ? `$${precioFijo.toLocaleString('es-AR')}` : 'Sin Fijar'}
+        </td>
+        <td style="font-family:'DM Mono',monospace;color:var(--ink3)">$${costoEst.toLocaleString('es-AR')}</td>
+        <td style="font-family:'DM Mono',monospace;color:var(--green)">$${Math.round(costoEst * 1.40).toLocaleString('es-AR')}</td>
+        <td style="font-family:'DM Mono',monospace;color:var(--blue)">$${Math.round(costoEst * 1.60).toLocaleString('es-AR')}</td>
+        <td style="font-family:'DM Mono',monospace;color:var(--orange)">$${Math.round(costoEst * 2.40).toLocaleString('es-AR')}</td>
+        <td style="font-family:'DM Mono',monospace;color:var(--gold)">$${retorno.toLocaleString('es-AR')}</td>
+      </tr>
+    `;
+  }).join('');
+};
+
+// ═══════════════════════════════════════════════════════════
+// HISTORIAL DE OPERACIONES
+// ═══════════════════════════════════════════════════════════
+window.renderHistorial = () => {
+  const tbody = document.getElementById('tabla-historial');
+  const vacio = document.getElementById('historial-vacio');
+  const filtro = document.getElementById('filtro-historial').value.toLowerCase();
+  
+  const filtradas = appState.ventas.filter(v => 
+    v.cliente.toLowerCase().includes(filtro) ||
+    v.items.some(item => item.nombre.toLowerCase().includes(filtro))
+  );
+  
+  if (filtradas.length === 0) {
+    tbody.innerHTML = '';
+    vacio.style.display = 'block';
+  } else {
+    vacio.style.display = 'none';
+    tbody.innerHTML = filtradas.map((v, i) => {
+      const detalleItems = v.items.map(it => `${it.cantidad}x ${it.nombre} ($${it.precioUnitario}/u)`).join('<br>');
+      return `
+        <tr>
+          <td style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--ink3)">#${v.id.toString().slice(-6)}</td>
+          <td>${v.fecha}</td>
+          <td>
+            <strong>${v.cliente}</strong>
+            ${v.envio === 'Sí' ? '<br><span class="badge badge-orange">🚚 Envío a domicilio</span>' : ''}
+          </td>
+          <td style="font-size:.8rem;line-height:1.4">${detalleItems}</td>
+          <td><span class="badge badge-purple">${v.canal}</span></td>
+          <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--blue)">$${v.total.toLocaleString('es-AR')}</td>
+          <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--green)">$${v.ganancia.toLocaleString('es-AR')}</td>
+          <td>
+            <div style="display:flex;gap:0.25rem">
+              <button class="btn btn-secondary" style="padding:.25rem .5rem;font-size:.75rem" onclick="verDetalleTicket(${v.id})">👁️ Ver</button>
+              <button class="btn btn-danger" style="padding:.25rem .5rem;font-size:.75rem" onclick="eliminarVenta(${v.id})">✕</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+  
+  const totalIngresos = appState.ventas.reduce((acc, v) => acc + v.total, 0);
+  const totalGanancias = appState.ventas.reduce((acc, v) => acc + v.ganancia, 0);
+  const envasesDevueltos = appState.ventas.reduce((acc, v) => acc + v.items.filter(it => it.envaseDevuelto).reduce((sum, it) => sum + it.cantidad, 0), 0);
+  
+  document.getElementById('kpi-ingresos').textContent = `$${totalIngresos.toLocaleString('es-AR')}`;
+  document.getElementById('kpi-ganancias').textContent = `$${totalGanancias.toLocaleString('es-AR')}`;
+  document.getElementById('kpi-ventas-cant').textContent = appState.ventas.length;
+  document.getElementById('kpi-envases-cant').textContent = envasesDevueltos;
+};
+
+window.verDetalleTicket = (id) => {
+  const v = appState.ventas.find(x => x.id === id);
+  if (!v) return;
+  
+  const content = document.getElementById('modal-ticket-content');
+  content.innerHTML = `
+    <div class="ticket">
+      <div style="text-align:center;margin-bottom:1rem">
+        <h4 style="font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--accent)">Lumina</h4>
+        <p style="font-size:.78rem;color:var(--ink3)">Punto de Venta · Ushuaia</p>
+      </div>
+      <div class="ticket-row"><span class="lbl">ID Operación</span><span style="font-family:'DM Mono',monospace">#${v.id}</span></div>
+      <div class="ticket-row"><span class="lbl">Fecha</span><span>${v.fecha}</span></div>
+      <div class="ticket-row"><span class="lbl">Cliente</span><span><strong>${v.cliente}</strong></span></div>
+      ${v.telefono ? `<div class="ticket-row"><span class="lbl">Teléfono</span><span>${v.telefono}</span></div>` : ''}
+      ${v.direccion ? `<div class="ticket-row"><span class="lbl">Dirección</span><span>${v.direccion}</span></div>` : ''}
+      <div class="ticket-row"><span class="lbl">Envío Domicilio</span><span>${v.envio}</span></div>
+      <div class="ticket-row"><span class="lbl">Canal</span><span>${v.canal}</span></div>
+      
+      <h5 style="font-size:.78rem;margin:1rem 0 0.5rem 0;color:var(--accent);text-transform:uppercase">Items cobrados</h5>
+      ${v.items.map(it => `
+        <div style="font-size:.82rem;margin-bottom:0.4rem;padding-bottom:0.4rem;border-bottom:1px dashed #eee">
+          <div style="display:flex;justify-content:space-between">
+            <span><strong>${it.nombre}</strong></span>
+            <span>$${((it.precioUnitario * it.cantidad) - (it.descuentoEnvase * it.cantidad)).toLocaleString('es-AR')}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;color:var(--ink3);font-size:.75rem">
+            <span>${it.cantidad}u x $${it.precioUnitario}/u</span>
+            ${it.envaseDevuelto ? `<span>Envase ret. (-$${it.descuentoEnvase * it.cantidad})</span>` : ''}
+          </div>
+        </div>
+      `).join('')}
+      
+      <div style="margin-top:1rem;background:var(--bg);padding:0.5rem;border-radius:var(--r)">
+        <div style="display:flex;justify-content:space-between;font-weight:700;font-size:1rem;color:var(--ink2)">
+          <span>Total Cobrado:</span>
+          <span style="font-family:'DM Mono',monospace">$${v.total.toLocaleString('es-AR')}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--green);font-weight:600;margin-top:0.25rem">
+          <span>Ganancia Estimada:</span>
+          <span>$${v.ganancia.toLocaleString('es-AR')}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  abrirModal('modal-ticket');
+};
+
+window.eliminarVenta = (id) => {
+  pedirConfirmacion("¿Estás seguro de eliminar de forma permanente esta operación del historial? El stock no se recuperará automáticamente.", () => {
+    appState.ventas = appState.ventas.filter(v => v.id !== id);
+    guardarEstadoEnNube();
+    toast("✕ Operación eliminada con éxito", "green");
+  });
+};
+
+window.eliminarHistorialCompleto = () => {
+  pedirConfirmacion("⚠️ ¿Estás completamente seguro de borrar TODO el historial de Lumina? Esta acción es irreversible.", () => {
+    appState.ventas = [];
+    guardarEstadoEnNube();
+    toast("🗑 Historial totalmente vaciado", "green");
+  });
+};
+
+// ═══════════════════════════════════════════════════════════
+// DIRECTORIO DE CLIENTES
+// ═══════════════════════════════════════════════════════════
+window.renderClientes = () => {
+  const container = document.getElementById('lista-clientes-render');
+  if (appState.clientes.length === 0) {
+    container.innerHTML = '<p style="color:var(--ink3);font-size:.9rem">No hay clientes agregados todavía.</p>';
+    return;
+  }
+  
+  container.innerHTML = appState.clientes.map((c, i) => {
+    const comprasCliente = appState.ventas.filter(v => v.cliente.toLowerCase() === c.nombre.toLowerCase());
+    const totalComprado = comprasCliente.reduce((sum, v) => sum + v.total, 0);
+    return `
+      <div class="cliente-card">
+        <div class="cliente-info">
+          <h4 style="font-size:1rem;color:var(--ink2)">${c.nombre}</h4>
+          <p>📍 Dirección: ${c.direccion || 'Sin registrar'}</p>
+          <p>📞 Teléfono: ${c.telefono || 'Sin registrar'}</p>
+          <p>🚚 Envío predeterminado: <span class="badge ${c.envio === 'Sí' ? 'badge-orange' : 'badge-purple'}">${c.envio}</span></p>
+        </div>
+        <div class="cliente-stats">
+          <div class="total">$${totalComprado.toLocaleString('es-AR')}</div>
+          <div style="font-size:.75rem;color:var(--ink3)">${comprasCliente.length} compra${comprasCliente.length !== 1 ? 's' : ''} registrada${comprasCliente.length !== 1 ? 's' : ''}</div>
+          <div style="margin-top:0.5rem;display:flex;gap:0.25rem;justify-content:flex-end">
+            <button class="btn btn-secondary" style="padding:.25rem .5rem;font-size:.75rem" onclick="abrirFichaClienteEditar(${i})">✏️ Editar</button>
+            <button class="btn btn-danger" style="padding:.25rem .5rem;font-size:.75rem" onclick="eliminarCliente(${i})">✕</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
+window.abrirModalClienteNuevo = () => {
+  document.getElementById('cl_nombre').value = '';
+  document.getElementById('cl_direccion').value = '';
+  document.getElementById('cl_telefono').value = '';
+  document.getElementById('cl_envio').value = 'No';
+  abrirModal('modal-cliente');
+};
+
+let indexClienteEditar = -1;
+window.abrirFichaClienteEditar = (index) => {
+  const c = appState.clientes[index];
+  document.getElementById('cl_nombre').value = c.nombre;
+  document.getElementById('cl_direccion').value = c.direccion;
+  document.getElementById('cl_telefono').value = c.telefono;
+  document.getElementById('cl_envio').value = c.envio;
+  indexClienteEditar = index;
+  abrirModal('modal-cliente');
+};
+
+window.guardarClienteFicha = () => {
+  const nombre = document.getElementById('cl_nombre').value.trim();
+  const direccion = document.getElementById('cl_direccion').value.trim();
+  const telefono = document.getElementById('cl_telefono').value.trim();
+  const envio = document.getElementById('cl_envio').value;
+  
+  if (!nombre) { toast("⚠️ El nombre es obligatorio", "red"); return; }
+  
+  const clienteData = { nombre, direccion, telefono, envio };
+  
+  if (indexClienteEditar >= 0) {
+    appState.clientes[indexClienteEditar] = clienteData;
+    indexClienteEditar = -1;
+  } else {
+    appState.clientes.push(clienteData);
+  }
+  
+  cerrarModal('modal-cliente');
+  guardarEstadoEnNube();
+  toast("✓ Ficha de cliente sincronizada", "green");
+};
+
+window.eliminarCliente = (index) => {
+  pedirConfirmacion("¿Deseas eliminar permanentemente a este cliente de tu base de datos?", () => {
+    appState.clientes.splice(index, 1);
+    guardarEstadoEnNube();
+    toast("✕ Cliente eliminado", "green");
+  });
+};
+
+// ═══════════════════════════════════════════════════════════
+// MÓDULO DE CONSIGNACIONES
+// ═══════════════════════════════════════════════════════════
+let carritoConsig = [];
+
+window.calcularPreciosFormatosConsig = () => {
+  const prod = document.getElementById('con_producto').value;
+  if (!prod) return;
+  const form = parseFloat(document.getElementById('con_formato').value);
+  const key = `${prod}_${form}`;
+  
+  let precioUnit = 0;
+  if (appState.preciosFijos[key] && appState.preciosFijos[key].venta > 0) {
+    precioUnit = appState.preciosFijos[key].venta;
+  } else {
+    precioUnit = Math.round((appState.insumos[prod] ? appState.insumos[prod].costoL : 0) * form * 1.80);
+  }
+  
+  if (document.activeElement.id !== 'con_precio_vta') {
+    document.getElementById('con_precio_vta').value = Math.round(precioUnit);
+  }
+};
+
+window.agregarAlCarritoConsig = () => {
+  const prod = document.getElementById('con_producto').value;
+  const form = parseFloat(document.getElementById('con_formato').value);
+  const cant = parseFloat(document.getElementById('con_cantidad').value) || 1;
+  const precioVenta = parseFloat(document.getElementById('con_precio_vta').value) || 0;
+  const comision = parseFloat(document.getElementById('con_comision').value) || 0;
+  
+  if (!prod) { toast("⚠️ Elegí un producto para consignar", "red"); return; }
+  
+  const netoUnitario = precioVenta * (1 - comision / 100);
+  
+  carritoConsig.push({
+    producto: prod,
+    formato: form,
+    cantidad: cant,
+    precioVenta: Math.round(precioVenta),
+    comision,
+    netoUnitario: Math.round(netoUnitario),
+    rendido: 0
+  });
+  
+  toast("🤝 Añadido al envío con éxito", "green");
+  renderCarritoConsig();
+  
+  document.getElementById('con_producto').value = '';
+  document.getElementById('con_cantidad').value = 5;
+  document.getElementById('con_precio_vta').value = '';
+};
+
+const renderCarritoConsig = () => {
+  const container = document.getElementById('consig-cart-items');
+  const totalDiv = document.getElementById('consig-cart-total');
+  
+  if (carritoConsig.length === 0) {
+    container.innerHTML = '<p style="color:var(--ink3);font-size:.85rem;text-align:center;padding:1rem">El borrador está vacío.</p>';
+    totalDiv.textContent = "Total Potencial de Ingreso: $0";
+    return;
+  }
+  
+  container.innerHTML = carritoConsig.map((item, i) => `
+    <div class="cart-item" style="border-left: 4px solid var(--gold)">
+      <div>
+        <strong>${item.producto} (${item.formato >= 1 ? item.formato+'L' : '500ml'})</strong> x${item.cantidad}u.
+        <br><small style="color:var(--ink3)">Precio acordado: $${item.precioVenta}/u · Comisión: ${item.comision}% (Tu neto: $${item.netoUnitario}/u)</small>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <span style="font-family:'DM Mono',monospace;font-weight:600;color:var(--gold)">$${(item.netoUnitario * item.cantidad).toLocaleString('es-AR')}</span>
+        <button class="btn btn-danger" style="padding:.2rem .5rem;font-size:.75rem" onclick="removerItemConsigCarrito(${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+  
+  const totalPotencial = carritoConsig.reduce((sum, item) => sum + (item.netoUnitario * item.cantidad), 0);
+  totalDiv.textContent = `Total Potencial de Ingreso: $${totalPotencial.toLocaleString('es-AR')}`;
+};
+
+window.removerItemConsigCarrito = (index) => {
+  carritoConsig.splice(index, 1);
+  renderCarritoConsig();
+};
+
+window.confirmarConsignacionCompleta = () => {
+  const nombre = document.getElementById('con_nombre').value.trim();
+  const fecha = document.getElementById('con_fecha').value;
+  const tipo = document.getElementById('con_tipo').value;
+  
+  if (carritoConsig.length === 0) { toast("⚠️ Cargá productos en el borrador", "red"); return; }
+  if (!nombre) { toast("⚠️ El consignatario es obligatorio", "red"); return; }
+  
+  carritoConsig.forEach(item => {
+    const insumo = appState.insumos[item.producto];
+    if (insumo) {
+      const litrosTotales = item.formato * item.cantidad;
+      insumo.stockL = Math.max(0, insumo.stockL - litrosTotales);
+    }
+  });
+  
+  const nuevaConsignacion = {
+    id: Date.now(),
+    fecha,
+    nombre,
+    tipo,
+    items: JSON.parse(JSON.stringify(carritoConsig)),
+    estado: 'Activa'
+  };
+  
+  appState.consignaciones.unshift(nuevaConsignacion);
+  
+  carritoConsig = [];
+  renderCarritoConsig();
+  document.getElementById('con_nombre').value = '';
+  
+  guardarEstadoEnNube();
+  toast("✓ Entrega de consignación sincronizada", "green");
+};
+
+window.renderConsig = () => {
+  const container = document.getElementById('consignaciones-activas-render');
+  if (appState.consignaciones.length === 0) {
+    container.innerHTML = '<p style="color:var(--ink3);font-size:.9rem;text-align:center;padding:2rem">No hay consignaciones activas registradas.</p>';
+    return;
+  }
+  
+  container.innerHTML = appState.consignaciones.map(con => {
+    return `
+      <div class="consignatario-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;border-bottom:1px solid var(--border);padding-bottom:0.5rem">
+          <div>
+            <h4 style="color:var(--accent);font-size:1.05rem"><strong>${con.nombre}</strong></h4>
+            <span style="font-size:.75rem;color:var(--ink3)">📅 Entregado: ${con.fecha} · Canal: ${con.tipo}</span>
+          </div>
+          <span class="badge ${con.estado === 'Activa' ? 'badge-gold' : 'badge-green'}">${con.estado}</span>
+        </div>
+        
+        <div class="tbl-wrap" style="margin-bottom:1rem">
+          <table style="font-size:.8rem">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cant. Entregada</th>
+                <th>Tu Ingreso Neto/u</th>
+                <th>Unidades Rendidas</th>
+                <th>Monto Rendido</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${con.items.map((it, i) => `
+                <tr>
+                  <td><strong>${it.producto} (${it.formato >= 1 ? it.formato+'L' : '500ml'})</strong></td>
+                  <td>${it.cantidad} unidades</td>
+                  <td>$${it.netoUnitario}</td>
+                  <td>
+                    <input type="number" min="0" max="${it.cantidad}" value="${it.rendido}" 
+                      style="width:60px;padding:.2rem;font-size:.8rem;text-align:center"
+                      ${con.estado === 'Cerrada' ? 'disabled' : ''}
+                      onchange="actualizarRendicionItem(${con.id}, ${i}, this.value)">
+                  </td>
+                  <td style="font-family:'DM Mono',monospace;font-weight:600;color:var(--green)">
+                    $${(it.rendido * it.netoUnitario).toLocaleString('es-AR')}
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem">
+          <div style="font-size:.8rem;color:var(--ink2)">
+            Ingreso cobrado hasta ahora: <strong style="color:var(--green);font-size:0.95rem">$${con.items.reduce((sum, it) => sum + (it.rendido * it.netoUnitario), 0).toLocaleString('es-AR')}</strong>
+          </div>
+          <div style="display:flex;gap:0.5rem">
+            ${con.estado === 'Activa' ? `
+              <button class="btn btn-green" style="padding:.4rem .85rem;font-size:.8rem" onclick="cerrarYDevolverStockConsig(${con.id})">🔒 Cerrar y Devolver Sobrantes</button>
+            ` : ''}
+            <button class="btn btn-danger" style="padding:.4rem .85rem;font-size:.8rem" onclick="eliminarConsig(${con.id})">🗑 Eliminar Registro</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
+window.actualizarRendicionItem = (conId, itemIndex, valor) => {
+  const con = appState.consignaciones.find(c => c.id === conId);
+  if (!con) return;
+  const cant = parseInt(valor) || 0;
+  
+  con.items[itemIndex].rendido = cant;
+  
+  const todoRendido = con.items.every(it => it.rendido === it.cantidad);
+  if (todoRendido) {
+    con.estado = 'Cerrada';
+  }
+  
+  guardarEstadoEnNube();
+  toast("✓ Rendición actualizada", "green");
+};
+
+window.cerrarYDevolverStockConsig = (conId) => {
+  pedirConfirmacion("¿Deseas cerrar esta consignación? Las botellas sobrantes que NO fueron vendidas serán devueltas al stock de litros inmediatamente.", () => {
+    const con = appState.consignaciones.find(c => c.id === conId);
+    if (!con) return;
+    
+    con.items.forEach(item => {
+      const sobranteUnidades = item.cantidad - item.rendido;
+      if (sobranteUnidades > 0) {
+        const insumo = appState.insumos[item.producto];
+        if (insumo) {
+          const lADevolver = item.formato * sobranteUnidades;
+          insumo.stockL += lADevolver;
+        }
+      }
+    });
+    
+    const montoEfectivo = con.items.reduce((sum, it) => sum + (it.rendido * it.netoUnitario), 0);
+    
+    if (montoEfectivo > 0) {
+      appState.ventas.unshift({
+        id: Date.now(),
+        fecha: new Date().toISOString().slice(0, 10),
+        cliente: `Consignación Rendida: ${con.nombre}`,
+        canal: 'Consignación',
+        items: con.items.filter(it => it.rendido > 0).map(it => ({
+          nombre: `${it.producto} (Rendido)`,
+          cantidad: it.rendido,
+          precioUnitario: it.netoUnitario,
+          litros: it.formato * it.rendido,
+          descuentoEnvase: 0,
+          tipo: 'unitario'
+        })),
+        total: montoEfectivo,
+        ganancia: montoEfectivo - con.items.filter(it => it.rendido > 0).reduce((sum, it) => sum + ((appState.insumos[it.producto] ? appState.insumos[it.producto].costoL : 0) * it.formato * it.rendido), 0),
+        envio: 'No',
+        telefono: '',
+        direccion: ''
+      });
+    }
+    
+    con.estado = 'Cerrada';
+    guardarEstadoEnNube();
+    toast("✓ Consignación cerrada con éxito", "green");
+  });
+};
+
+window.eliminarConsig = (conId) => {
+  pedirConfirmacion("¿Deseas eliminar permanentemente esta planilla de consignación?", () => {
+    appState.consignaciones = appState.consignaciones.filter(c => c.id !== conId);
+    guardarEstadoEnNube();
+    toast("✕ Registro eliminado", "green");
+  });
+};
+
+// ═══════════════════════════════════════════════════════════
+// CATALOGO DE CONFIGURACIÓN DE PRECIOS FIJOS Y COMBOS
+// ═══════════════════════════════════════════════════════════
+window.renderConfigPrecios = () => {
+  const tbody = document.getElementById('tabla-config-precios');
+  tbody.innerHTML = '';
+  
+  Object.entries(appState.insumos).forEach(([nombre, ins]) => {
+    let formatos = [5];
+    if (ins.estilo === 'lavandinas') formatos = [5, 3, 1];
+    if (ins.estilo === 'detergentes') formatos = [2, 1, 0.5];
+    
+    formatos.forEach(form => {
+      const key = `${nombre}_${form}`;
+      const costoCalculado = Math.round(ins.costoL * form);
+      const precioVenta = appState.preciosFijos[key] ? appState.preciosFijos[key].venta : 0;
+      const envaseVal = appState.preciosFijos[key] ? appState.preciosFijos[key].envase : 0;
+      
+      tbody.innerHTML += `
+        <tr>
+          <td><strong>${nombre} (${form >= 1 ? form+' Litros' : '500ml'})</strong></td>
+          <td style="font-family:'DM Mono',monospace;color:var(--ink3)">$${costoCalculado.toLocaleString('es-AR')}</td>
+          <td>
+            <input type="number" id="cfg_vta_${key}" value="${precioVenta}" style="width:100px;padding:.2rem;font-size:.8rem;text-align:right" placeholder="Calcular M80">
+          </td>
+          <td>
+            <input type="number" id="cfg_env_${key}" value="${envaseVal}" style="width:100px;padding:.2rem;font-size:.8rem;text-align:right" placeholder="0">
+          </td>
+          <td>
+            <button class="btn btn-primary" style="padding:.25rem .75rem;font-size:.78rem" onclick="guardarPrecioFijo('${key}')">✓ Fijar</button>
+          </td>
+        </tr>
+      `;
+    });
+  });
+};
+
+window.guardarPrecioFijo = (key) => {
+  const venta = parseFloat(document.getElementById(`cfg_vta_${key}`).value) || 0;
+  const envase = parseFloat(document.getElementById(`cfg_env_${key}`).value) || 0;
+  
+  appState.preciosFijos[key] = { venta, envase };
+  guardarEstadoEnNube();
+  toast("✓ Catálogo de precios guardado en caliente", "green");
+};
+
+let comboComponentesEdicion = [];
+
+window.renderCombosDisponibles = () => {
+  const container = document.getElementById('lista-combos-render');
+  if (appState.combos.length === 0) {
+    container.innerHTML = '<p style="color:var(--ink3);font-size:.9rem">No hay combos activos creados.</p>';
+    return;
+  }
+  
+  container.innerHTML = appState.combos.map((c, i) => {
+    const listado = c.items.map(it => `• ${it.cant}u. de ${it.prod} (${it.form >= 1 ? it.form+'L' : '500ml'})`).join('<br>');
+    return `
+      <div class="cliente-card" style="border-left:4px solid var(--accent)">
+        <div>
+          <h4 style="color:var(--accent);font-size:1.05rem"><strong>${c.nombre}</strong></h4>
+          <p style="font-size:.8rem;color:var(--ink3);line-height:1.4;margin:0.25rem 0">${listado}</p>
+          <span class="badge badge-gold">Descuento: ${c.tipo === 'porc' ? c.desc+'%' : '$'+c.desc}</span>
+        </div>
+        <div style="text-align:right">
+          <button class="btn btn-danger" style="padding:.35rem .75rem;font-size:.8rem" onclick="eliminarComboPromo(${i})">🗑 Eliminar</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
+window.abrirModalComboNuevo = () => {
+  document.getElementById('comb_nombre').value = '';
+  document.getElementById('comb_descuento').value = 10;
+  comboComponentesEdicion = [];
+  agregarLineaCombo();
+  abrirModal('modal-combo');
+};
+
+window.agregarLineaCombo = () => {
+  comboComponentesEdicion.push({ prod: Object.keys(appState.insumos)[0], form: 5, cant: 1 });
+  renderLineasComboEdicion();
+};
+
+const renderLineasComboEdicion = () => {
+  const container = document.getElementById('combo-componentes-list');
+  container.innerHTML = comboComponentesEdicion.map((item, i) => `
+    <div style="display:flex;gap:0.25rem;align-items:center">
+      <select style="flex:2" onchange="actualizarLineaComboEdic(${i}, 'prod', this.value)">
+        ${Object.keys(appState.insumos).map(n => `<option value="${n}" ${item.prod === n ? 'selected' : ''}>${n}</option>`).join('')}
+      </select>
+      <select style="flex:1" onchange="actualizarLineaComboEdic(${i}, 'form', parseFloat(this.value))">
+        <option value="5" ${item.form === 5 ? 'selected' : ''}>5L</option>
+        <option value="3" ${item.form === 3 ? 'selected' : ''}>3L</option>
+        <option value="1" ${item.form === 1 ? 'selected' : ''}>1L</option>
+        <option value="0.5" ${item.form === 0.5 ? 'selected' : ''}>500ml</option>
+      </select>
+      <input type="number" value="${item.cant}" min="1" style="width:60px" oninput="actualizarLineaComboEdic(${i}, 'cant', parseInt(this.value)||1)">
+      <button class="btn btn-danger" style="padding:.25rem .5rem" onclick="removerLineaComboEdic(${i})">✕</button>
+    </div>
+  `).join('');
+  calcularPrevisualizacionCombo();
+};
+
+window.actualizarLineaComboEdic = (index, campo, valor) => {
+  comboComponentesEdicion[index][campo] = valor;
+  calcularPrevisualizacionCombo();
+};
+
+window.removerLineaComboEdic = (index) => {
+  comboComponentesEdicion.splice(index, 1);
+  renderLineasComboEdicion();
+};
+
+window.calcularPrevisualizacionCombo = () => {
+  let totalSuma = 0;
+  comboComponentesEdicion.forEach(item => {
+    const key = `${item.prod}_${item.form}`;
+    const costoEst = (appState.insumos[item.prod] ? appState.insumos[item.prod].costoL : 0) * item.form;
+    const precioFijo = appState.preciosFijos[key] ? appState.preciosFijos[key].venta : (costoEst * 1.80);
+    totalSuma += (precioFijo * item.cant);
+  });
+  
+  const desc = parseFloat(document.getElementById('comb_descuento').value) || 0;
+  const tipo = document.getElementById('comb_tipo_desc').value;
+  
+  let totalFinal = 0;
+  if (tipo === 'porc') {
+    totalFinal = totalSuma * (1 - desc / 100);
+  } else {
+    totalFinal = Math.max(0, totalSuma - desc);
+  }
+  
+  document.getElementById('comb-previsualizacion-suma').textContent = `$${Math.round(totalSuma).toLocaleString('es-AR')}`;
+  document.getElementById('comb-previsualizacion-final').textContent = `$${Math.round(totalFinal).toLocaleString('es-AR')}`;
+};
+
+window.guardarComboPromocional = () => {
+  const nombre = document.getElementById('comb_nombre').value.trim();
+  const tipo = document.getElementById('comb_tipo_desc').value;
+  const desc = parseFloat(document.getElementById('comb_descuento').value) || 0;
+  
+  if (!nombre) { toast("⚠️ Escribí un nombre para el combo", "red"); return; }
+  if (comboComponentesEdicion.length === 0) { toast("⚠️ Cargá al menos un componente", "red"); return; }
+  
+  const nuevoCombo = {
+    id: 'combo_' + Date.now(),
+    nombre,
+    items: JSON.parse(JSON.stringify(comboComponentesEdicion)),
+    tipo,
+    desc
+  };
+  
+  appState.combos.push(nuevoCombo);
+  cerrarModal('modal-combo');
+  guardarEstadoEnNube();
+  toast("✓ Combo promocional creado con éxito", "green");
+};
+
+window.eliminarComboPromo = (index) => {
+  pedirConfirmacion("¿Deseas eliminar permanentemente esta promoción del catálogo?", () => {
+    appState.combos.splice(index, 1);
+    guardarEstadoEnNube();
+    toast("✕ Promo eliminada", "green");
+  });
+};
+
+// ═══════════════════════════════════════════════════════════
+// COMPRAS, GASTOS & ALTA INSUMOS EN CALIENTE
+// ═══════════════════════════════════════════════════════════
+let lineasCompraFactura = [];
+
+window.crearInsumoNuevo = () => {
+  const nombre = document.getElementById('ins_nombre').value.trim();
+  const estilo = document.getElementById('ins_estilo_formatos').value;
+  
+  if (!nombre) { toast("⚠️ El nombre del insumo es obligatorio", "red"); return; }
+  if (appState.insumos[nombre]) { toast("⚠️ Este insumo ya existe en el catálogo", "red"); return; }
+  
+  appState.insumos[nombre] = {
+    costoL: 0,
+    stockL: 0,
+    estilo,
+    fleteAsignado: 0
+  };
+  
+  document.getElementById('ins_nombre').value = '';
+  guardarEstadoEnNube();
+  toast("✓ Insumo registrado con éxito en Lumina", "green");
+};
+
+window.renderCompras = () => {
+  const selectFactura = document.getElementById('fac_prod');
+  selectFactura.innerHTML = '';
+  Object.keys(appState.insumos).forEach(n => {
+    selectFactura.innerHTML += `<option value="${n}">${n}</option>`;
+  });
+};
+
+window.agregarLineaFactura = () => {
+  const prod = document.getElementById('fac_prod').value;
+  const lts = parseFloat(document.getElementById('fac_litros').value) || 0;
+  const costoLista = parseFloat(document.getElementById('fac_costo_lista').value) || 0;
+  
+  if (!prod || lts <= 0 || costoLista <= 0) { toast("⚠️ Verificá los campos de la línea", "red"); return; }
+  
+  lineasCompraFactura.push({
+    producto: prod,
+    litros: lts,
+    costoLista,
+    costoProrrateadoLitro: 0
+  });
+  
+  toast("＋ Línea añadida");
+  calcularProrrateoCompra();
+};
+
+const calcularProrrateoCompra = () => {
+  const flete = parseFloat(document.getElementById('fac_flete').value) || 0;
+  const dtos = parseFloat(document.getElementById('fac_descuentos').value) || 0;
+  const otros = parseFloat(document.getElementById('fac_otros').value) || 0;
+  
+  const totalLitrosFactura = lineasCompraFactura.reduce((sum, item) => sum + item.litros, 0);
+  const totalCostoLista = lineasCompraFactura.reduce((sum, item) => sum + item.costoLista, 0);
+  
+  lineasCompraFactura.forEach(linea => {
+    const porcentajeLitro = totalLitrosFactura > 0 ? (linea.litros / totalLitrosFactura) : 0;
+    const fleteProrrateado = flete * porcentajeLitro;
+    const otrosGastosProrrateados = otros * porcentajeLitro;
+    const dtoProrrateado = dtos * porcentajeLitro;
+    
+    const costoNetoTotal = (linea.costoLista + fleteProrrateado + otrosGastosProrrateados) - dtoProrrateado;
+    linea.costoProrrateadoLitro = linea.litros > 0 ? Math.round(costoNetoTotal / linea.litros) : 0;
+  });
+  
+  const tbody = document.getElementById('tabla-lineas-compra');
+  tbody.innerHTML = lineasCompraFactura.map((linea, i) => `
+    <tr>
+      <td><strong>${linea.producto}</strong></td>
+      <td>${linea.litros} Litros</td>
+      <td style="font-family:'DM Mono',monospace">$${linea.costoLista.toLocaleString('es-AR')}</td>
+      <td style="font-family:'DM Mono',monospace;color:var(--accent);font-weight:700">
+        $${linea.costoProrrateadoLitro.toLocaleString('es-AR')} / Litro
+      </td>
+      <td>
+        <button class="btn btn-danger" style="padding:.2rem .5rem" onclick="removerLineaFactura(${i})">✕</button>
+      </td>
+    </tr>
+  `).join('');
+  
+  const totalCobrarCompra = (totalCostoLista + flete + otros) - dtos;
+  document.getElementById('compra-total-final').textContent = `$${Math.round(totalCobrarCompra).toLocaleString('es-AR')}`;
+};
+
+window.removerLineaFactura = (index) => {
+  lineasCompraFactura.splice(index, 1);
+  calcularProrrateoCompra();
+};
+
+window.guardarPedidoCompletoStock = () => {
+  if (lineasCompraFactura.length === 0) { toast("⚠️ No hay líneas cargadas", "red"); return; }
+  
+  lineasCompraFactura.forEach(linea => {
+    const ins = appState.insumos[linea.producto];
+    if (ins) {
+      const stockAnterior = ins.stockL;
+      const costoAnterior = ins.costoL;
+      const stockNuevo = stockAnterior + linea.litros;
+      
+      const nuevoCostoL = stockNuevo > 0 ? (((stockAnterior * costoAnterior) + (linea.litros * linea.costoProrrateadoLitro)) / stockNuevo) : linea.costoProrrateadoLitro;
+      
+      ins.stockL = stockNuevo;
+      ins.costoL = Math.round(nuevoCostoL);
+    }
+  });
+  
+  const flete = parseFloat(document.getElementById('fac_flete').value) || 0;
+  const dtos = parseFloat(document.getElementById('fac_descuentos').value) || 0;
+  const otros = parseFloat(document.getElementById('fac_otros').value) || 0;
+  const totalCostoLista = lineasCompraFactura.reduce((sum, item) => sum + item.costoLista, 0);
+  const totalGastoFactura = (totalCostoLista + flete + otros) - dtos;
+  
+  appState.inversionHistorica += Math.round(totalGastoFactura);
+  
+  lineasCompraFactura = [];
+  document.getElementById('fac_flete').value = 0;
+  document.getElementById('fac_descuentos').value = 0;
+  document.getElementById('fac_otros').value = 0;
+  calcularProrrateoCompra();
+  
+  guardarEstadoEnNube();
+  toast("✓ Pedido ingresado y stock actualizado", "green");
+};
+
+// ═══════════════════════════════════════════════════════════
+// MONITOREO DE STOCK Y DASHBOARD (CON ESCALA DE COLORES)
+// ═══════════════════════════════════════════════════════════
+window.renderDashboard = () => {
+  const ingresosTotales = appState.ventas.reduce((sum, v) => sum + v.total, 0);
+  const gananciasTotales = appState.ventas.reduce((sum, v) => sum + v.ganancia, 0);
+  const inversionTotal = appState.inversionHistorica;
+  const porcRecupero = inversionTotal > 0 ? Math.round((ingresosTotales / inversionTotal) * 100) : 0;
+  
+  document.getElementById('dash-inversion-total').textContent = `$${inversionTotal.toLocaleString('es-AR')}`;
+  document.getElementById('dash-ingresos-total').textContent = `$${ingresosTotales.toLocaleString('es-AR')}`;
+  document.getElementById('dash-ganancias-total').textContent = `$${gananciasTotales.toLocaleString('es-AR')}`;
+  document.getElementById('dash-recupero-porc').textContent = `${porcRecupero}%`;
+  
+  const container = document.getElementById('panel-monitoreo-stock');
+  container.innerHTML = '';
+  
+  Object.entries(appState.insumos).forEach(([nombre, ins]) => {
+    const capacidadIdealTanque = 150;
+    const porcLlenado = Math.min(100, Math.max(0, Math.round((ins.stockL / capacidadIdealTanque) * 100)));
+    
+    // Escala de colores estricta según porcentaje de llenado
+    let colorBarra = "var(--green)";
+    let badgeStyle = "badge-green";
+    let estadoTexto = "Óptimo";
+    
+    if (porcLlenado >= 76) {
+      colorBarra = "var(--green)";
+      badgeStyle = "badge-green";
+      estadoTexto = "Óptimo";
+    } else if (porcLlenado >= 51) {
+      colorBarra = "var(--blue)";
+      badgeStyle = "badge-blue";
+      estadoTexto = "Alto";
+    } else if (porcLlenado >= 31) {
+      colorBarra = "var(--gold)";
+      badgeStyle = "badge-gold";
+      estadoTexto = "Moderado / adecuado";
+    } else if (porcLlenado >= 1) {
+      colorBarra = "var(--orange)";
+      badgeStyle = "badge-orange";
+      estadoTexto = "Bajo / crítico / solicitar stock";
+    } else {
+      colorBarra = "var(--red)";
+      badgeStyle = "badge-red";
+      estadoTexto = "Agotado / Sin stock";
+    }
+    
+    container.innerHTML += `
+      <div class="stock-monitor-item">
+        <div class="sm-header">
+          <span class="sm-title">${nombre}</span>
+          <span class="badge ${badgeStyle}">${estadoTexto} (${porcLlenado}%)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--ink3);margin-bottom:0.4rem">
+          <span>Capacidad remanente: <strong>${Math.round(ins.stockL)} Lts disponibles</strong></span>
+          <span>Costo reposición: $${ins.costoL}/Litro</span>
+        </div>
+        <div class="sm-bar-bg">
+          <div class="sm-bar-fill" style="width:${porcLlenado}%;background:${colorBarra}"></div>
+        </div>
+      </div>
+    `;
+  });
+};
+
+// ═══════════════════════════════════════════════════════════
+// EXPORTADOR PREMIUM DE GOOGLE SHEETS Y UTILITARIOS
+// ═══════════════════════════════════════════════════════════
+window.exportarExcel = () => {
+  if (appState.ventas.length === 0) { toast("⚠️ No hay datos de ventas para exportar", "red"); return; }
+  
+  let csv = 'LUMINA — REPORTE DE VENTAS DETALLADAS PARA GOOGLE SHEETS\n';
+  csv += 'ID Operacion,Fecha,Cliente,Direccion,Telefono,Envio a Domicilio,Canal de Venta,Detalle Items,Cantidad Total,Total Cobrado ($),Ganancia Estimada ($)\n';
+  
+  appState.ventas.forEach(v => {
+    const detalleCortoStr = v.items.map(it => `${it.cantidad}x ${it.nombre}`).join(' | ');
+    const cantTotalItems = v.items.reduce((sum, it) => sum + it.cantidad, 0);
+    csv += `"${v.id}","${v.fecha}","${v.cliente}","${v.direccion || ''}","${v.telefono || ''}","${v.envio}","${v.canal}","${detalleCortoStr}",${cantTotalItems},${v.total},${v.ganancia}\n`;
+  });
+  
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `Lumina_Sheets_Report_${new Date().toISOString().slice(0,10)}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+  toast("✓ Reporte CSV descargado con éxito", "green");
+};
+
+window.abrirModal = (id) => {
+  document.getElementById(id).classList.add('active');
+};
+
+window.cerrarModal = (id) => {
+  document.getElementById(id).classList.remove('active');
+};
+
+window.toast = (msg, tipo = '') => {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + tipo;
+  setTimeout(() => t.classList.remove('show'), 3500);
+};
+
+</script>
+</body>
+</html>
