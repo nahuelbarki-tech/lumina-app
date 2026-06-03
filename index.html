@@ -1,3 +1,4 @@
+<!-- STREAMING_CHUNK: Starting the structural definitions of Lumina Cloud POS -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -56,6 +57,7 @@ main{max-width:1200px;margin:0 auto;padding:1rem 1rem 5rem 1rem}
 .page{display:none}
 .page.active{display:block}
 
+/* STREAMING_CHUNK: Styling layout metrics and sections... */
 /* CARDS KPI */
 .kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem;margin-bottom:1.25rem}
 .kpi{background:var(--bg3);border-radius:var(--r);padding:1rem;border:1px solid var(--border);box-shadow:var(--shadow)}
@@ -105,6 +107,7 @@ table{width:100%;border-collapse:collapse;font-size:.8rem}
 th{text-align:left;padding:.5rem .75rem;font-size:.68rem;font-weight:700;color:var(--ink3);text-transform:uppercase;border-bottom:2px solid var(--border);background:var(--bg)}
 td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle}
 
+/* STREAMING_CHUNK: Styling modal components and widgets... */
 /* TARJETAS PARA CELULARES */
 .mobile-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:0.85rem;margin-bottom:0.65rem;box-shadow:var(--shadow)}
 
@@ -155,6 +158,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* STREAMING_CHUNK: Refining CSS modal classes... */
 /* MODALES OVERLAYS Y DIÁLOGOS (CORRIGE TEXTO PLANO VISIBLE ABAJO) */
 .modal-overlay {
   position: fixed !important;
@@ -258,6 +262,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
 </head>
 <body>
 
+<!-- STREAMING_CHUNK: Setting up lock screen and PC keyboard access... -->
 <!-- PANTALLA DE BLOQUEO POR PIN (INSTANTÁNEA) -->
 <div id="lock-screen">
   <div class="text-center mb-6">
@@ -360,6 +365,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   });
 </script>
 
+<!-- STREAMING_CHUNK: Loading App indicators... -->
 <!-- CARGANDO CONEXIÓN CLOUD (Detrás del PIN) -->
 <div id="app-loader">
   <div class="spinner"></div>
@@ -388,6 +394,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
 
 <main class="hidden" id="main-content">
 
+<!-- STREAMING_CHUNK: Setting up POS Page... -->
 <!-- ═══════════ CAJA / VENTAS ═══════════ -->
 <div id="page-ventas" class="page active">
   <div class="section">
@@ -480,6 +487,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
         <button class="btn btn-secondary" onclick="limpiarFormularioPOS()">✕ Limpiar</button>
       </div>
 
+      <!-- STREAMING_CHUNK: Carrito de compras... -->
       <!-- Carrito Virtual de Ventas -->
       <div class="cart-area">
         <div class="cart-title">
@@ -553,6 +561,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   </div>
 </div>
 
+<!-- STREAMING_CHUNK: Setting up History Page... -->
 <!-- ═══════════ HISTORIAL DE OPERACIONES ═══════════ -->
 <div id="page-historial" class="page" style="display: none;">
   <div class="section">
@@ -620,6 +629,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   </div>
 </div>
 
+<!-- STREAMING_CHUNK: Setting up Customers Page... -->
 <!-- ═══════════ CLIENTES ═══════════ -->
 <div id="page-clientes" class="page" style="display: none;">
   <div class="section">
@@ -635,6 +645,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   </div>
 </div>
 
+<!-- STREAMING_CHUNK: Setting up Consignments Page... -->
 <!-- ═══════════ CONSIGNACIONES ═══════════ -->
 <div id="page-consignaciones" class="page" style="display: none;">
   <div class="section">
@@ -719,6 +730,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   </div>
 </div>
 
+<!-- STREAMING_CHUNK: Setting up Catalogs Page... -->
 <!-- ═══════════ CATALOGO DE PRECIOS Y COMBOS ═══════════ -->
 <div id="page-promos" class="page" style="display: none;">
   <div class="section">
@@ -754,6 +766,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   </div>
 </div>
 
+<!-- STREAMING_CHUNK: Setting up Purchases Page... -->
 <!-- ═══════════ COMPRAS Y GASTOS ═══════════ -->
 <div id="page-compras" class="page" style="display: none;">
   <div class="section">
@@ -852,8 +865,36 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
       <button class="btn btn-primary w-full mt-3 bg-teal-700 hover:bg-teal-800" onclick="guardarPedidoCompletoStock()">✓ Confirmar Pedido y Cargar al Inventario</button>
     </div>
   </div>
+
+  <!-- STREAMING_CHUNK: Past Purchases History... -->
+  <!-- Historial de Pedidos de Insumos -->
+  <div class="section mt-4">
+    <div class="section-head">
+      <h3>Historial de Pedidos Recientes (Insumos)</h3>
+    </div>
+    <div class="section-body">
+      <div class="tbl-wrap">
+        <table class="min-w-full">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Detalle Compra</th>
+              <th>Total Gasto</th>
+              <th>Estado de Pago</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-historial-compras">
+            <!-- Dinámico -->
+          </tbody>
+        </table>
+      </div>
+      <div id="compras-vacio" class="text-center py-6 text-slate-400 text-xs">No hay pedidos registrados todavía.</div>
+    </div>
+  </div>
 </div>
 
+<!-- STREAMING_CHUNK: Setting up Dashboard Page... -->
 <!-- ═══════════ MONITOREO DE STOCK & DASHBOARD ═══════════ -->
 <div id="page-dashboard" class="page" style="display: none;">
   <!-- Inversión vs Retorno -->
@@ -889,10 +930,52 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
       <h3>Monitoreo de Litros y Corrección de Stock Manual</h3>
     </div>
     <div class="section-body">
-      <p class="text-slate-400 text-xs mb-4">Ajustá manualmente los niveles en litros si detectás diferencias reales con el tanque físico.</p>
+      <p class="text-slate-400 text-xs mb-4">Ajustá manualmente los niveles en litros si detectás diferencias reales con el tanque físico, y definí la capacidad de referencia para que los porcentajes tengan sentido.</p>
       <div id="panel-monitoreo-stock" class="flex flex-col gap-3">
         <!-- Dinámico con inputs de corrección rápida -->
       </div>
+    </div>
+  </div>
+
+  <!-- STREAMING_CHUNK: Sheets Cloud Integration Card... -->
+  <!-- Sincronización con Google Sheets -->
+  <div class="section">
+    <div class="section-head">
+      <h3>Sincronización Cloud con Google Sheets</h3>
+      <span class="badge badge-green" id="sheet-sync-status">Soporte Activo</span>
+    </div>
+    <div class="section-body">
+      <p class="text-xs text-slate-500 mb-3">Ingresá la URL de tu Google Apps Script para sincronizar automáticamente tus Ventas, Compras y Consignaciones cada vez que se guarden en el sistema.</p>
+      <div class="flex flex-col md:flex-row gap-2">
+        <input type="text" id="google_sheet_url" placeholder="https://script.google.com/macros/s/..." class="flex-1">
+        <button class="btn btn-primary" onclick="guardarGoogleSheetUrl()">💾 Guardar URL</button>
+      </div>
+      
+      <!-- Collapsible de ayuda técnica -->
+      <details class="mt-4 bg-slate-50 p-3 rounded-xl border text-xs">
+        <summary class="font-bold text-slate-700 cursor-pointer">🛠️ ¿Cómo obtener esta URL en 2 minutos? (Instrucciones)</summary>
+        <div class="mt-2 space-y-2 text-slate-600">
+          <p>1. Creá una hoja de cálculo en Google Drive.</p>
+          <p>2. Andá a <strong>Extensiones > Apps Script</strong>.</p>
+          <p>3. Borrá todo el código y pega exactamente esto:</p>
+          <pre class="bg-slate-800 text-slate-200 p-2 rounded font-mono text-[10px] overflow-x-auto">
+function doPost(e) {
+  var data = JSON.parse(e.postData.contents);
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(data.tipo) || ss.insertSheet(data.tipo);
+  
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["Fecha de Registro", "Tipo Evento", "Detalle JSON"]);
+  }
+  
+  sheet.appendRow([new Date(), data.tipo, JSON.stringify(data.datos)]);
+  return ContentService.createTextOutput("Sincronizado");
+}</pre>
+          <p>4. Haz clic en <strong>Implementar > Nueva implementación</strong>.</p>
+          <p>5. Tipo: <strong>Aplicación web</strong>. Ejecutar como: <strong>Tú</strong>. Quién tiene acceso: <strong>Cualquiera</strong>.</p>
+          <p>6. Copia la URL de la aplicación web que te da Google y pegala arriba.</p>
+        </div>
+      </details>
     </div>
   </div>
 
@@ -910,6 +993,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
 
 </main>
 
+<!-- STREAMING_CHUNK: Overlays and Modal content... -->
 <!-- ═══════════ MODALES DE INTERFAZ (FUERTEMENTE PROTEGIDOS CONTRA FUGAS) ═══════════ -->
 <!-- Ticket Modal -->
 <div class="modal-overlay" id="modal-ticket" style="display: none !important;">
@@ -919,6 +1003,17 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
       <button onclick="cerrarModal('modal-ticket')">✕</button>
     </div>
     <div class="modal-body" id="modal-ticket-content"></div>
+  </div>
+</div>
+
+<!-- Modal Detalle de Compra Insumos -->
+<div class="modal-overlay" id="modal-compra-detalle" style="display: none !important;">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <h3>Detalle del Pedido de Insumos</h3>
+      <button onclick="cerrarModal('modal-compra-detalle')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-compra-detalle-content"></div>
   </div>
 </div>
 
@@ -1017,6 +1112,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
 
 <div id="toast" class="toast"></div>
 
+<!-- STREAMING_CHUNK: Initializing Firebase and App Logic... -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -1040,14 +1136,14 @@ const db = getFirestore(app);
 // Estado Local Inicial de respaldo
 const DATOS_INICIALES = {
   insumos: {
-    "Pisos Lavanda": { costoL: 180, stockL: 120, estilo: "estandar" },
-    "Pisos Bebé": { costoL: 195, stockL: 80, estilo: "estandar" },
-    "Jabón Verde": { costoL: 450, stockL: 100, estilo: "estandar" },
-    "Jabón Azul": { costoL: 450, stockL: 90, estilo: "estandar" },
-    "Suavizante Celeste": { costoL: 430, stockL: 100, estilo: "estandar" },
-    "Suavizante Lila": { costoL: 430, stockL: 100, estilo: "estandar" },
-    "Lavandina": { costoL: 110, stockL: 200, estilo: "lavandinas" },
-    "Detergente Manzana": { costoL: 1482, stockL: 50, estilo: "detergentes" }
+    "Pisos Lavanda": { costoL: 180, stockL: 120, estilo: "estandar", capacidadMax: 150 },
+    "Pisos Bebé": { costoL: 195, stockL: 80, estilo: "estandar", capacidadMax: 150 },
+    "Jabón Verde": { costoL: 450, stockL: 100, estilo: "estandar", capacidadMax: 150 },
+    "Jabón Azul": { costoL: 450, stockL: 90, estilo: "estandar", capacidadMax: 150 },
+    "Suavizante Celeste": { costoL: 430, stockL: 100, estilo: "estandar", capacidadMax: 150 },
+    "Suavizante Lila": { costoL: 430, stockL: 100, estilo: "estandar", capacidadMax: 150 },
+    "Lavandina": { costoL: 110, stockL: 200, estilo: "lavandinas", capacidadMax: 200 },
+    "Detergente Manzana": { costoL: 1482, stockL: 50, estilo: "detergentes", capacidadMax: 100 }
   },
   preciosFijos: {
     "Pisos Lavanda_5": { venta: 4500, envase: 800 },
@@ -1067,12 +1163,14 @@ const DATOS_INICIALES = {
   ],
   ventas: [],
   consignaciones: [],
+  compras: [],
   clientes: [
     { nombre: "Consumidor Final", direccion: "Retira en Local", telefono: "", envio: "No" }
   ],
   canales: ["Venta Directa", "Pedido WhatsApp", "Feria / Evento", "Vecinos"],
   inversionHistorica: 169657,
-  notas: ""
+  notas: "",
+  googleSheetsUrl: ""
 };
 
 let appState = JSON.parse(JSON.stringify(DATOS_INICIALES));
@@ -1108,6 +1206,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+// STREAMING_CHUNK: Synchronization logic with Cloud DB...
 // Sincronización de base de datos en la nube
 const escucharCambiosNube = () => {
   const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appState', 'main');
@@ -1119,10 +1218,12 @@ const escucharCambiosNube = () => {
       appState.combos = dbData.combos || appState.combos;
       appState.ventas = dbData.ventas || appState.ventas;
       appState.consignaciones = dbData.consignaciones || appState.consignaciones;
+      appState.compras = dbData.compras || appState.compras;
       appState.clientes = dbData.clientes || appState.clientes;
       appState.canales = dbData.canales || appState.canales;
       appState.inversionHistorica = dbData.inversionHistorica || appState.inversionHistorica;
       appState.notas = dbData.notas || "";
+      appState.googleSheetsUrl = dbData.googleSheetsUrl || "";
     } else {
       guardarEstadoEnNube();
     }
@@ -1154,8 +1255,37 @@ const actualizarAppUI = () => {
   if (document.getElementById('notas_admin') && !document.getElementById('notas_admin').value) {
     document.getElementById('notas_admin').value = appState.notas || "";
   }
+  if (document.getElementById('google_sheet_url') && !document.getElementById('google_sheet_url').value) {
+    document.getElementById('google_sheet_url').value = appState.googleSheetsUrl || "";
+  }
 };
 
+// STREAMING_CHUNK: Sheets Sincronizacion trigger...
+const dispararSincronizacionSheets = async (tipo, datos) => {
+  if (!appState.googleSheetsUrl) return;
+  try {
+    await fetch(appState.googleSheetsUrl, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ tipo, datos })
+    });
+    console.log("Sincronización enviada a Google Sheets:", tipo);
+  } catch (err) {
+    console.warn("Fallo de envío a Google Sheets (común bajo no-cors o configuración errónea):", err);
+  }
+};
+
+window.guardarGoogleSheetUrl = () => {
+  const url = document.getElementById('google_sheet_url').value.trim();
+  appState.googleSheetsUrl = url;
+  guardarEstadoEnNube();
+  toast("✓ URL de Google Sheets guardada en la nube", "green");
+};
+
+// STREAMING_CHUNK: Page navigation helper...
 // ═══════════════════════════════════════════════════════════
 // NAVEGACIÓN Y CONFIGURACIÓN INICIAL
 // ═══════════════════════════════════════════════════════════
@@ -1200,6 +1330,7 @@ document.getElementById('confirm-btn-si').onclick = () => {
   callbackConfirmacion = null;
 };
 
+// STREAMING_CHUNK: POS Engine logic...
 // ═══════════════════════════════════════════════════════════
 // LOGICA DE CAJA, VENTAS Y CARRITO
 // ═══════════════════════════════════════════════════════════
@@ -1350,6 +1481,7 @@ window.autocompletarCliente = (nombre) => {
   }
 };
 
+// STREAMING_CHUNK: Carrito handling...
 window.agregarAlCarrito = () => {
   const val = document.getElementById('v_producto').value;
   const cant = parseFloat(document.getElementById('v_cantidad').value) || 1;
@@ -1467,6 +1599,7 @@ window.limpiarFormularioPOS = () => {
   document.getElementById('pos-price-source').style.display = 'none';
 };
 
+// STREAMING_CHUNK: Processing sale and Triggering Sheets Sincronizacion...
 window.procesarVentaCarrito = () => {
   const cliente = document.getElementById('v_cliente').value.trim();
   const fecha = document.getElementById('v_fecha').value;
@@ -1532,6 +1665,9 @@ window.procesarVentaCarrito = () => {
   
   appState.ventas.unshift(nuevaVenta);
   
+  // Sincronizar con Google Sheets
+  dispararSincronizacionSheets("Ventas", nuevaVenta);
+  
   carritoActual = [];
   renderCarrito();
   document.getElementById('v_cliente').value = '';
@@ -1562,6 +1698,7 @@ window.actualizarSimuladorMargen = () => {
   document.getElementById('sim-precio').textContent = `$${Math.round(precioSugerido)}`;
 };
 
+// STREAMING_CHUNK: History filter rendering...
 // ═══════════ HISTORIAL CON FILTRO DE FECHA Y CSV EXCEL ═══════════
 let filtradoFechaDesde = null;
 let filtradoFechaHasta = null;
@@ -1629,16 +1766,34 @@ window.renderHistorial = () => {
     }).join('');
   }
   
-  const totalIngresos = filtradas.reduce((acc, v) => acc + v.total, 0);
-  const totalGanancias = filtradas.reduce((acc, v) => acc + v.ganancia, 0);
+  // Calcular KPI sumatorias agregando rendimiento parcial de consignaciones activas
+  let consignacionRendidoExtraIngresos = 0;
+  let consignacionRendidoExtraGanancias = 0;
+  
+  if (appState.consignaciones) {
+    appState.consignaciones.filter(c => c.estado === 'Activa').forEach(c => {
+      c.items.forEach(it => {
+        const rendido = it.rendido || 0;
+        if (rendido > 0) {
+          consignacionRendidoExtraIngresos += (rendido * it.netoUnitario);
+          const costoEst = (appState.insumos[it.producto] ? appState.insumos[it.producto].costoL : 0) * it.formato;
+          consignacionRendidoExtraGanancias += (rendido * (it.netoUnitario - costoEst));
+        }
+      });
+    });
+  }
+
+  const totalIngresos = filtradas.reduce((acc, v) => acc + v.total, 0) + consignacionRendidoExtraIngresos;
+  const totalGanancias = filtradas.reduce((acc, v) => acc + v.ganancia, 0) + consignacionRendidoExtraGanancias;
   const envasesDevueltos = filtradas.reduce((acc, v) => acc + v.items.filter(it => it.envaseDevuelto).reduce((sum, it) => sum + it.cantidad, 0), 0);
   
-  document.getElementById('kpi-ingresos').textContent = `$${totalIngresos.toLocaleString('es-AR')}`;
-  document.getElementById('kpi-ganancias').textContent = `$${totalGanancias.toLocaleString('es-AR')}`;
+  document.getElementById('kpi-ingresos').textContent = `$${Math.round(totalIngresos).toLocaleString('es-AR')}`;
+  document.getElementById('kpi-ganancias').textContent = `$${Math.round(totalGanancias).toLocaleString('es-AR')}`;
   document.getElementById('kpi-ventas-cant').textContent = filtradas.length;
   document.getElementById('kpi-envases-cant').textContent = envasesDevueltos;
 };
 
+// STREAMING_CHUNK: Export spreadsheet report...
 window.exportarExcel = () => {
   if (appState.ventas.length === 0) { toast("⚠️ No hay datos para exportar", "red"); return; }
   
@@ -1678,7 +1833,7 @@ window.renderClientes = () => {
     const compras = appState.ventas.filter(v => v.cliente.toLowerCase() === c.nombre.toLowerCase());
     const totalComprado = compras.reduce((sum, v) => sum + v.total, 0);
     return `
-      <div class="mobile-card flex flex-col justify-between">
+      <div class="mobile-card flex flex-col justify-between text-xs">
         <div>
           <h4 class="font-bold text-slate-800 text-sm mb-1">${c.nombre}</h4>
           <p class="text-[11px] text-slate-500">📍 Dir: ${c.direccion || 'Sin registrar'}</p>
@@ -1696,6 +1851,7 @@ window.renderClientes = () => {
   }).join('');
 };
 
+// STREAMING_CHUNK: Consignment logic, reabrir and calculations...
 // ═══════════════════════════════════════════════════════════
 // MÓDULO CONSIGNACIONES CON LOGICA REABRIBLE
 // ═══════════════════════════════════════════════════════════
@@ -1808,6 +1964,10 @@ window.confirmarConsignacionCompleta = () => {
   };
   
   appState.consignaciones.unshift(nuevaConsig);
+  
+  // Sincronizar Google Sheets
+  dispararSincronizacionSheets("Consignaciones", nuevaConsig);
+  
   carritoConsig = [];
   renderCarritoConsig();
   document.getElementById('con_nombre').value = '';
@@ -1903,6 +2063,7 @@ window.reabrirConsignacion = (conId) => {
   });
 };
 
+// STREAMING_CHUNK: Setting up catalogs and prices...
 // ═══════════════════════════════════════════════════════════
 // CATALOGO DE CONFIGURACIÓN DE PRECIOS FIJOS Y COMBOS
 // ═══════════════════════════════════════════════════════════
@@ -1981,6 +2142,7 @@ window.renderCombosDisponibles = () => {
   }).join('');
 };
 
+// STREAMING_CHUNK: Past Purchases detailing and payments...
 // ═══════════════════════════════════════════════════════════
 // COMPRAS Y FACTURACIÓN CON CONTROL DE DEUDAS
 // ═══════════════════════════════════════════════════════════
@@ -2013,6 +2175,24 @@ window.guardarPedidoCompletoStock = () => {
     appState.inversionHistorica += Math.round(totalGastoFactura);
   }
   
+  // Registrar en Historial de compras
+  const nuevaCompra = {
+    id: Date.now(),
+    fecha: new Date().toISOString().slice(0, 10),
+    lineas: JSON.parse(JSON.stringify(lineasCompraFactura)),
+    flete,
+    descuentos: dtos,
+    otros,
+    total: Math.round(totalGastoFactura),
+    estadoPago
+  };
+  
+  if (!appState.compras) appState.compras = [];
+  appState.compras.unshift(nuevaCompra);
+  
+  // Sincronizar Google Sheets
+  dispararSincronizacionSheets("Compras", nuevaCompra);
+  
   lineasCompraFactura = [];
   document.getElementById('fac_flete').value = 0;
   document.getElementById('fac_descuentos').value = 0;
@@ -2023,35 +2203,128 @@ window.guardarPedidoCompletoStock = () => {
   toast("✓ Pedido Ingresado y Sincronizado", "green");
 };
 
+window.cambiarEstadoPagoCompra = (compraId) => {
+  const compra = appState.compras.find(c => c.id === compraId);
+  if (!compra) return;
+  
+  const nuevoEstado = compra.estadoPago === 'Pagado' ? 'Pendiente' : 'Pagado';
+  
+  if (nuevoEstado === 'Pagado') {
+    appState.inversionHistorica += compra.total;
+  } else {
+    appState.inversionHistorica = Math.max(0, appState.inversionHistorica - compra.total);
+  }
+  
+  compra.estadoPago = nuevoEstado;
+  guardarEstadoEnNube();
+  toast(`✓ Pago de compra marcado como: ${nuevoEstado}`, "green");
+};
+
+window.verDetalleCompraInsumos = (compraId) => {
+  const compra = appState.compras.find(c => c.id === compraId);
+  if (!compra) return;
+  
+  const content = document.getElementById('modal-compra-detalle-content');
+  content.innerHTML = `
+    <div class="ticket text-xs">
+      <div style="text-align:center;margin-bottom:1rem">
+        <h4 style="font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--accent)">Detalle de Pedido</h4>
+        <p style="font-size:.78rem;color:var(--ink3)">Compra de Insumos / Concentrados</p>
+      </div>
+      <div class="ticket-row"><span class="lbl">ID Compra</span><span>#${compra.id.toString().slice(-6)}</span></div>
+      <div class="ticket-row"><span class="lbl">Fecha</span><span>${compra.fecha}</span></div>
+      <div class="ticket-row"><span class="lbl">Estado de Pago</span><span class="badge ${compra.estadoPago === 'Pagado' ? 'badge-green' : 'badge-red'}">${compra.estadoPago}</span></div>
+      
+      <h5 style="font-size:.78rem;margin:1rem 0 0.5rem 0;color:var(--accent);text-transform:uppercase">Líneas Adquiridas</h5>
+      ${compra.lineas.map(linea => `
+        <div style="font-size:.82rem;margin-bottom:0.4rem;padding-bottom:0.4rem;border-bottom:1px dashed #eee">
+          <div style="display:flex;justify-content:space-between">
+            <span><strong>${linea.producto}</strong></span>
+            <span>$${linea.costoLista.toLocaleString('es-AR')}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;color:var(--ink3);font-size:.75rem">
+            <span>${linea.litros} Litros</span>
+            <span>Costo Neto: $${linea.costoProrrateadoLitro}/Litro</span>
+          </div>
+        </div>
+      `).join('')}
+      
+      <div style="margin-top:1rem;background:var(--bg);padding:0.5rem;border-radius:var(--r)">
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--ink3)">
+          <span>Flete prorrateado:</span><span>$${compra.flete || 0}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--ink3)">
+          <span>Descuentos obtenidos:</span><span>-$${compra.descuentos || 0}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-weight:700;font-size:1rem;color:var(--ink2);margin-top:0.25rem">
+          <span>Gasto Total:</span>
+          <span style="font-family:'DM Mono',monospace">$${compra.total.toLocaleString('es-AR')}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  abrirModal('modal-compra-detalle');
+};
+
+window.eliminarPedidoCompraInsumos = (compraId) => {
+  pedirConfirmacion("¿Deseas eliminar permanentemente esta compra del historial? (El stock no será descontado de forma automática)", () => {
+    const compra = appState.compras.find(c => c.id === compraId);
+    if (compra && compra.estadoPago === 'Pagado') {
+      appState.inversionHistorica = Math.max(0, appState.inversionHistorica - compra.total);
+    }
+    appState.compras = appState.compras.filter(c => c.id !== compraId);
+    guardarEstadoEnNube();
+    toast("✕ Registro de compra eliminado", "red");
+  });
+};
+
+// STREAMING_CHUNK: Dashboard rendering, calculating street capital in real-time...
 // ═══════════════════════════════════════════════════════════
-// MONITOREO CON AJUSTES DE STOCK MANUAL EN CALIENTE
+// MONITOREO DE STOCK & DASHBOARD
 // ═══════════════════════════════════════════════════════════
 window.renderDashboard = () => {
-  const ingresosTotales = appState.ventas.reduce((sum, v) => sum + v.total, 0);
-  const gananciasTotales = appState.ventas.reduce((sum, v) => sum + v.ganancia, 0);
-  const inversionTotal = appState.inversionHistorica;
+  const directSalesIngresos = appState.ventas.reduce((sum, v) => sum + v.total, 0);
+  const directSalesGanancias = appState.ventas.reduce((sum, v) => sum + v.ganancia, 0);
   
+  // Calcular rendimiento y capital en la calle de forma dinamica (tiempo real)
   let totalConsigCalle = 0;
+  let consignacionRendidoExtraIngresos = 0;
+  let consignacionRendidoExtraGanancias = 0;
+  
   if (appState.consignaciones) {
     appState.consignaciones.filter(c => c.estado === 'Activa').forEach(c => {
       c.items.forEach(it => {
         const restan = it.cantidad - it.rendido;
+        const rendido = it.rendido || 0;
+        
+        // Capital en la calle = Lo que resta por cobrar
         totalConsigCalle += (restan * it.netoUnitario);
+        
+        // Rendidos = Ingresos ya cobrados en la calle aunque siga activa
+        if (rendido > 0) {
+          consignacionRendidoExtraIngresos += (rendido * it.netoUnitario);
+          const costoEst = (appState.insumos[it.producto] ? appState.insumos[it.producto].costoL : 0) * it.formato;
+          consignacionRendidoExtraGanancias += (rendido * (it.netoUnitario - costoEst));
+        }
       });
     });
   }
   
+  const inversionTotal = appState.inversionHistorica;
+  const ingresosTotales = directSalesIngresos + consignacionRendidoExtraIngresos;
+  const gananciasTotales = directSalesGanancias + consignacionRendidoExtraGanancias;
+  
   document.getElementById('dash-inversion-total').textContent = `$${inversionTotal.toLocaleString('es-AR')}`;
-  document.getElementById('dash-ingresos-total').textContent = `$${ingresosTotales.toLocaleString('es-AR')}`;
-  document.getElementById('dash-ganancias-total').textContent = `$${gananciasTotales.toLocaleString('es-AR')}`;
-  document.getElementById('dash-capital-calle').textContent = `$${totalConsigCalle.toLocaleString('es-AR')}`;
+  document.getElementById('dash-ingresos-total').textContent = `$${Math.round(ingresosTotales).toLocaleString('es-AR')}`;
+  document.getElementById('dash-ganancias-total').textContent = `$${Math.round(gananciasTotales).toLocaleString('es-AR')}`;
+  document.getElementById('dash-capital-calle').textContent = `$${Math.round(totalConsigCalle).toLocaleString('es-AR')}`;
   
   const container = document.getElementById('panel-monitoreo-stock');
   container.innerHTML = '';
   
   Object.entries(appState.insumos).forEach(([nombre, ins]) => {
-    const capacidadIdealTanque = 150;
-    const porcLlenado = Math.min(100, Math.max(0, Math.round((ins.stockL / capacidadIdealTanque) * 100)));
+    const capMax = ins.capacidadMax || 150;
+    const porcLlenado = Math.min(100, Math.max(0, Math.round((ins.stockL / capMax) * 100)));
     
     let colorBarra = "var(--green)";
     let badgeStyle = "badge-green";
@@ -2075,15 +2348,32 @@ window.renderDashboard = () => {
         <div class="bg-slate-100 h-2 rounded-full overflow-hidden w-full">
           <div class="h-full rounded-full transition-all duration-300" style="width:${porcLlenado}%;background:${colorBarra}"></div>
         </div>
-        <div class="flex gap-2 items-center">
-          <span class="text-slate-500">Corregir stock físico (Lts):</span>
-          <input type="number" step="0.1" value="${Math.round(ins.stockL)}" 
-            class="w-16 p-1 border rounded text-right ml-auto bg-slate-50 font-bold"
-            onchange="corregirStockManual('${nombre}', this.value)">
+        <div class="grid grid-cols-2 gap-2 mt-1">
+          <div class="flex gap-1 items-center">
+            <span class="text-slate-500">Corregir stock (Lts):</span>
+            <input type="number" step="0.1" value="${Math.round(ins.stockL)}" 
+              class="w-16 p-1 border rounded text-right bg-slate-50 font-bold text-slate-800"
+              onchange="corregirStockManual('${nombre}', this.value)">
+          </div>
+          <div class="flex gap-1 items-center justify-end">
+            <span class="text-slate-500">Capacidad Ref (Lts):</span>
+            <input type="number" value="${capMax}" 
+              class="w-16 p-1 border rounded text-right bg-slate-50 font-bold text-slate-800"
+              onchange="cambiarCapacidadMaxInsumo('${nombre}', this.value)">
+          </div>
         </div>
       </div>
     `;
   });
+};
+
+window.cambiarCapacidadMaxInsumo = (nombre, valor) => {
+  const cap = parseFloat(valor) || 150;
+  if (appState.insumos[nombre]) {
+    appState.insumos[nombre].capacidadMax = cap;
+    guardarEstadoEnNube();
+    toast(`✓ Capacidad de referencia para ${nombre} cambiada a ${cap}L`);
+  }
 };
 
 window.corregirStockManual = (nombre, valor) => {
@@ -2102,6 +2392,7 @@ window.guardarNotasAdmin = () => {
   toast("✓ Notas administrativas guardadas", "green");
 };
 
+// STREAMING_CHUNK: Past Purchases lists rendering...
 // ═══════════════════════════════════════════════════════════
 // DETALLES ADICIONALES DE SOPORTE E INTERFAZ CON PROTECCIÓN DE RENDER
 // ═══════════════════════════════════════════════════════════
@@ -2300,7 +2591,8 @@ window.crearInsumoNuevo = () => {
   appState.insumos[nombre] = {
     costoL: 0,
     stockL: 0,
-    estilo
+    estilo,
+    capacidadMax: 150
   };
   
   document.getElementById('ins_nombre').value = '';
@@ -2315,6 +2607,39 @@ window.renderCompras = () => {
   Object.keys(appState.insumos).forEach(n => {
     selectFactura.innerHTML += `<option value="${n}">${n}</option>`;
   });
+  
+  // Render de historial de compras de insumos
+  const tbody = document.getElementById('tabla-historial-compras');
+  const vacio = document.getElementById('compras-vacio');
+  
+  if (!appState.compras || appState.compras.length === 0) {
+    tbody.innerHTML = '';
+    vacio.style.display = 'block';
+  } else {
+    vacio.style.display = 'none';
+    tbody.innerHTML = appState.compras.map(c => {
+      const itemsListStr = c.lineas.map(l => `${l.litros}L ${l.producto}`).join(', ');
+      return `
+        <tr class="border-b text-xs">
+          <td>${c.fecha}</td>
+          <td class="text-slate-600 truncate max-w-[200px]" title="${itemsListStr}">${itemsListStr}</td>
+          <td class="font-bold text-amber-800">$${c.total.toLocaleString()}</td>
+          <td>
+            <button class="badge ${c.estadoPago === 'Pagado' ? 'badge-green' : 'badge-red'}" 
+              onclick="cambiarEstadoPagoCompra(${c.id})">
+              ${c.estadoPago}
+            </button>
+          </td>
+          <td>
+            <div class="flex gap-1">
+              <button class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded" onclick="verDetalleCompraInsumos(${c.id})">👁️</button>
+              <button class="bg-red-50 text-red-600 hover:bg-red-100 px-2 py-1 rounded" onclick="eliminarPedidoCompraInsumos(${c.id})">✕</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
 };
 
 let lineasCompraFactura = [];
