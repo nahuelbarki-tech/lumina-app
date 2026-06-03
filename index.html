@@ -110,6 +110,9 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
 
 /* CARRITO */
 .cart-area{border:2px dashed var(--border);border-radius:var(--r);padding:0.85rem;margin-top:0.85rem;background:#fff}
+.cart-title{font-size:.85rem;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center}
+.cart-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.cart-item{display:flex;justify-content:space-between;align-items:center;background:var(--bg);padding:.5rem .75rem;border-radius:var(--r);font-size:.85rem}
 
 /* PANTALLA DE BLOQUEO */
 #lock-screen {
@@ -152,6 +155,94 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* MODALES OVERLAYS Y DIÁLOGOS (CORRIGE TEXTO PLANO VISIBLE ABAJO) */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(17, 29, 38, 0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.active {
+  display: flex;
+}
+.modal-card {
+  background: var(--bg3);
+  border-radius: var(--r2);
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 126, 167, 0.15);
+  border: 1px solid var(--border);
+  animation: modalSlideUp 0.25s ease-out;
+}
+@keyframes modalSlideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.modal-hdr {
+  background: var(--ink2);
+  color: #fff;
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-hdr h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.modal-body {
+  padding: 1.25rem;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* TICKET / RECIBO DE VENTAS */
+.ticket {
+  border: 2px dashed var(--border);
+  padding: 1.25rem;
+  background: #fcfdfe;
+  border-radius: var(--r);
+  color: var(--ink);
+}
+.ticket-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px dashed var(--bg2);
+  font-size: 0.8rem;
+}
+.ticket-row:last-child {
+  border-bottom: none;
+}
+.ticket-row .lbl {
+  color: var(--ink3);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+/* BADGES / ETIQUETAS */
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.badge-green { background: var(--green-l); color: var(--green); }
+.badge-blue { background: var(--blue-l); color: var(--blue); }
+.badge-gold { background: var(--gold-l); color: var(--gold); }
+.badge-orange { background: var(--orange-l); color: var(--orange); }
+.badge-red { background: var(--red-l); color: var(--red); }
+.badge-purple { background: var(--bg2); color: var(--ink2); }
+
 /* DESKTOP MEDIA QUERIES */
 @media(min-width:768px){
   .kpi-grid{grid-template-columns:repeat(4,1fr)}
@@ -192,13 +283,13 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
     <div class="keypad-btn" onclick="pressPinKey('0')">0</div>
     <div class="keypad-btn" onclick="pressPinKey('back')">⌫</div>
   </div>
-  <p class="text-[10px] text-slate-500 mt-6 tracking-wide">PIN Predeterminado: 1234</p>
+  <p class="text-[10px] text-slate-400 mt-6 tracking-wide">PIN Predeterminado: 1234 (Podés usar el teclado de la PC)</p>
 </div>
 
-<!-- SCRIPT INSTANTÁNEO DE PIN (Evita retrasos de carga de Firebase) -->
+<!-- SCRIPT INSTANTÁNEO DE PIN (Evita retrasos de carga de Firebase y soporta teclado físico de PC) -->
 <script>
   let pinIngresado = "";
-  const PIN_CORRECTO = "1234"; // PIN por defecto modificado aquí
+  const PIN_CORRECTO = "1234";
 
   window.pressPinKey = (key) => {
     if (key === 'clear') {
@@ -252,6 +343,20 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
       }, 150);
     }
   };
+
+  // Agregar soporte de teclado para PC (Ingreso rápido por teclado numérico o estándar)
+  window.addEventListener('keydown', (e) => {
+    const lockScreen = document.getElementById('lock-screen');
+    if (lockScreen && lockScreen.style.display !== 'none') {
+      if (e.key >= '0' && e.key <= '9') {
+        pressPinKey(e.key);
+      } else if (e.key === 'Backspace') {
+        pressPinKey('back');
+      } else if (e.key === 'Escape' || e.key === 'Delete') {
+        pressPinKey('clear');
+      }
+    }
+  });
 </script>
 
 <!-- CARGANDO CONEXIÓN CLOUD (Detrás del PIN) -->
@@ -756,7 +861,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
       <h3>Resumen del Capital</h3>
     </div>
     <div class="section-body">
-      <div class="kpi-grid">
+      <div class="kpi-grid" style="margin-bottom:0">
         <div class="kpi">
           <div class="kpi-label">Inversión Insumos</div>
           <div class="kpi-val" id="dash-inversion-total">$0</div>
@@ -983,6 +1088,16 @@ window.iniciarAutenticacion = async () => {
   }
 };
 
+// Sincronizador de Loader (Cierra el loader a los 4 seg si falla la sincronización o cookies en PC)
+setTimeout(() => {
+  const loader = document.getElementById("app-loader");
+  if (loader && loader.style.display !== "none") {
+    loader.style.display = "none";
+    toast("⚠️ Sincronizando respaldo local sin demoras", "orange");
+    actualizarAppUI();
+  }
+}, 4000);
+
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
   const indicador = document.getElementById("cloud-status");
@@ -1008,7 +1123,7 @@ const escucharCambiosNube = () => {
       appState.consignaciones = dbData.consignaciones || appState.consignaciones;
       appState.clientes = dbData.clientes || appState.clientes;
       appState.canales = dbData.canales || appState.canales;
-      appState.inversionHistorica = dbData.inversionHistorica || dbState.inversionHistorica;
+      appState.inversionHistorica = dbData.inversionHistorica || appState.inversionHistorica;
       appState.notas = dbData.notas || "";
     } else {
       guardarEstadoEnNube();
@@ -1038,7 +1153,6 @@ const actualizarAppUI = () => {
   renderCombosDisponibles();
   renderCompras();
   renderDashboard();
-  renderTablaReferencias();
   
   if (document.getElementById('notas_admin') && !document.getElementById('notas_admin').value) {
     document.getElementById('notas_admin').value = appState.notas || "";
@@ -1056,7 +1170,7 @@ window.showPage = (id) => {
   const currentTab = Array.from(document.querySelectorAll('.tab')).find(t => t.onclick.toString().includes(id));
   if (currentTab) currentTab.classList.add('active');
   
-  if (id === 'ventas') { renderTablaReferencias(); actualizarSimuladorMargen(); }
+  if (id === 'ventas') { actualizarSimuladorMargen(); }
   if (id === 'historial') renderHistorial();
   if (id === 'clientes') renderClientes();
   if (id === 'consignaciones') renderConsig();
@@ -1440,29 +1554,6 @@ window.actualizarSimuladorMargen = () => {
   document.getElementById('sim-precio').textContent = `$${Math.round(precioSugerido)}`;
 };
 
-window.renderTablaReferencias = () => {
-  const tbody = document.getElementById('tabla-precios-ref');
-  if (!tbody) return;
-  tbody.innerHTML = Object.entries(appState.insumos).map(([nombre, ins]) => {
-    const key = `${nombre}_5`;
-    const costoEst = Math.round(ins.costoL * 5);
-    const precioFijo = appState.preciosFijos[key] ? appState.preciosFijos[key].venta : 0;
-    const retorno = appState.preciosFijos[key] ? appState.preciosFijos[key].envase : 0;
-    
-    return `
-      <tr class="border-b">
-        <td><strong>${nombre} (5L)</strong></td>
-        <td class="text-teal-700 font-bold">$${precioFijo > 0 ? precioFijo : '—'}</td>
-        <td>$${costoEst}</td>
-        <td>$${Math.round(costoEst * 1.4)}</td>
-        <td>$${Math.round(costoEst * 1.6)}</td>
-        <td>$${Math.round(costoEst * 2.4)}</td>
-        <td class="text-amber-700">$${retorno}</td>
-      </tr>
-    `;
-  }).join('');
-};
-
 // ═══════════ HISTORIAL CON FILTRO DE FECHA Y CSV EXCEL ═══════════
 let filtradoFechaDesde = null;
 let filtradoFechaHasta = null;
@@ -1488,7 +1579,7 @@ window.renderHistorial = () => {
   const vacio = document.getElementById('historial-vacio');
   const filtro = document.getElementById('filtro-historial').value.toLowerCase();
   
-  let filtradas = appState.ventas;
+  let filtradas = appState.ventas || [];
   
   if (filtradoFechaDesde) {
     filtradas = filtradas.filter(v => v.fecha >= filtradoFechaDesde);
@@ -1719,7 +1810,7 @@ window.confirmarConsignacionCompleta = () => {
 
 window.renderConsig = () => {
   const container = document.getElementById('consignaciones-activas-render');
-  if (appState.consignaciones.length === 0) {
+  if (!appState.consignaciones || appState.consignaciones.length === 0) {
     container.innerHTML = '<p class="text-slate-400 text-xs text-center py-6">No hay registros de consignación.</p>';
     return;
   }
@@ -1859,7 +1950,7 @@ window.editarComboPromo = (comboId) => {
 
 window.renderCombosDisponibles = () => {
   const container = document.getElementById('lista-combos-render');
-  if (appState.combos.length === 0) {
+  if (!appState.combos || appState.combos.length === 0) {
     container.innerHTML = '<p class="text-slate-400 text-xs">No hay combos registrados.</p>';
     return;
   }
@@ -1931,15 +2022,16 @@ window.renderDashboard = () => {
   const ingresosTotales = appState.ventas.reduce((sum, v) => sum + v.total, 0);
   const gananciasTotales = appState.ventas.reduce((sum, v) => sum + v.ganancia, 0);
   const inversionTotal = appState.inversionHistorica;
-  const porcRecupero = inversionTotal > 0 ? Math.round((ingresosTotales / inversionTotal) * 100) : 0;
   
   let totalConsigCalle = 0;
-  appState.consignaciones.filter(c => c.estado === 'Activa').forEach(c => {
-    c.items.forEach(it => {
-      const restan = it.cantidad - it.rendido;
-      totalConsigCalle += (restan * it.netoUnitario);
+  if (appState.consignaciones) {
+    appState.consignaciones.filter(c => c.estado === 'Activa').forEach(c => {
+      c.items.forEach(it => {
+        const restan = it.cantidad - it.rendido;
+        totalConsigCalle += (restan * it.netoUnitario);
+      });
     });
-  });
+  }
   
   document.getElementById('dash-inversion-total').textContent = `$${inversionTotal.toLocaleString('es-AR')}`;
   document.getElementById('dash-ingresos-total').textContent = `$${ingresosTotales.toLocaleString('es-AR')}`;
