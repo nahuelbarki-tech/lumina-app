@@ -91,7 +91,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 
   align-items:center;
   gap:.4rem;
   justify-content:center;
-  min-height: 44px; /* Tamaño táctil óptimo */
+  min-height: 44px;
 }
 .btn-primary{background:var(--accent);color:#fff}
 .btn-secondary{background:var(--bg2);color:var(--ink2)}
@@ -129,12 +129,28 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   font-size: 1.5rem; font-weight: 500; display: flex;
   align-items: center; justify-content: center; cursor: pointer;
   transition: background 0.15s; border: 1px solid rgba(255,255,255,0.1);
+  user-select: none;
 }
 .keypad-btn:active { background: rgba(255,255,255,0.2); }
 
 /* TOAST */
 .toast{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%) translateY(100px);opacity:0;background:var(--ink);color:#fff;padding:.8rem 1.2rem;border-radius:var(--r);font-size:.8rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:all .3s ease;z-index:99999;display:flex;align-items:center;gap:.5rem;width:90%;max-width:350px}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.green{background:var(--green)}
+.toast.red{background:var(--red)}
+
+/* APP LOADER BACKGROUND */
+#app-loader {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bg3); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; z-index: 9999;
+}
+.spinner {
+  width: 40px; height: 40px; border: 4px solid var(--bg2);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* DESKTOP MEDIA QUERIES */
 @media(min-width:768px){
@@ -150,7 +166,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
 </head>
 <body>
 
-<!-- PANTALLA DE BLOQUEO POR PIN -->
+<!-- PANTALLA DE BLOQUEO POR PIN (INSTANTÁNEA) -->
 <div id="lock-screen">
   <div class="text-center mb-6">
     <div class="text-4xl font-serif text-white mb-2 font-bold" style="font-family:'DM Serif Display',serif">Lumina</div>
@@ -179,7 +195,66 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   <p class="text-[10px] text-slate-500 mt-6 tracking-wide">PIN Predeterminado: 1234</p>
 </div>
 
-<!-- CARGANDO CONEXIÓN CLOUD -->
+<!-- SCRIPT INSTANTÁNEO DE PIN (Evita retrasos de carga de Firebase) -->
+<script>
+  let pinIngresado = "";
+  const PIN_CORRECTO = "1234"; // PIN por defecto modificado aquí
+
+  window.pressPinKey = (key) => {
+    if (key === 'clear') {
+      pinIngresado = "";
+    } else if (key === 'back') {
+      pinIngresado = pinIngresado.slice(0, -1);
+    } else {
+      if (pinIngresado.length < 4) {
+        pinIngresado += key;
+      }
+    }
+    
+    // Actualizar UI del PIN
+    for (let i = 0; i < 4; i++) {
+      const dot = document.getElementById(`dot-${i}`);
+      if (dot) {
+        if (i < pinIngresado.length) {
+          dot.classList.add('filled');
+        } else {
+          dot.classList.remove('filled');
+        }
+      }
+    }
+
+    if (pinIngresado === PIN_CORRECTO) {
+      document.getElementById('lock-screen').style.display = 'none';
+      document.getElementById('main-nav').classList.remove('hidden');
+      document.getElementById('main-content').classList.remove('hidden');
+      
+      // Mostrar alerta visual rápida
+      const toastEl = document.getElementById('toast');
+      if (toastEl) {
+        toastEl.textContent = "🔓 Acceso Correcto a Lumina";
+        toastEl.className = 'toast show green';
+        setTimeout(() => toastEl.classList.remove('show'), 2000);
+      }
+      
+      // Lanzamos la autenticación de Firebase que está cargando de fondo
+      if (window.iniciarAutenticacion) {
+        window.iniciarAutenticacion();
+      }
+    } else if (pinIngresado.length === 4) {
+      setTimeout(() => {
+        const toastEl = document.getElementById('toast');
+        if (toastEl) {
+          toastEl.textContent = "⚠️ PIN Incorrecto";
+          toastEl.className = 'toast show red';
+          setTimeout(() => toastEl.classList.remove('show'), 2000);
+        }
+        pressPinKey('clear');
+      }, 150);
+    }
+  };
+</script>
+
+<!-- CARGANDO CONEXIÓN CLOUD (Detrás del PIN) -->
 <div id="app-loader">
   <div class="spinner"></div>
   <p style="margin-top:1.5rem;font-weight:500;color:var(--accent)">Conectando con Lumina Cloud...</p>
@@ -234,7 +309,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
               <option value="Feria / Evento">Feria / Evento</option>
               <option value="Vecinos">Vecino / Recomendación</option>
             </select>
-            <button class="btn btn-secondary px-3" onclick="crearCanalPersonalizado()">➕</button>
+            <button class="btn btn-secondary px-3" style="min-height:unset" onclick="crearCanalPersonalizado()">➕</button>
           </div>
         </div>
         
@@ -283,7 +358,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
         </div>
         <div class="form-group">
           <label>Precio Unitario Cobrado ($)</label>
-          <input type="number" id="v_precio" oninput="ajustarTotalManualPOS()" placeholder="0">
+          <input type="number" id="v_precio" placeholder="0">
         </div>
         <div class="form-group">
           <label>Devolución de Envase</label>
@@ -543,7 +618,6 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   <div class="section">
     <div class="section-head">
       <h3>Precios de Venta Fijos por Catálogo</h3>
-      <span class="text-slate-400 text-xs">Fijá precios de venta específicos para evitar cálculos dinámicos.</span>
     </div>
     <div class="section-body">
       <div class="tbl-wrap">
@@ -857,7 +931,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Estado Local
+// Estado Local Inicial de respaldo
 const DATOS_INICIALES = {
   insumos: {
     "Pisos Lavanda": { costoL: 180, stockL: 120, estilo: "estandar" },
@@ -898,46 +972,8 @@ const DATOS_INICIALES = {
 let appState = JSON.parse(JSON.stringify(DATOS_INICIALES));
 let currentUser = null;
 
-// Acceso de Seguridad por PIN táctil
-let pinIngresado = "";
-const PIN_CORRECTO = "1234";
-
-window.pressPinKey = (key) => {
-  if (key === 'clear') {
-    pinIngresado = "";
-  } else if (key === 'back') {
-    pinIngresado = pinIngresado.slice(0, -1);
-  } else {
-    if (pinIngresado.length < 4) {
-      pinIngresado += key;
-    }
-  }
-  
-  // Actualizar UI del PIN
-  for (let i = 0; i < 4; i++) {
-    const dot = document.getElementById(`dot-${i}`);
-    if (i < pinIngresado.length) {
-      dot.classList.add('filled');
-    } else {
-      dot.classList.remove('filled');
-    }
-  }
-
-  if (pinIngresado === PIN_CORRECTO) {
-    document.getElementById('lock-screen').classList.add('hidden');
-    document.getElementById('main-nav').classList.remove('hidden');
-    document.getElementById('main-content').classList.remove('hidden');
-    toast("🔓 Acceso Correcto a Lumina", "green");
-    iniciarAutenticacion();
-  } else if (pinIngresado.length === 4) {
-    setTimeout(() => {
-      toast("⚠️ PIN Incorrecto", "red");
-      pressPinKey('clear');
-    }, 150);
-  }
-};
-
-const iniciarAutenticacion = async () => {
+// Conectar con Firebase una vez verificado el PIN
+window.iniciarAutenticacion = async () => {
   try {
     await signInAnonymously(auth);
   } catch (error) {
@@ -958,7 +994,7 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-// Sincronización en tiempo real basada en las especificaciones del path
+// Sincronización de base de datos en la nube
 const escucharCambiosNube = () => {
   if (!currentUser) return;
   const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appState', 'main');
@@ -972,15 +1008,14 @@ const escucharCambiosNube = () => {
       appState.consignaciones = dbData.consignaciones || appState.consignaciones;
       appState.clientes = dbData.clientes || appState.clientes;
       appState.canales = dbData.canales || appState.canales;
-      appState.inversionHistorica = dbData.inversionHistorica || appState.inversionHistorica;
+      appState.inversionHistorica = dbData.inversionHistorica || dbState.inversionHistorica;
       appState.notas = dbData.notas || "";
     } else {
       guardarEstadoEnNube();
     }
-    
     actualizarAppUI();
   }, (err) => {
-    console.error(err);
+    console.error("Error en nube:", err);
   });
 };
 
@@ -990,7 +1025,7 @@ const guardarEstadoEnNube = async () => {
   try {
     await setDoc(docRef, appState);
   } catch (error) {
-    console.error(error);
+    console.error("Error al guardar:", error);
   }
 };
 
@@ -1005,7 +1040,6 @@ const actualizarAppUI = () => {
   renderDashboard();
   renderTablaReferencias();
   
-  // Rellenar notas admin si existe
   if (document.getElementById('notas_admin') && !document.getElementById('notas_admin').value) {
     document.getElementById('notas_admin').value = appState.notas || "";
   }
@@ -1048,8 +1082,10 @@ document.getElementById('confirm-btn-si').onclick = () => {
 };
 
 // ═══════════════════════════════════════════════════════════
-// LOGICA DE CAJA, VENTAS Y CARRITO (CON DESCUENTOS FIJOS)
+// LOGICA DE CAJA, VENTAS Y CARRITO
 // ═══════════════════════════════════════════════════════════
+let carritoActual = [];
+
 const inicializarCombosSelects = () => {
   const selectPOS = document.getElementById('v_producto');
   const selectConsig = document.getElementById('con_producto');
@@ -1170,11 +1206,7 @@ window.calcularPreciosFormatosPOS = () => {
   }
   
   document.getElementById('v_precio').value = Math.round(precioUnitarioCalculado);
-  ajustarTotalManualPOS();
-};
-
-window.ajustarTotalManualPOS = () => {
-  // Callback pasivo
+  aplicarFinanzasCarrito();
 };
 
 window.crearCanalPersonalizado = () => {
@@ -1270,8 +1302,8 @@ const renderCarrito = () => {
         ${item.envaseDevuelto ? `<br><small class="text-amber-700">✓ Retorna Envase (-$${item.descuentoEnvase * item.cantidad})</small>` : ''}
       </div>
       <div class="flex items-center gap-2">
-        <span class="font-mono font-bold">$${(item.precioUnitario * item.cantidad).toLocaleString('es-AR')}</span>
-        <button class="btn-danger p-1 rounded text-[10px]" style="min-height:unset" onclick="removerItemCarrito(${i})">✕</button>
+        <span class="font-mono font-bold">$${((item.precioUnitario * item.cantidad) - (item.descuentoEnvase * item.cantidad)).toLocaleString('es-AR')}</span>
+        <button class="btn btn-danger px-2 py-1" style="min-height:unset" onclick="removerItemCarrito(${i})">✕</button>
       </div>
     </div>
   `).join('');
@@ -1289,21 +1321,20 @@ window.vaciarCarrito = () => {
   renderCarrito();
 };
 
-const aplicarFinanzasCarrito = () => {
+window.aplicarFinanzasCarrito = () => {
   const dtoGlobal = parseFloat(document.getElementById('v_dto_global').value) || 0;
   let suma = 0;
   carritoActual.forEach(item => {
-    suma += (item.precioUnitario * item.cantidad);
+    suma += ((item.precioUnitario * item.cantidad) - (item.descuentoEnvase * item.cantidad));
   });
   
-  // CORRECCIÓN: El descuento global se aplica al valor real en caliente
   const totalConDto = suma * (1 - dtoGlobal / 100);
   document.getElementById('v_total_calculado').value = Math.round(totalConDto);
   document.getElementById('v_total_manual').value = Math.round(totalConDto);
 };
 
 window.aplicarTotalManual = () => {
-  // Callback de anulación de precio manual
+  // Manejador del total modificado manualmente
 };
 
 window.limpiarFormularioPOS = () => {
@@ -1327,7 +1358,6 @@ window.procesarVentaCarrito = () => {
   if (carritoActual.length === 0) { toast("⚠️ Carrito vacío", "red"); return; }
   if (!cliente) { toast("⚠️ El nombre del cliente es obligatorio", "red"); return; }
   
-  // Registro automático de cliente
   let clExistente = appState.clientes.find(c => c.nombre.toLowerCase() === cliente.toLowerCase());
   if (!clExistente) {
     appState.clientes.push({ nombre: cliente, direccion, telefono, envio });
@@ -1380,7 +1410,6 @@ window.procesarVentaCarrito = () => {
   
   appState.ventas.unshift(nuevaVenta);
   
-  // Limpieza
   carritoActual = [];
   renderCarrito();
   document.getElementById('v_cliente').value = '';
@@ -1393,7 +1422,6 @@ window.procesarVentaCarrito = () => {
   toast("✓ Venta Sincronizada y Guardada", "green");
 };
 
-// SIMULADOR DE MARGEN DINAMICO PLEGABLE
 window.actualizarSimuladorMargen = () => {
   const prodName = document.getElementById('sim_producto').value;
   if (!prodName) return;
@@ -1462,7 +1490,6 @@ window.renderHistorial = () => {
   
   let filtradas = appState.ventas;
   
-  // Filtro de Fechas
   if (filtradoFechaDesde) {
     filtradas = filtradas.filter(v => v.fecha >= filtradoFechaDesde);
   }
@@ -1470,7 +1497,6 @@ window.renderHistorial = () => {
     filtradas = filtradas.filter(v => v.fecha <= filtradoFechaHasta);
   }
   
-  // Buscador Texto
   if (filtro) {
     filtradas = filtradas.filter(v => 
       v.cliente.toLowerCase().includes(filtro) ||
@@ -1517,7 +1543,6 @@ window.renderHistorial = () => {
 window.exportarExcel = () => {
   if (appState.ventas.length === 0) { toast("⚠️ No hay datos para exportar", "red"); return; }
   
-  // CORRECCIÓN: CSV Premium con resumen global integrado arriba
   const totalIng = appState.ventas.reduce((acc, v) => acc + v.total, 0);
   const totalGan = appState.ventas.reduce((acc, v) => acc + v.ganancia, 0);
   
@@ -1591,6 +1616,8 @@ window.calcularPreciosFormatosConsig = () => {
   document.getElementById('con_precio_vta').value = Math.round(precioUnit);
 };
 
+let carritoConsig = [];
+
 window.agregarAlCarritoConsig = () => {
   const prod = document.getElementById('con_producto').value;
   const form = parseFloat(document.getElementById('con_formato').value);
@@ -1638,7 +1665,7 @@ const renderCarritoConsig = () => {
       </div>
       <div class="flex items-center gap-2">
         <span class="font-bold text-amber-700">$${(item.netoUnitario * item.cantidad).toLocaleString()}</span>
-        <button class="btn-danger p-1 rounded text-[10px]" style="min-height:unset" onclick="removerItemConsigCarrito(${i})">✕</button>
+        <button class="btn btn-danger px-2 py-1" style="min-height:unset" onclick="removerItemConsigCarrito(${i})">✕</button>
       </div>
     </div>
   `).join('');
@@ -1660,13 +1687,11 @@ window.confirmarConsignacionCompleta = () => {
   if (carritoConsig.length === 0) { toast("⚠️ No hay elementos en el envío", "red"); return; }
   if (!nombre) { toast("⚠️ Nombre de consignatario requerido", "red"); return; }
   
-  // Agregar cliente automáticamente si no existe para que se pueda editar
   let clExistente = appState.clientes.find(c => c.nombre.toLowerCase() === nombre.toLowerCase());
   if (!clExistente) {
     appState.clientes.push({ nombre, direccion: "", telefono: "", envio: "No" });
   }
 
-  // Restar de Litros Disponibles de Insumo
   carritoConsig.forEach(item => {
     const insumo = appState.insumos[item.producto];
     if (insumo) {
@@ -1702,7 +1727,7 @@ window.renderConsig = () => {
   container.innerHTML = appState.consignaciones.map(con => {
     const totalRendido = con.items.reduce((sum, it) => sum + (it.rendido * it.netoUnitario), 0);
     return `
-      <div class="consignatario-card bg-white p-3 rounded-xl border border-slate-200 mb-3">
+      <div class="consignatario-card bg-white p-3 rounded-xl border border-slate-200 mb-3 text-xs">
         <div class="flex justify-between items-start border-b pb-2 mb-2">
           <div>
             <h4 class="font-bold text-teal-800 text-sm">${con.nombre}</h4>
@@ -1755,13 +1780,11 @@ window.renderConsig = () => {
   }).join('');
 };
 
-// CORRECCIÓN: Volver a abrir consignación restando los sobrantes devueltos
 window.reabrirConsignacion = (conId) => {
   pedirConfirmacion("¿Deseas volver a abrir esta consignación? El stock de los sobrantes será retirado del inventario para volver a ponerlos en la calle.", () => {
     const con = appState.consignaciones.find(c => c.id === conId);
     if (!con) return;
     
-    // Restamos del inventario los sobrantes que habían vuelto
     con.items.forEach(item => {
       const sobranteUnidades = item.cantidad - item.rendido;
       if (sobranteUnidades > 0) {
@@ -1773,7 +1796,6 @@ window.reabrirConsignacion = (conId) => {
       }
     });
     
-    // Borrar el registro de venta de rendición automática si existía
     appState.ventas = appState.ventas.filter(v => v.cliente !== `Consignación Rendida: ${con.nombre}`);
     
     con.estado = 'Activa';
@@ -1819,7 +1841,6 @@ window.renderConfigPrecios = () => {
   });
 };
 
-// CORRECCIÓN: Edición completa de combos existentes
 let comboEditarId = null;
 
 window.editarComboPromo = (comboId) => {
@@ -1846,7 +1867,7 @@ window.renderCombosDisponibles = () => {
   container.innerHTML = appState.combos.map((c) => {
     const itemsList = c.items.map(it => `• ${it.cant}u. ${it.prod} (${it.form}L)`).join('<br>');
     return `
-      <div class="mobile-card border-l-4 border-teal-600 flex justify-between items-center mb-2 bg-white">
+      <div class="mobile-card border-l-4 border-teal-600 flex justify-between items-center mb-2 bg-white text-xs">
         <div>
           <h4 class="font-bold text-sm text-teal-800">${c.nombre}</h4>
           <p class="text-[10px] text-slate-500 my-1">${itemsList}</p>
@@ -1889,7 +1910,6 @@ window.guardarPedidoCompletoStock = () => {
   const totalCostoLista = lineasCompraFactura.reduce((sum, item) => sum + item.costoLista, 0);
   const totalGastoFactura = (totalCostoLista + flete + otros) - dtos;
   
-  // Si fue pagado, se computa como inversión real. Si no, se registra para pagar.
   if (estadoPago === 'Pagado') {
     appState.inversionHistorica += Math.round(totalGastoFactura);
   }
@@ -1913,7 +1933,6 @@ window.renderDashboard = () => {
   const inversionTotal = appState.inversionHistorica;
   const porcRecupero = inversionTotal > 0 ? Math.round((ingresosTotales / inversionTotal) * 100) : 0;
   
-  // Dinero en la calle (Mercadería consignada sin rendir)
   let totalConsigCalle = 0;
   appState.consignaciones.filter(c => c.estado === 'Activa').forEach(c => {
     c.items.forEach(it => {
@@ -1926,7 +1945,6 @@ window.renderDashboard = () => {
   document.getElementById('dash-ingresos-total').textContent = `$${ingresosTotales.toLocaleString('es-AR')}`;
   document.getElementById('dash-ganancias-total').textContent = `$${gananciasTotales.toLocaleString('es-AR')}`;
   document.getElementById('dash-capital-calle').textContent = `$${totalConsigCalle.toLocaleString('es-AR')}`;
-  document.getElementById('dash-recupero-porc').textContent = `${porcRecupero}%`;
   
   const container = document.getElementById('panel-monitoreo-stock');
   container.innerHTML = '';
@@ -1949,15 +1967,15 @@ window.renderDashboard = () => {
     }
     
     container.innerHTML += `
-      <div class="mobile-card flex flex-col gap-2 bg-white">
-        <div class="flex justify-between items-center text-xs">
+      <div class="mobile-card flex flex-col gap-2 bg-white text-xs">
+        <div class="flex justify-between items-center">
           <strong>${nombre}</strong>
           <span class="badge ${badgeStyle}">${porcLlenado}%</span>
         </div>
-        <div class="sm-bar-bg mb-1">
-          <div class="sm-bar-fill" style="width:${porcLlenado}%;background:${colorBarra}"></div>
+        <div class="bg-slate-100 h-2 rounded-full overflow-hidden w-full">
+          <div class="h-full rounded-full transition-all duration-300" style="width:${porcLlenado}%;background:${colorBarra}"></div>
         </div>
-        <div class="flex gap-2 items-center text-xs">
+        <div class="flex gap-2 items-center">
           <span class="text-slate-500">Corregir stock físico (Lts):</span>
           <input type="number" step="0.1" value="${Math.round(ins.stockL)}" 
             class="w-16 p-1 border rounded text-right ml-auto bg-slate-50 font-bold"
@@ -2095,17 +2113,17 @@ window.agregarLineaCombo = () => {
 const renderLineasComboEdicion = () => {
   const container = document.getElementById('combo-componentes-list');
   container.innerHTML = comboComponentesEdicion.map((item, i) => `
-    <div class="flex gap-1 items-center">
-      <select class="p-1 border rounded text-xs" style="flex:2" onchange="actualizarLineaComboEdic(${i}, 'prod', this.value)">
+    <div class="flex gap-1 items-center text-xs">
+      <select class="p-1 border rounded" style="flex:2" onchange="actualizarLineaComboEdic(${i}, 'prod', this.value)">
         ${Object.keys(appState.insumos).map(n => `<option value="${n}" ${item.prod === n ? 'selected' : ''}>${n}</option>`).join('')}
       </select>
-      <select class="p-1 border rounded text-xs" style="flex:1" onchange="actualizarLineaComboEdic(${i}, 'form', parseFloat(this.value))">
+      <select class="p-1 border rounded" style="flex:1" onchange="actualizarLineaComboEdic(${i}, 'form', parseFloat(this.value))">
         <option value="5" ${item.form === 5 ? 'selected' : ''}>5L</option>
         <option value="3" ${item.form === 3 ? 'selected' : ''}>3L</option>
         <option value="1" ${item.form === 1 ? 'selected' : ''}>1L</option>
         <option value="0.5" ${item.form === 0.5 ? 'selected' : ''}>500ml</option>
       </select>
-      <input type="number" value="${item.cant}" min="1" class="w-12 p-1 border rounded text-center text-xs" oninput="actualizarLineaComboEdic(${i}, 'cant', parseInt(this.value)||1)">
+      <input type="number" value="${item.cant}" min="1" class="w-12 p-1 border rounded text-center" oninput="actualizarLineaComboEdic(${i}, 'cant', parseInt(this.value)||1)">
       <button class="bg-red-50 text-red-600 p-1 rounded" onclick="removerLineaComboEdic(${i})">✕</button>
     </div>
   `).join('');
@@ -2144,13 +2162,11 @@ window.guardarComboPromocional = () => {
   if (comboComponentesEdicion.length === 0) { toast("⚠️ Sin componentes", "red"); return; }
   
   if (comboEditarId) {
-    // Modo Edición
     const index = appState.combos.findIndex(c => c.id === comboEditarId);
     if (index >= 0) {
       appState.combos[index] = { id: comboEditarId, nombre, items: JSON.parse(JSON.stringify(comboComponentesEdicion)), tipo, desc };
     }
   } else {
-    // Modo Nuevo
     const nuevoCombo = {
       id: 'combo_' + Date.now(),
       nombre,
@@ -2332,7 +2348,7 @@ window.verDetalleTicket = (id) => {
         <div style="font-size:.82rem;margin-bottom:0.4rem;padding-bottom:0.4rem;border-bottom:1px dashed #eee">
           <div style="display:flex;justify-content:space-between">
             <span><strong>${it.nombre}</strong></span>
-            <span>$${(it.precioUnitario * it.cantidad).toLocaleString('es-AR')}</span>
+            <span>$${((it.precioUnitario * it.cantidad) - (it.descuentoEnvase * it.cantidad)).toLocaleString('es-AR')}</span>
           </div>
           <div style="display:flex;justify-content:space-between;color:var(--ink3);font-size:.75rem">
             <span>${it.cantidad}u x $${it.precioUnitario}/u</span>
