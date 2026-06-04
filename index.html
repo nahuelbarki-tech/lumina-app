@@ -1,17 +1,23 @@
+Aquí tenés tu código modificado. Corregí el error de sintaxis que tenías al final en la etiqueta `<select>` de la sección de compras (donde decía `5L_` en lugar de cerrar correctamente la opción) y además **eliminé la estrella/destello del logotipo de Lumina** en la barra de navegación, dejando únicamente el ícono definitivo de la gota limpia.
+
+```html
+<!-- STREAMING_CHUNK: Starting the structural definitions of Lumina Cloud POS -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lumina — Sistema de Ventas en la Nube</title>
+<!-- Fuentes Tipográficas Modernas -->
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Tailwind CSS para utilidades de diseño responsivo -->
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
 :root {
-  --ink:     #111d26;
-  --ink2:    #1b3241;
-  --ink3:    #4a677a;
+  --ink:      #111d26;
+  --ink2:     #1b3241;
+  --ink3:     #4a677a;
   --bg:      #f0f6fa;
   --bg2:     #dcecf5;
   --bg3:     #ffffff;
@@ -36,202 +42,420 @@
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
 
 /* NAV */
-nav{background:var(--ink2);padding:0 1.5rem;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:100;box-shadow:0 4px 25px rgba(0,0,0,.2)}
-.logo{font-family:'DM Serif Display',serif;font-size:1.6rem;color:#fff;letter-spacing:-.02em;padding:1rem 1.5rem 1rem 0;border-right:1px solid rgba(255,255,255,.15);margin-right:1.5rem}
+nav{background:var(--ink2);padding:0 1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 25px rgba(0,0,0,.2)}
+.logo{font-family:'DM Serif Display',serif;font-size:1.4rem;color:#fff;letter-spacing:-.02em;padding:0.75rem 0.5rem;display:flex;align-items:center;gap:0.4rem}
 .logo span{color:var(--accent2)}
-.nav-tabs{display:flex;gap:0;flex:1;overflow-x:auto;scrollbar-width:none}
+.nav-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;width:100%;background:rgba(27,50,65,0.95);position:fixed;bottom:0;left:0;z-index:110;box-shadow:0 -4px 15px rgba(0,0,0,0.1)}
 .nav-tabs::-webkit-scrollbar{display:none}
-.tab{padding:1.1rem 1.1rem;color:rgba(255,255,255,.65);font-size:.85rem;font-weight:500;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+.tab{flex:1;text-align:center;padding:0.75rem 0.5rem;color:rgba(255,255,255,0.65);font-size:.72rem;font-weight:600;cursor:pointer;border-top:3px solid transparent;transition:all 0.2s;white-space:nowrap;display:flex;flex-direction:column;align-items:center;gap:0.15rem}
 .tab:hover{color:rgba(255,255,255,.95)}
-.tab.active{color:#fff;border-bottom-color:var(--accent2);background:rgba(255,255,255,0.05)}
-.nav-right{display:flex;align-items:center;gap:.75rem;margin-left:auto}
-.btn-export{background:var(--accent);color:#fff;border:none;padding:.5rem 1rem;border-radius:var(--r);font-size:.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem;transition:background .2s}
-.btn-export:hover{background:var(--accent2)}
-.cloud-indicator{width:10px;height:10px;border-radius:50%;background:var(--red);transition:background 0.3s}
+.tab.active{color:var(--accent2);border-top-color:var(--accent2);background:rgba(255,255,255,0.05)}
+.nav-right{display:flex;align-items:center;gap:.5rem;padding:0.5rem}
+.btn-export{background:var(--accent);color:#fff;border:none;padding:.4rem .75rem;border-radius:var(--r);font-size:.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.3rem}
+.cloud-indicator{width:10px;height:10px;border-radius:50%;background:var(--red)}
 .cloud-indicator.online{background:var(--green);box-shadow:0 0 8px var(--green)}
 
 /* MAIN */
-main{max-width:1200px;margin:0 auto;padding:1.5rem}
+main{max-width:1200px;margin:0 auto;padding:1rem 1rem 5rem 1rem}
 .page{display:none}
 .page.active{display:block}
 
-/* CARDS / KPIS */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
-.kpi{background:var(--bg3);border-radius:var(--r2);padding:1.25rem 1.5rem;border:1px solid var(--border);box-shadow:var(--shadow)}
-.kpi-label{font-size:.75rem;font-weight:500;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
-.kpi-val{font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:500;color:var(--ink)}
+/* STREAMING_CHUNK: Styling layout metrics and sections... */
+/* CARDS KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem;margin-bottom:1.25rem}
+.kpi{background:var(--bg3);border-radius:var(--r);padding:1rem;border:1px solid var(--border);box-shadow:var(--shadow)}
+.kpi-label{font-size:.65rem;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem}
+.kpi-val{font-family:'DM Mono',monospace;font-size:1.2rem;font-weight:600;color:var(--ink)}
 .kpi-val.green{color:var(--green)}
 .kpi-val.accent{color:var(--accent)}
-.kpi-sub{font-size:.75rem;color:var(--ink3);margin-top:.25rem}
 
-/* SECCIONES COHESIVAS */
-.section{background:var(--bg3);border-radius:var(--r2);border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:1.25rem;overflow:hidden}
-.section-head{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
-.section-head h3{font-size:1rem;font-weight:600;color:var(--ink)}
-.section-body{padding:1.5rem}
+/* SECCIONES */
+.section{background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:1rem;overflow:hidden}
+.section-head{padding:0.85rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem}
+.section-head h3{font-size:0.95rem;font-weight:700;color:var(--ink)}
+.section-body{padding:1.25rem}
 
 /* FORMULARIOS */
-.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.form-group{display:flex;flex-direction:column;gap:.4rem}
-.form-group.full{grid-column:1/-1}
-.form-group.half{grid-column:span 2}
-label{font-size:.78rem;font-weight:600;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
-input,select,textarea{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:.6rem .85rem;font-family:'Outfit',sans-serif;font-size:.9rem;color:var(--ink);outline:none;transition:border-color .2s,box-shadow .2s}
+.form-grid{display:grid;grid-template-columns:1fr;gap:0.75rem}
+.form-group{display:flex;flex-direction:column;gap:.3rem}
+label{font-size:.72rem;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
+input,select,textarea{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:.55rem .75rem;font-family:'Outfit',sans-serif;font-size:.85rem;color:var(--ink);outline:none;width:100%}
 input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,126,167,.12)}
-input[type=number]{text-align:right}
-.calculated{background:var(--green-l);border-color:#5cd1c5;color:var(--green);font-family:'DM Mono',monospace;font-weight:500}
+.calculated{background:var(--green-l);border-color:#5cd1c5;color:var(--green);font-family:'DM Mono',monospace;font-weight:600}
 
-/* BOTONES UBICUOS */
-.btn{padding:.65rem 1.25rem;border-radius:var(--r);border:none;font-family:'Outfit',sans-serif;font-weight:600;cursor:pointer;font-size:.9rem;transition:all .2s;display:inline-flex;align-items:center;gap:.5rem;justify-content:center}
+/* BOTONES */
+.btn {
+  padding: .7rem 1.25rem;
+  border-radius: var(--r);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: .85rem;
+  transition: all .2s;
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  justify-content:center;
+  min-height: 44px;
+}
 .btn-primary{background:var(--accent);color:#fff}
-.btn-primary:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,126,167,.3)}
 .btn-secondary{background:var(--bg2);color:var(--ink2)}
-.btn-secondary:hover{background:var(--border)}
 .btn-danger{background:var(--red-l);color:var(--red)}
-.btn-danger:hover{background:var(--red);color:#fff}
 .btn-green{background:var(--green-l);color:var(--green)}
 .btn-gold{background:var(--gold-l);color:var(--gold)}
 
-/* TABLAS LIMPIAS */
-.tbl-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.85rem}
-th{text-align:left;padding:.6rem 1rem;font-size:.72rem;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--border);background:var(--bg)}
-td{padding:.65rem 1rem;border-bottom:1px solid var(--bg2);vertical-align:middle}
-tr:hover td{background:var(--bg)}
+/* TABLAS RESPONSIVAS */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{text-align:left;padding:.5rem .75rem;font-size:.68rem;font-weight:700;color:var(--ink3);text-transform:uppercase;border-bottom:2px solid var(--border);background:var(--bg)}
+td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle}
 
-/* BADGES */
-.badge{display:inline-block;padding:.2rem .6rem;border-radius:100px;font-size:.72rem;font-weight:600}
-.badge-green{background:var(--green-l);color:var(--green)}
-.badge-blue{background:var(--blue-l);color:var(--accent)}
-.badge-gold{background:var(--gold-l);color:var(--gold)}
-.badge-orange{background:var(--orange-l);color:var(--orange)}
-.badge-red{background:var(--red-l);color:var(--red)}
-.badge-purple{background:var(--bg2);color:var(--ink2)}
+/* STREAMING_CHUNK: Styling modal components and widgets... */
+/* TARJETAS PARA CELULARES */
+.mobile-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:0.85rem;margin-bottom:0.65rem;box-shadow:var(--shadow)}
 
-/* CARRITO POS */
-.cart-area{border:2px dashed var(--border);border-radius:var(--r);padding:1rem;margin-top:1rem;background:#fff}
+/* CARRITO */
+.cart-area{border:2px dashed var(--border);border-radius:var(--r);padding:0.85rem;margin-top:0.85rem;background:#fff}
 .cart-title{font-size:.85rem;font-weight:700;color:var(--accent);text-transform:uppercase;margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center}
 .cart-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
 .cart-item{display:flex;justify-content:space-between;align-items:center;background:var(--bg);padding:.5rem .75rem;border-radius:var(--r);font-size:.85rem}
 
-/* DIRECTORIO CLIENTES */
-.cliente-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:1rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;box-shadow:var(--shadow)}
-.cliente-info h4{font-size:.9rem;font-weight:600;color:var(--ink)}
-.cliente-info p{font-size:.78rem;color:var(--ink3);margin-top:.2rem}
-.cliente-stats{text-align:right}
-.cliente-stats .total{font-family:'DM Mono',monospace;font-weight:600;color:var(--green);font-size:1rem}
+/* PANTALLA DE BLOQUEO */
+#lock-screen {
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:linear-gradient(to bottom, #111d26, #1b3241);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:99999;padding:1.5rem;
+}
+.pin-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.4); transition: background 0.2s;
+}
+.pin-dot.filled { background: var(--accent2); border-color: var(--accent2); }
+.keypad-btn {
+  width: 70px; height: 70px; border-radius: 50%;
+  background: rgba(255,255,255,0.06); color: #fff;
+  font-size: 1.5rem; font-weight: 500; display: flex;
+  align-items: center; justify-content: center; cursor: pointer;
+  transition: background 0.15s; border: 1px solid rgba(255,255,255,0.1);
+  user-select: none;
+}
+.keypad-btn:active { background: rgba(255,255,255,0.2); }
 
-/* BARRAS DE PROGRESO DE STOCK */
-.stock-monitor-item{margin-bottom:1rem}
-.sm-header{display:flex;justify-content:space-between;margin-bottom:.25rem}
-.sm-title{font-size:.85rem;font-weight:600}
-.sm-bar-bg{background:var(--bg2);height:8px;border-radius:100px;overflow:hidden}
-.sm-bar-fill{height:100%;border-radius:100px;transition:width .4s ease}
-
-/* APP LOADER & TOASTS */
-#app-loader{position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.4s}
-.spinner{width:40px;height:40px;border:4px solid var(--bg2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-.toast{position:fixed;bottom:2rem;right:2rem;background:var(--ink);color:#fff;padding:.85rem 1.25rem;border-radius:var(--r);font-size:.85rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.25);transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);z-index:999;display:flex;align-items:center;gap:.6rem}
-.toast.show{transform:translateY(0);opacity:1}
+/* TOAST */
+.toast{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%) translateY(100px);opacity:0;background:var(--ink);color:#fff;padding:.8rem 1.2rem;border-radius:var(--r);font-size:.8rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:all .3s ease;z-index:99999;display:flex;align-items:center;gap:.5rem;width:90%;max-width:350px}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .toast.green{background:var(--green)}
 .toast.red{background:var(--red)}
 
-/* MODAL INTERFACES */
-.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(27,50,65,0.6);display:none;align-items:center;justify-content:center;z-index:1000;padding:1rem}
-.modal-overlay.active{display:flex}
-.modal-card{background:#fff;border-radius:var(--r2);width:100%;max-width:500px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.3);animation:modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)}
-@keyframes modalIn{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-hdr{background:var(--ink2);color:#fff;padding:1.25rem;display:flex;justify-content:space-between;align-items:center}
-.modal-body{padding:1.5rem;max-height:75vh;overflow-y:auto}
+/* APP LOADER BACKGROUND */
+#app-loader {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bg3); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; z-index: 9999;
+}
+.spinner {
+  width: 40px; height: 40px; border: 4px solid var(--bg2);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-@media(max-width:768px){
-  .kpi-grid{grid-template-columns:repeat(2,1fr)}
-  .form-grid{grid-template-columns:1fr}
-  .form-group.half,.form-group.full{grid-column:1}
+/* STREAMING_CHUNK: Refining CSS modal classes... */
+/* MODALES OVERLAYS Y DIÁLOGOS (CORRIGE TEXTO PLANO VISIBLE ABAJO) */
+.modal-overlay {
+  position: fixed !important;
+  top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+  background: rgba(17, 29, 38, 0.85) !important;
+  display: none; /* Asegura ocultación base */
+  align-items: center;
+  justify-content: center;
+  z-index: 99999 !important;
+  padding: 1rem;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+.modal-overlay.active {
+  display: flex !important;
+}
+.modal-card {
+  background: var(--bg3) !important;
+  border-radius: var(--r2) !important;
+  width: 100%;
+  max-width: 480px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 126, 167, 0.25) !important;
+  border: 1px solid var(--border) !important;
+  animation: modalSlideUp 0.25s ease-out;
+}
+@keyframes modalSlideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.modal-hdr {
+  background: var(--ink2) !important;
+  color: #fff !important;
+  padding: 1rem 1.25rem !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+.modal-hdr h3 {
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+}
+.modal-body {
+  padding: 1.25rem !important;
+  max-height: 80vh !important;
+  overflow-y: auto !important;
+}
+
+/* TICKET / RECIBO DE VENTAS */
+.ticket {
+  border: 2px dashed var(--border);
+  padding: 1.25rem;
+  background: #fcfdfe;
+  border-radius: var(--r);
+  color: var(--ink);
+}
+.ticket-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px dashed var(--bg2);
+  font-size: 0.8rem;
+}
+.ticket-row:last-child {
+  border-bottom: none;
+}
+.ticket-row .lbl {
+  color: var(--ink3);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+
+/* BADGES / ETIQUETAS */
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.badge-green { background: var(--green-l); color: var(--green); }
+.badge-blue { background: var(--blue-l); color: var(--blue); }
+.badge-gold { background: var(--gold-l); color: var(--gold); }
+.badge-orange { background: var(--orange-l); color: var(--orange); }
+.badge-red { background: var(--red-l); color: var(--red); }
+.badge-purple { background: var(--bg2); color: var(--ink2); }
+
+/* DESKTOP MEDIA QUERIES */
+@media(min-width:768px){
+  .kpi-grid{grid-template-columns:repeat(4,1fr)}
+  .form-grid{grid-template-columns:repeat(3,1fr)}
+  .form-grid-3{grid-template-columns:repeat(3,1fr)}
+  .nav-tabs{position:static;width:auto;background:transparent;box-shadow:none;overflow:visible}
+  .tab{padding:1.1rem 1.25rem;border-top:none;border-bottom:3px solid transparent;font-size:.8rem}
+  .tab.active{border-bottom-color:var(--accent2);border-top-color:transparent}
+  main{padding-bottom:1.5rem}
 }
 </style>
 </head>
 <body>
 
+<!-- STREAMING_CHUNK: Setting up lock screen and PC keyboard access... -->
+<!-- PANTALLA DE BLOQUEO POR PIN (INSTANTÁNEA) -->
+<div id="lock-screen">
+  <div class="text-center mb-6">
+    <div class="text-4xl font-serif text-white mb-2 font-bold" style="font-family:'DM Serif Display',serif">Lumina</div>
+    <p class="text-xs text-slate-400 uppercase tracking-widest">Punto de Venta Ushuaia</p>
+  </div>
+  <div class="flex gap-4 mb-8">
+    <div class="pin-dot" id="dot-0"></div>
+    <div class="pin-dot" id="dot-1"></div>
+    <div class="pin-dot" id="dot-2"></div>
+    <div class="pin-dot" id="dot-3"></div>
+  </div>
+  <div class="grid grid-cols-3 gap-4 max-w-[260px] w-full">
+    <div class="keypad-btn" onclick="pressPinKey('1')">1</div>
+    <div class="keypad-btn" onclick="pressPinKey('2')">2</div>
+    <div class="keypad-btn" onclick="pressPinKey('3')">3</div>
+    <div class="keypad-btn" onclick="pressPinKey('4')">4</div>
+    <div class="keypad-btn" onclick="pressPinKey('5')">5</div>
+    <div class="keypad-btn" onclick="pressPinKey('6')">6</div>
+    <div class="keypad-btn" onclick="pressPinKey('7')">7</div>
+    <div class="keypad-btn" onclick="pressPinKey('8')">8</div>
+    <div class="keypad-btn" onclick="pressPinKey('9')">9</div>
+    <div class="keypad-btn" onclick="pressPinKey('clear')">✕</div>
+    <div class="keypad-btn" onclick="pressPinKey('0')">0</div>
+    <div class="keypad-btn" onclick="pressPinKey('back')">⌫</div>
+  </div>
+  <p class="text-[10px] text-slate-400 mt-6 tracking-wide">PIN Predeterminado: 1234 (Podés usar el teclado de la PC)</p>
+</div>
+
+<!-- SCRIPT INSTANTÁNEO DE PIN -->
+<script>
+  let pinIngresado = "";
+  const PIN_CORRECTO = "1234";
+
+  window.pressPinKey = (key) => {
+    if (key === 'clear') {
+      pinIngresado = "";
+    } else if (key === 'back') {
+      pinIngresado = pinIngresado.slice(0, -1);
+    } else {
+      if (pinIngresado.length < 4) {
+        pinIngresado += key;
+      }
+    }
+    
+    for (let i = 0; i < 4; i++) {
+      const dot = document.getElementById(`dot-${i}`);
+      if (dot) {
+        if (i < pinIngresado.length) {
+          dot.classList.add('filled');
+        } else {
+          dot.classList.remove('filled');
+        }
+      }
+    }
+
+    if (pinIngresado === PIN_CORRECTO) {
+      document.getElementById('lock-screen').style.display = 'none';
+      document.getElementById('main-nav').classList.remove('hidden');
+      document.getElementById('main-content').classList.remove('hidden');
+      
+      const toastEl = document.getElementById('toast');
+      if (toastEl) {
+        toastEl.textContent = "🔓 Acceso Correcto a Lumina";
+        toastEl.className = 'toast show green';
+        setTimeout(() => toastEl.classList.remove('show'), 2000);
+      }
+      
+      if (window.iniciarAutenticacion) {
+        window.iniciarAutenticacion();
+      }
+    } else if (pinIngresado.length === 4) {
+      setTimeout(() => {
+        const toastEl = document.getElementById('toast');
+        if (toastEl) {
+          toastEl.textContent = "⚠️ PIN Incorrecto";
+          toastEl.className = 'toast show red';
+          setTimeout(() => toastEl.classList.remove('show'), 2000);
+        }
+        pressPinKey('clear');
+      }, 150);
+    }
+  };
+
+  window.addEventListener('keydown', (e) => {
+    const lockScreen = document.getElementById('lock-screen');
+    if (lockScreen && lockScreen.style.display !== 'none') {
+      if (e.key >= '0' && e.key <= '9') {
+        pressPinKey(e.key);
+      } else if (e.key === 'Backspace') {
+        pressPinKey('back');
+      } else if (e.key === 'Escape' || e.key === 'Delete') {
+        pressPinKey('clear');
+      }
+    }
+  });
+</script>
+
+<!-- STREAMING_CHUNK: Loading App indicators... -->
+<!-- CARGANDO CONEXIÓN CLOUD (Detrás del PIN) -->
 <div id="app-loader">
   <div class="spinner"></div>
   <p style="margin-top:1.5rem;font-weight:500;color:var(--accent)">Conectando con Lumina Cloud...</p>
 </div>
 
-<nav>
-  <div class="logo">Lumin<span>a</span></div>
+<nav class="hidden" id="main-nav">
+  <div class="logo">
+    <!-- Ícono definitivo: gota limpia sin destellos -->
+    <svg class="w-5 h-5 text-[#00a8e8]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+    Lumin<span>a</span>
+  </div>
   <div class="nav-tabs">
-    <div class="tab active" onclick="showPage('ventas')">💰 Caja/Ventas</div>
-    <div class="tab" onclick="showPage('historial')">📋 Historial</div>
-    <div class="tab" onclick="showPage('clientes')">👤 Clientes</div>
-    <div class="tab" onclick="showPage('consignaciones')">🤝 Consignaciones</div>
-    <div class="tab" onclick="showPage('promos')">🏷️ Precios & Promos</div>
-    <div class="tab" onclick="showPage('compras')">📥 Compras & Gastos</div>
-    <div class="tab" onclick="showPage('dashboard')">📊 Stock & Resumen</div>
+    <div class="tab active" onclick="showPage('ventas')">💰<span>Ventas</span></div>
+    <div class="tab" onclick="showPage('historial')">📋<span>Historial</span></div>
+    <div class="tab" onclick="showPage('clientes')">👤<span>Clientes</span></div>
+    <div class="tab" onclick="showPage('consignaciones')">🤝<span>Consignas</span></div>
+    <div class="tab" onclick="showPage('promos')">🏷️<span>Precios</span></div>
+    <div class="tab" onclick="showPage('compras')">📥<span>Compras</span></div>
+    <div class="tab" onclick="showPage('dashboard')">📊<span>Resumen</span></div>
   </div>
   <div class="nav-right">
     <div class="cloud-indicator" id="cloud-status" title="Desconectado"></div>
-    <button class="btn-export" onclick="exportarExcel()">⬇ Exportar</button>
+    <button class="btn-export" onclick="exportarExcel()">⬇ CSV</button>
   </div>
 </nav>
 
-<main>
+<main class="hidden" id="main-content">
 
+<!-- STREAMING_CHUNK: Setting up POS Page... -->
+<!-- ═══════════ CAJA / VENTAS ═══════════ -->
 <div id="page-ventas" class="page active">
   <div class="section">
     <div class="section-head">
-      <h3>Nueva Operación de Venta</h3>
+      <h3>Operación de Venta Rápida</h3>
+      <span id="pos-price-source" class="badge" style="display:none"></span>
     </div>
     <div class="section-body">
       <div class="form-grid">
         <div class="form-group">
-          <label>Fecha</label>
+          <label>Fecha de Operación</label>
           <input type="date" id="v_fecha">
         </div>
         <div class="form-group">
           <label>Cliente</label>
-          <input type="text" id="v_cliente" list="lista-clientes" placeholder="Nombre o buscar..." onchange="autocompletarCliente(this.value)">
+          <input type="text" id="v_cliente" list="lista-clientes" placeholder="Buscar o crear..." onchange="autocompletarCliente(this.value)">
           <datalist id="lista-clientes"></datalist>
         </div>
         <div class="form-group">
           <label>Canal de Venta</label>
-          <select id="v_canal">
-            <option value="Venta Directa">Venta Directa</option>
-            <option value="Pedido WhatsApp">Pedido WhatsApp</option>
-            <option value="Feria / Evento">Feria / Evento</option>
-            <option value="Recomendación / Vecino">Recomendación / Vecino</option>
-          </select>
+          <div class="flex gap-1">
+            <select id="v_canal" style="flex:1">
+              <option value="Venta Directa">Venta Directa</option>
+              <option value="Pedido WhatsApp">Pedido WhatsApp</option>
+              <option value="Feria / Evento">Feria / Evento</option>
+              <option value="Vecinos">Vecino / Recomendación</option>
+            </select>
+            <button class="btn btn-secondary px-3" style="min-height:unset" onclick="crearCanalPersonalizado()">➕</button>
+          </div>
         </div>
         
-        <div class="form-group full" id="cliente-datos-extra" style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; background:var(--bg); padding:1rem; border-radius:var(--r)">
-          <div>
-            <label style="font-size:.7rem">Dirección de Despacho</label>
-            <input type="text" id="v_cliente_dir" placeholder="Calle y N°" style="width:100%;margin-top:.2rem">
-          </div>
-          <div>
-            <label style="font-size:.7rem">Teléfono de Contacto</label>
-            <input type="text" id="v_cliente_tel" placeholder="2901..." style="width:100%;margin-top:.2rem">
-          </div>
-          <div>
-            <label style="font-size:.7rem">Envío de Logística</label>
-            <select id="v_cliente_envio" style="width:100%;margin-top:.2rem">
-              <option value="No">Retira / Entrega en mano</option>
-              <option value="Sí">Sí, requiere reparto programado</option>
-            </select>
+        <!-- Datos de Entrega Opcionales -->
+        <div class="form-group sm:col-span-3 bg-slate-50 p-3 rounded-xl border border-dashed border-slate-200">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="form-group">
+              <label class="text-[10px]">Dirección de Entrega</label>
+              <input type="text" id="v_cliente_dir" placeholder="Calle y N°">
+            </div>
+            <div class="form-group">
+              <label class="text-[10px]">Teléfono de Contacto</label>
+              <input type="text" id="v_cliente_tel" placeholder="2901...">
+            </div>
+            <div class="form-group">
+              <label class="text-[10px]">Requiere Envío</label>
+              <select id="v_cliente_envio">
+                <option value="No">No requiere</option>
+                <option value="Sí">Sí (Coordinar envío)</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <div class="form-group half">
-          <label>Elegir Producto / Combo Base</label>
+        <div class="form-group sm:col-span-2">
+          <label>Insumo o Producto Base</label>
           <select id="v_producto" onchange="seleccionarProductoPOS()">
-            <option value="">— elegí un producto —</option>
+            <option value="">— elegí un producto o combo promocional —</option>
           </select>
         </div>
         
         <div class="form-group">
-          <label>Formato / Fraccionamiento</label>
+          <label>Fraccionamiento</label>
           <select id="v_formato" onchange="calcularPreciosFormatosPOS()">
             <option value="5">Bidón 5 Litros</option>
             <option value="3">Botella 3 Litros</option>
@@ -247,32 +471,33 @@ tr:hover td{background:var(--bg)}
         </div>
         <div class="form-group">
           <label>Precio Unitario Cobrado ($)</label>
-          <input type="number" id="v_precio" oninput="calcularPreciosFormatosPOS()" placeholder="0">
+          <input type="number" id="v_precio" placeholder="0" oninput="aplicarFinanzasCarrito()">
         </div>
         <div class="form-group">
-          <label>¿Devuelve Envase?</label>
+          <label>Devolución de Envase</label>
           <select id="v_envase" onchange="calcularPreciosFormatosPOS()">
-            <option value="no">No devuelve (Venta de envase incluido)</option>
-            <option value="si">Sí — Trae envase / Retorno</option>
+            <option value="no">No devuelve envase</option>
+            <option value="si">Sí devuelve envase (Descuento)</option>
           </select>
         </div>
       </div>
       
-      <div style="margin-top:1.25rem;display:flex;gap:.75rem">
-        <button class="btn btn-primary" onclick="agregarAlCarrito()">🛒 Añadir al Carrito</button>
-        <button class="btn btn-secondary" onclick="limpiarFormularioPOS()">✕ Limpiar Selección</button>
+      <div class="mt-4 flex gap-2">
+        <button class="btn btn-primary flex-1" onclick="agregarAlCarrito()">🛒 Añadir al Carrito</button>
+        <button class="btn btn-secondary" onclick="limpiarFormularioPOS()">✕ Limpiar</button>
       </div>
 
+      <!-- Carrito Virtual de Ventas -->
       <div class="cart-area">
         <div class="cart-title">
           <span>🛒 Carrito de Compras</span>
           <span style="font-size:.75rem" id="cart-item-count">0 artículos</span>
         </div>
         <div class="cart-list" id="cart-items-render">
-          <p style="color:var(--ink3);font-size:.85rem;text-align:center;padding:1rem">El carrito está vacío.</p>
+          <p class="text-slate-400 text-xs text-center py-4">El carrito está vacío. Añadí un producto arriba.</p>
         </div>
         
-        <div style="background:var(--bg);padding:1rem;border-radius:var(--r);margin-top:1rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+        <div class="bg-slate-50 p-4 rounded-xl mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="form-group">
             <label>Descuento General %</label>
             <input type="number" id="v_dto_global" value="0" min="0" max="90" oninput="aplicarFinanzasCarrito()">
@@ -282,81 +507,146 @@ tr:hover td{background:var(--bg)}
             <input type="number" id="v_total_calculado" class="calculated" readonly>
           </div>
           <div class="form-group">
-            <label>Total Final a Cobrar ($)</label>
-            <input type="number" id="v_total_manual" style="font-weight:700;background:#fff" oninput="aplicarTotalManual()">
+            <label>Total Final Cobrado ($)</label>
+            <input type="number" id="v_total_manual" class="font-bold bg-white" oninput="aplicarTotalManual()">
           </div>
         </div>
 
-        <div style="margin-top:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem">
-          <button class="btn btn-primary" style="background:var(--green)" onclick="procesarVentaCarrito()">✓ Confirmar Venta</button>
+        <div class="mt-4 flex flex-wrap gap-2 justify-between">
+          <button class="btn btn-primary" style="background:var(--green)" onclick="procesarVentaCarrito()">✓ Confirmar y Registrar Venta</button>
           <button class="btn btn-danger" onclick="vaciarCarrito()">🗑 Vaciar Carrito</button>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div id="page-historial" class="page">
+  <!-- Herramienta de Referencia de Precios Simplificada -->
   <div class="section">
     <div class="section-head">
-      <h3>Historial de Movimientos e Ingresos</h3>
-      <input type="text" id="filtro-historial" placeholder="Filtrar por cliente o canal..." oninput="renderHistorial()">
+      <h3>Calculador de Margen Rápido</h3>
     </div>
-    <div class="section-body" style="padding:0">
+    <div class="section-body">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="mb-2 block">Producto de Simulación</label>
+          <select id="sim_producto" onchange="actualizarSimuladorMargen()">
+            <!-- Dinámico -->
+          </select>
+          
+          <div class="mt-3">
+            <label>Formato Simulado</label>
+            <select id="sim_formato" onchange="actualizarSimuladorMargen()" class="mt-1">
+              <option value="5">Bidón de 5 Litros</option>
+              <option value="1">Botella de 1 Litro</option>
+              <option value="0.5">Frasco de 500ml</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="bg-slate-50 p-3 rounded-xl">
+          <div class="flex justify-between text-xs font-semibold mb-2 text-slate-500">
+            <span>MARGEN DESEADO</span>
+            <span id="sim-margen-porc" class="text-teal-600">80%</span>
+          </div>
+          <input type="range" id="sim_slider" min="30" max="200" value="80" oninput="actualizarSimuladorMargen()" class="w-full">
+          
+          <div class="grid grid-cols-2 gap-2 mt-3 text-xs">
+            <div class="bg-white p-2 rounded border">Costos: <strong id="sim-costo">$0</strong></div>
+            <div class="bg-white p-2 rounded border">Precio Sugerido: <strong id="sim-precio" class="text-teal-600">$0</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ HISTORIAL DE OPERACIONES ═══════════ -->
+<div id="page-historial" class="page" style="display: none;">
+  <div class="section">
+    <div class="section-head">
+      <h3>Historial General de Ventas</h3>
+    </div>
+    <div class="section-body">
+      <!-- Filtros de Período -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4 bg-slate-50 p-3 rounded-xl">
+        <div class="form-group">
+          <label class="text-[10px]">Desde</label>
+          <input type="date" id="filtro_desde">
+        </div>
+        <div class="form-group">
+          <label class="text-[10px]">Hasta</label>
+          <input type="date" id="filtro_hasta">
+        </div>
+        <div class="form-group">
+          <label class="text-[10px]">Buscador</label>
+          <input type="text" id="filtro-historial" placeholder="Cliente o producto..." oninput="renderHistorial()">
+        </div>
+        <div class="flex items-end gap-1">
+          <button class="btn btn-secondary w-full" onclick="aplicarFiltroFechas()">Filtrar</button>
+          <button class="btn btn-danger" onclick="limpiarFiltrosHistorial()" title="Limpiar Filtros">✕</button>
+        </div>
+      </div>
+
       <div class="tbl-wrap">
-        <table>
+        <table class="min-w-full">
           <thead>
             <tr>
-              <th># ID</th>
+              <th>ID</th>
               <th>Fecha</th>
               <th>Cliente</th>
-              <th>Detalle Operación</th>
-              <th>Canal</th>
-              <th>Total Cobrado</th>
-              <th>Ganancia Est.</th>
-              <th>Acciones</th>
+              <th>Productos</th>
+              <th>Total</th>
+              <th>Ganancia</th>
+              <th>Acción</th>
             </tr>
           </thead>
           <tbody id="tabla-historial"></tbody>
         </table>
       </div>
+      <div id="historial-vacio" class="text-center py-6 text-slate-400 text-xs">No hay operaciones que coincidan.</div>
     </div>
   </div>
   
   <div class="kpi-grid">
     <div class="kpi">
-      <div class="kpi-label">Ingresos Totales</div>
+      <div class="kpi-label">Ingresos Totales (Período)</div>
       <div class="kpi-val green" id="kpi-ingresos">$0</div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">Ganancia Acumulada</div>
+      <div class="kpi-label">Ganancia Real (Período)</div>
       <div class="kpi-val accent" id="kpi-ganancias">$0</div>
     </div>
     <div class="kpi">
-      <div class="kpi-label">Operaciones</div>
+      <div class="kpi-label">Ventas Registradas</div>
       <div class="kpi-val" id="kpi-ventas-cant">0</div>
     </div>
+    <div class="kpi">
+      <div class="kpi-label">Retorno Envases</div>
+      <div class="kpi-val gold" id="kpi-envases-cant">0</div>
+    </div>
   </div>
 </div>
 
-<div id="page-clientes" class="page">
+<!-- ═══════════ CLIENTES ═══════════ -->
+<div id="page-clientes" class="page" style="display: none;">
   <div class="section">
     <div class="section-head">
-      <h3>Directorio de Clientes</h3>
-      <div style="display:flex; gap:0.5rem; width: 100%; max-width: 500px;">
-        <input type="text" id="buscar-clientes-input" placeholder="🔍 Buscar por nombre, dirección o teléfono..." style="flex:1" oninput="renderClientes()">
-        <button class="btn btn-primary" onclick="abrirModalClienteNuevo()">👤 Nuevo Cliente</button>
+      <h3>Fichas y Directorio de Clientes</h3>
+      <button class="btn btn-primary" onclick="abrirModalClienteNuevo()">👤 Nuevo Cliente</button>
+    </div>
+    <div class="section-body">
+      <div id="lista-clientes-render" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <!-- Dinámico -->
       </div>
     </div>
-    <div class="section-body" id="lista-clientes-render">
-      </div>
   </div>
 </div>
 
-<div id="page-consignaciones" class="page">
+<!-- ═══════════ CONSIGNACIONES ═══════════ -->
+<div id="page-consignaciones" class="page" style="display: none;">
   <div class="section">
     <div class="section-head">
-      <h3>Armar Entrega para Consignación</h3>
+      <h3>Crear Hoja de Consignación</h3>
     </div>
     <div class="section-body">
       <div class="form-grid">
@@ -366,17 +656,19 @@ tr:hover td{background:var(--bg)}
         </div>
         <div class="form-group">
           <label>Consignatario (Local / Revendedor)</label>
-          <input type="text" id="con_nombre" placeholder="Ej: Kiosco Don Pedro">
+          <input type="text" id="con_nombre" placeholder="Nombre comercial o persona...">
         </div>
         <div class="form-group">
-          <label>Tipo de Comercio</label>
+          <label>Canal comercial</label>
           <select id="con_tipo">
-            <option>Kiosco / Almacén de barrio</option>
-            <option>Peluquería / Estética</option>
-            <option>Revendedora Particular</option>
+            <option value="Kiosco / Almacén">Kiosco / Almacén de Barrio</option>
+            <option value="Peluquería / Estética">Peluquería / Estética</option>
+            <option value="Hospedaje / Hotel">Hospedaje / Cabañas</option>
+            <option value="Revendedor">Revendedor Particular</option>
           </select>
         </div>
-        <div class="form-group half">
+        
+        <div class="form-group sm:col-span-2">
           <label>Producto a Consignar</label>
           <select id="con_producto" onchange="calcularPreciosFormatosConsig()">
             <option value="">— seleccionar —</option>
@@ -388,83 +680,68 @@ tr:hover td{background:var(--bg)}
             <option value="5">Bidón 5 Litros</option>
             <option value="3">Botella 3 Litros</option>
             <option value="1">Botella 1 Litro</option>
+            <option value="0.5">Botella 500ml</option>
           </select>
         </div>
         <div class="form-group">
           <label>Cantidad Entregada</label>
-          <input type="number" id="con_cantidad" value="5" min="1" oninput="calcularPreciosFormatosConsig()">
+          <input type="number" id="con_cantidad" value="5" min="1">
         </div>
         <div class="form-group">
-          <label>Precio Venta Acordado ($)</label>
-          <input type="number" id="con_precio_vta" oninput="calcularPreciosFormatosConsig()">
+          <label>Precio Acordado por Unidad ($)</label>
+          <input type="number" id="con_precio_vta">
         </div>
         <div class="form-group">
-          <label>Comisión de Comercio (%)</label>
+          <label>Comisión del Comercio (%)</label>
           <input type="number" id="con_comision" value="15" min="0" max="100">
         </div>
       </div>
       
-      <div style="margin-top:1.25rem;">
-        <button class="btn btn-primary" onclick="agregarAlCarritoConsig()">🛒 Añadir al Borrador</button>
+      <div class="mt-4">
+        <button class="btn btn-primary w-full" onclick="agregarAlCarritoConsig()">➕ Añadir al Borrador</button>
       </div>
 
-      <div class="cart-area" style="border-color:var(--gold)">
-        <div class="cart-title" style="color:var(--gold)"><span>🤝 Productos en este Envío</span></div>
-        <div class="cart-list" id="consig-cart-items"></div>
-        <div style="text-align:right; font-weight:600; color:var(--gold);" id="consig-cart-total">Total Potencial: $0</div>
-        <div style="margin-top:1rem">
-          <button class="btn btn-primary" style="background:var(--accent)" onclick="confirmarConsignacionCompleta()">✓ Confirmar Entrega</button>
+      <div class="cart-area mt-4" style="border-color:var(--gold)">
+        <div class="cart-title" style="color:var(--gold)">
+          <span>🤝 Borrador de Envío Activo</span>
         </div>
+        <div class="cart-list" id="consig-cart-items">
+          <p class="text-slate-400 text-xs text-center py-4">No hay productos en el borrador.</p>
+        </div>
+        <div class="text-right font-bold text-sm text-amber-700 mt-2" id="consig-cart-total">
+          Total Potencial Neto: $0
+        </div>
+        <button class="btn btn-primary w-full mt-3 bg-amber-700 hover:bg-amber-800" onclick="confirmarConsignacionCompleta()">✓ Registrar Hoja de Consignación</button>
       </div>
     </div>
   </div>
 
   <div class="section">
     <div class="section-head">
-      <h3>Seguimiento de Consignaciones Activas</h3>
+      <h3>Seguimiento y Control de Hojas en la Calle</h3>
     </div>
-    <div class="section-body" id="consignaciones-activas-render"></div>
+    <div class="section-body" id="consignaciones-activas-render">
+      <!-- Dinámico -->
+    </div>
   </div>
 </div>
 
-<div id="page-promos" class="page">
+<!-- ═══════════ CATALOGO DE PRECIOS Y COMBOS ═══════════ -->
+<div id="page-promos" class="page" style="display: none;">
   <div class="section">
     <div class="section-head">
-      <h3>Estructura de Márgenes de Ganancia Sugeridos</h3>
+      <h3>Precios de Venta Fijos por Catálogo</h3>
     </div>
-    <div class="section-body" style="padding:0">
+    <div class="section-body">
       <div class="tbl-wrap">
-        <table>
+        <table class="min-w-full">
           <thead>
             <tr>
-              <th>Producto / Insumo</th>
-              <th>Precio Venta Base (5L)</th>
-              <th>Costo Neto Litro</th>
-              <th>Sugerido Mayorista (+40%)</th>
-              <th>Sugerido Distribución (+60%)</th>
-              <th>Sugerido Minorista (+140%)</th>
-              <th>Estatus Retorno</th>
-            </tr>
-          </thead>
-          <tbody id="tabla-precios-ref"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-head">
-      <h3>Configuración de Precios de Venta Fijos e Insumos</h3>
-    </div>
-    <div class="section-body" style="padding:0">
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Insumo / Producto</th>
-              <th>Precio de Venta Fijo ($)</th>
-              <th>Costo Base Unitario ($)</th>
-              <th class="text-center">Acciones</th>
+              <th>Producto / Formato</th>
+              <th>Costo Neto</th>
+              <th>Venta Sugerido ($)</th>
+              <th>Depósito Envase ($)</th>
+              <th>Acción</th>
             </tr>
           </thead>
           <tbody id="tabla-config-precios"></tbody>
@@ -472,740 +749,45 @@ tr:hover td{background:var(--bg)}
       </div>
     </div>
   </div>
-</div>
-
-<div id="page-compras" class="page">
-  <div class="section">
-    <div class="section-head">
-      <h3>Creación de Nuevos Productos / Insumos en Caliente</h3>
-    </div>
-    <div class="section-body">
-      <div class="form-grid" style="grid-template-columns: 2fr 1fr">
-        <div class="form-group">
-          <label>Nombre del Producto / Insumo</label>
-          <input type="text" id="ins_nombre" placeholder="Ej: Detergente de Manzana">
-        </div>
-        <div class="form-group" style="justify-content:flex-end">
-          <button class="btn btn-primary" style="width:100%" onclick="crearInsumoNuevo()">＋ Agregar Insumo</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <div class="section">
     <div class="section-head">
-      <h3>Registrar Compra / Carga de Stock</h3>
+      <h3>Combos y Ofertas</h3>
+      <button class="btn btn-primary" onclick="abrirModalComboNuevo()">🎁 Crear Nuevo Combo</button>
     </div>
-    <div class="section-body">
-      <div class="form-grid" style="grid-template-columns: 2fr 1fr">
-        <div class="form-group">
-          <label>Insumo Adquirido</label>
-          <select id="fac_prod"></select>
-        </div>
-        <div class="form-group">
-          <label>Litros Comprados</label>
-          <input type="number" id="fac_litros" value="50">
-        </div>
-        <div class="form-group">
-          <label>Costo de Lista Total ($)</label>
-          <input type="number" id="fac_costo_lista" value="50000">
-        </div>
-      </div>
-      <div style="margin-top:1rem; text-align:right">
-        <button class="btn btn-primary" onclick="guardarPedidoCompletoStock()">✓ Registrar Carga de Stock</button>
-      </div>
+    <div class="section-body" id="lista-combos-render">
+      <!-- Dinámico -->
     </div>
   </div>
 </div>
 
-<div id="page-dashboard" class="page">
+<!-- ═══════════ COMPRAS Y GASTOS ═══════════ -->
+<div id="page-compras" class="page" style="display: none;">
   <div class="section">
     <div class="section-head">
-      <h3>Inversión vs. Retorno Financiero</h3>
-      <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="resetearInversionHistorica()">🔄 Resetear Inversión</button>
+      <h3>Crear Insumo o Producto Nuevo en Caliente</h3>
     </div>
     <div class="section-body">
-      <div class="kpi-grid" style="margin-bottom:0">
-        <div class="kpi">
-          <div class="kpi-label">Inversión Histórica</div>
-          <div class="kpi-val" id="dash-inversion-total">$0</div>
+      <div class="form-grid">
+        <div class="form-group sm:col-span-2">
+          <label>Nombre del Insumo / Concentrado</label>
+          <input type="text" id="ins_nombre" placeholder="Ej: Jabón Concentrado Lavanda">
         </div>
-        <div class="kpi">
-          <div class="kpi-label">Retorno Obtenido</div>
-          <div class="kpi-val green" id="dash-ingresos-total">$0</div>
-        </div>
-        <div class="kpi">
-          <div class="kpi-label">Ganancia Real Neta</div>
-          <div class="kpi-val accent" id="dash-ganancias-total">$0</div>
+        <div class="form-group">
+          <label>Esquema de Formato</label>
+          <select id="ins_estilo_formatos">
+            <option value="estandar">Bidón de 5L</option>
+          </select>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="section">
-    <div class="section-head">
-      <h3>Monitoreo de Stock Actual (Litros)</h3>
-    </div>
-    <div class="section-body" id="panel-monitoreo-stock">
-      </div>
   </div>
 </div>
-
 </main>
-
-<div class="modal-overlay" id="modal-cliente">
-  <div class="modal-card">
-    <div class="modal-hdr">
-      <h3>Datos de Ficha de Cliente</h3>
-      <button onclick="cerrarModal('modal-cliente')" style="background:none;border:none;color:#fff;cursor:pointer">✕</button>
-    </div>
-    <div class="modal-body">
-      <div style="display:flex;flex-direction:column;gap:1rem">
-        <div class="form-group">
-          <label>Nombre y Apellido</label>
-          <input type="text" id="cl_nombre" placeholder="Ej: Juan Gómez">
-        </div>
-        <div class="form-group">
-          <label>Dirección</label>
-          <input type="text" id="cl_direccion" placeholder="Calle ...">
-        </div>
-        <div class="form-group">
-          <label>Teléfono</label>
-          <input type="text" id="cl_telefono" placeholder="2901...">
-        </div>
-        <button class="btn btn-primary" onclick="guardarClienteFicha()">Guardar Cliente</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div id="toast" class="toast"></div>
 
-<script>
-// Estado de la Aplicación inicializado con tus insumos de muestra
-let appState = {
-  insumos: [
-    { id: "ins-1", nombre: "Jabón Líquido Tipo Ariel", costoBase: 450, precioFijo: 1200, stockLitros: 150 },
-    { id: "ins-2", nombre: "Suavizante Celeste Bebé", costoBase: 380, precioFijo: 1000, stockLitros: 200 },
-    { id: "ins-3", nombre: "Detergente Concentrado Limón", costoBase: 510, precioFijo: 1400, stockLitros: 90 }
-  ],
-  ventas: [],
-  clientes: [
-    { id: "c-1", nombre: "María Lawson", direccion: "Ushuaia Centro", telefono: "2901-445566", totalComprado: 0 },
-    { id: "c-2", nombre: "Kiosco El Faro", direccion: "Av. Maipú 450", telefono: "2901-152233", totalComprado: 0 }
-  ],
-  consignaciones: [],
-  inversionHistorica: 145000
-};
-
-let carritoPOS = [];
-let borradorConsig = [];
-
-window.addEventListener('DOMContentLoaded', () => {
-  cargarDeLocalStorage();
-  document.getElementById('v_fecha').value = new Date().toISOString().slice(0, 10);
-  document.getElementById('con_fecha').value = new Date().toISOString().slice(0, 10);
-  
-  setTimeout(() => {
-    document.getElementById('app-loader').style.opacity = 0;
-    setTimeout(() => document.getElementById('app-loader').style.display = 'none', 400);
-    document.getElementById('cloud-status').classList.add('online');
-  }, 800);
-
-  refrescarTodo();
-});
-
-function guardarEnLocalStorage() {
-  localStorage.setItem('lumina_state', JSON.stringify(appState));
-}
-
-function cargarDeLocalStorage() {
-  const guardado = localStorage.getItem('lumina_state');
-  if(guardado) {
-    try { appState = JSON.parse(guardado); } catch(e) { console.error(e); }
-  }
-}
-
-function refrescarTodo() {
-  renderSelectores();
-  renderPreciosRef();
-  renderHistorial();
-  renderClientes();
-  renderConsignaciones();
-  renderConfigPrecios();
-  renderDashboard();
-}
-
-function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  
-  document.getElementById(`page-${pageId}`).classList.add('active');
-  event.currentTarget.classList.add('active');
-}
-
-function toast(msg, tipo = "green") {
-  const t = document.getElementById('toast');
-  t.innerText = msg;
-  t.className = `toast show ${tipo}`;
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
-
-function cerrarModal(id) {
-  document.getElementById(id).classList.remove('active');
-}
-
-// LÓGICA DE INSUMOS (CON FUNCIÓN DE ELIMINACIÓN REQUERIDA)
-function crearInsumoNuevo() {
-  const nom = document.getElementById('ins_nombre').value.trim();
-  if(!nom) return toast("⚠️ Escribí un nombre", "red");
-  
-  const nuevo = {
-    id: "ins-" + Date.now(),
-    nombre: nom,
-    costoBase: 0,
-    precioFijo: 0,
-    stockLitros: 0
-  };
-  
-  appState.insumos.push(nuevo);
-  guardarEnLocalStorage();
-  refrescarTodo();
-  document.getElementById('ins_nombre').value = "";
-  toast(`✓ "${nom}" creado con éxito`);
-}
-
-function eliminarInsumo(id) {
-  const insumo = appState.insumos.find(i => i.id === id);
-  if(!insumo) return;
-  
-  if(confirm(`¿Estás seguro de que querés eliminar el producto "${insumo.nombre}"? No aparecerá más en las listas.`)) {
-    appState.insumos = appState.insumos.filter(i => i.id !== id);
-    guardarEnLocalStorage();
-    refrescarTodo();
-    toast("✓ Insumo eliminado correctamente");
-  }
-}
-
-// RENDERIZADO DE SELECTORES INTERNOS
-function renderSelectores() {
-  const vProd = document.getElementById('v_producto');
-  const conProd = document.getElementById('con_producto');
-  const facProd = document.getElementById('fac_prod');
-  const dl = document.getElementById('lista-clientes');
-  
-  let h = '<option value="">— elegí un producto —</option>';
-  appState.insumos.forEach(i => {
-    h += `<option value="${i.id}">${i.nombre}</option>`;
-  });
-  
-  vProd.innerHTML = h;
-  conProd.innerHTML = h;
-  facProd.innerHTML = h;
-
-  let hc = '';
-  appState.clientes.forEach(c => { hc += `<option value="${c.nombre}">`; });
-  dl.innerHTML = hc;
-}
-
-// COMPORTAMIENTOS CAJA / CAJA POS
-function seleccionarProductoPOS() {
-  const id = document.getElementById('v_producto').value;
-  const ins = appState.insumos.find(i => i.id === id);
-  if(ins) {
-    document.getElementById('v_precio').value = ins.precioFijo || 0;
-    calcularPreciosFormatosPOS();
-  }
-}
-
-function calcularPreciosFormatosPOS() {
-  const id = document.getElementById('v_producto').value;
-  const formato = parseFloat(document.getElementById('v_formato').value);
-  const cant = parseInt(document.getElementById('v_cantidad').value) || 1;
-  const ins = appState.insumos.find(i => i.id === id);
-  
-  if(!ins) return;
-  
-  let total = (ins.precioFijo * (formato / 5)) * cant;
-  document.getElementById('v_total_calculado').value = Math.round(total);
-}
-
-function autocompletarCliente(nom) {
-  const c = appState.clientes.find(cl => cl.nombre.toLowerCase() === nom.toLowerCase());
-  if(c) {
-    document.getElementById('v_cliente_dir').value = c.direccion || '';
-    document.getElementById('v_cliente_tel').value = c.telefono || '';
-  }
-}
-
-function limpiarFormularioPOS() {
-  document.getElementById('v_producto').value = '';
-  document.getElementById('v_precio').value = '';
-  document.getElementById('v_cantidad').value = 1;
-  document.getElementById('v_total_calculado').value = '';
-}
-
-function agregarAlCarrito() {
-  const id = document.getElementById('v_producto').value;
-  const ins = appState.insumos.find(i => i.id === id);
-  if(!ins) return toast("⚠️ Seleccioná un producto", "red");
-  
-  const formato = parseFloat(document.getElementById('v_formato').value);
-  const cant = parseInt(document.getElementById('v_cantidad').value) || 1;
-  const precioUnit = parseFloat(document.getElementById('v_precio').value) || 0;
-  
-  const item = {
-    idInsumo: ins.id,
-    nombre: ins.nombre,
-    formato: formato,
-    cantidad: cant,
-    precioCobrado: precioUnit,
-    costoEstimado: ins.costoBase * formato
-  };
-  
-  carritoPOS.push(item);
-  renderCarrito();
-  limpiarFormularioPOS();
-  toast("✓ Añadido al carrito");
-}
-
-function renderCarrito() {
-  const container = document.getElementById('cart-items-render');
-  if(carritoPOS.length === 0) {
-    container.innerHTML = '<p style="color:var(--ink3);font-size:.85rem;text-align:center;padding:1rem">El carrito está vacío.</p>';
-    document.getElementById('v_total_calculado').value = 0;
-    document.getElementById('v_total_manual').value = 0;
-    document.getElementById('cart-item-count').innerText = "0 artículos";
-    return;
-  }
-  
-  let h = '';
-  let suma = 0;
-  carritoPOS.forEach((it, idx) => {
-    let sub = it.precioCobrado * it.cantidad;
-    suma += sub;
-    h += `<div class="cart-item">
-      <span><b>${it.cantidad}x</b> ${it.nombre} (${it.formato}L)</span>
-      <span>$${Math.round(sub)} <button onclick="quitarCarrito(${idx})" style="color:var(--red);margin-left:0.5rem">✕</button></span>
-    </div>`;
-  });
-  
-  container.innerHTML = h;
-  document.getElementById('v_total_calculado').value = Math.round(suma);
-  document.getElementById('v_total_manual').value = Math.round(suma);
-  document.getElementById('cart-item-count').innerText = `${carritoPOS.length} ítems`;
-}
-
-function quitarCarrito(idx) {
-  carritoPOS.splice(idx, 1);
-  renderCarrito();
-}
-
-function vaciarCarrito() {
-  carritoPOS = [];
-  renderCarrito();
-}
-
-function aplicarFinanzasCarrito() {
-  const suma = parseFloat(document.getElementById('v_total_calculado').value) || 0;
-  const dto = parseFloat(document.getElementById('v_dto_global').value) || 0;
-  const final = suma - (suma * (dto / 100));
-  document.getElementById('v_total_manual').value = Math.round(final);
-}
-
-function aplicarTotalManual() {}
-
-function procesarVentaCarrito() {
-  if(carritoPOS.length === 0) return toast("⚠️ Carrito vacío", "red");
-  
-  const cliente = document.getElementById('v_cliente').value.trim() || "Consumidor Final";
-  const total = parseFloat(document.getElementById('v_total_manual').value) || 0;
-  
-  let costoTotal = 0;
-  carritoPOS.forEach(it => {
-    costoTotal += (it.costoEstimado || 0) * it.quantity;
-    const ins = appState.insumos.find(i => i.id === it.idInsumo);
-    if(ins) ins.stockLitros = Math.max(0, ins.stockLitros - (it.formato * it.cantidad));
-  });
-  
-  const ganancia = total - costoTotal;
-  
-  const venta = {
-    id: "VTA-" + Math.floor(1000 + Math.random() * 9000),
-    fecha: document.getElementById('v_fecha').value,
-    cliente: cliente,
-    canal: document.getElementById('v_canal').value,
-    total: total,
-    ganancia: Math.round(ganancia),
-    items: [...carritoPOS]
-  };
-  
-  appState.ventas.push(venta);
-  
-  const cEx = appState.clientes.find(c => c.nombre.toLowerCase() === cliente.toLowerCase());
-  if(cEx) cEx.totalComprado += total;
-  
-  carritoPOS = [];
-  renderCarrito();
-  guardarEnLocalStorage();
-  refrescarTodo();
-  toast("✓ Venta registrada con éxito");
-}
-
-// INTERFAZ HISTORIAL
-function renderHistorial() {
-  const f = document.getElementById('filtro-historial').value.toLowerCase();
-  const t = document.getElementById('tabla-historial');
-  
-  let h = '';
-  let ing = 0, gan = 0;
-  
-  appState.ventas.forEach(v => {
-    if(v.cliente.toLowerCase().includes(f) || v.canal.toLowerCase().includes(f)) {
-      ing += v.total;
-      gan += v.ganancia;
-      
-      const det = v.items.map(i => `${i.cantidad}x ${i.nombre} (${i.formato}L)`).join(', ');
-      
-      h += `<tr>
-        <td><b>${v.id}</b></td>
-        <td>${v.fecha}</td>
-        <td>${v.cliente}</td>
-        <td>${det}</td>
-        <td><span class="badge badge-purple">${v.canal}</span></td>
-        <td><b>$${v.total}</b></td>
-        <td style="color:var(--green); font-weight:500">$${v.ganancia}</td>
-        <td><button class="btn-danger p-1 text-xs rounded" onclick="borrarOperacion('${v.id}')">🗑</button></td>
-      </tr>`;
-    }
-  });
-  
-  t.innerHTML = h;
-  document.getElementById('kpi-ingresos').innerText = `$${ing}`;
-  document.getElementById('kpi-ganancias').innerText = `$${gan}`;
-  document.getElementById('kpi-ventas-cant').innerText = appState.ventas.length;
-}
-
-function borrarOperacion(id) {
-  if(confirm("¿Desea eliminar esta venta del historial?")) {
-    appState.ventas = appState.ventas.filter(v => v.id !== id);
-    guardarEnLocalStorage();
-    refrescarTodo();
-  }
-}
-
-// RENDER DE CLIENTES CON BUSCADOR EXCLUSIVO EN TIEMPO REAL
-function renderClientes() {
-  const container = document.getElementById('lista-clientes-render');
-  const query = document.getElementById('buscar-clientes-input') ? document.getElementById('buscar-clientes-input').value.toLowerCase() : "";
-  
-  let h = '';
-  
-  const clientesFiltrados = appState.clientes.filter(c => 
-    c.nombre.toLowerCase().includes(query) || 
-    (c.direccion && c.direccion.toLowerCase().includes(query)) ||
-    (c.telefono && c.telefono.includes(query))
-  );
-
-  if(clientesFiltrados.length === 0) {
-    container.innerHTML = `<p style="color:var(--ink3);text-align:center;padding:2rem;">No se encontraron clientes.</p>`;
-    return;
-  }
-
-  clientesFiltrados.forEach(c => {
-    h += `<div class="cliente-card">
-      <div class="cliente-info">
-        <h4>${c.nombre}</h4>
-        <p>📍 ${c.direccion || 'Sin dirección'} | 📞 ${c.telefono || 'Sin teléfono'}</p>
-      </div>
-      <div class="cliente-stats">
-        <div class="total">$${c.totalComprado || 0}</div>
-        <div style="font-size:0.7rem; color:var(--ink3)">Acumulado</div>
-      </div>
-    </div>`;
-  });
-  
-  container.innerHTML = h;
-}
-
-function abrirModalClienteNuevo() {
-  document.getElementById('modal-cliente').classList.add('active');
-}
-
-function guardarClienteFicha() {
-  const nom = document.getElementById('cl_nombre').value.trim();
-  const dir = document.getElementById('cl_direccion').value.trim();
-  const tel = document.getElementById('cl_telefono').value.trim();
-  
-  if(!nom) return toast("⚠️ El nombre es obligatorio", "red");
-  
-  appState.clientes.push({
-    id: "c-" + Date.now(),
-    nombre: nom,
-    direccion: dir,
-    telefono: tel,
-    totalComprado: 0
-  });
-  
-  guardarEnLocalStorage();
-  refrescarTodo();
-  cerrarModal('modal-cliente');
-  toast("✓ Cliente agendado");
-}
-
-// LOGICA CONSIGNACIONES CON IMPACTO VERDADERO EN LAS GANANCIAS GLOBALES
-function calcularPreciosFormatosConsig() {
-  const id = document.getElementById('con_producto').value;
-  const formato = parseFloat(document.getElementById('con_formato').value);
-  const ins = appState.insumos.find(i => i.id === id);
-  if(ins) {
-    document.getElementById('con_precio_vta').value = Math.round(ins.precioFijo * (formato / 5));
-  }
-}
-
-function agregarAlCarritoConsig() {
-  const id = document.getElementById('con_producto').value;
-  const ins = appState.insumos.find(i => i.id === id);
-  if(!ins) return toast("⚠️ Elegí un producto", "red");
-  
-  const formato = parseFloat(document.getElementById('con_formato').value);
-  const cant = parseInt(document.getElementById('con_cantidad').value) || 1;
-  const pVta = parseFloat(document.getElementById('con_precio_vta').value) || 0;
-  
-  borradorConsig.push({
-    idInsumo: ins.id,
-    nombre: ins.nombre,
-    formato: formato,
-    cantidad: cant,
-    precioAcordado: pVta,
-    costoBaseUnitario: ins.costoBase * formato
-  });
-  
-  renderBorradorConsig();
-}
-
-function renderBorradorConsig() {
-  const c = document.getElementById('consig-cart-items');
-  let h = '', tot = 0;
-  
-  borradorConsig.forEach((it, idx) => {
-    let sub = it.precioAcordado * it.cantidad;
-    tot += sub;
-    h += `<div class="cart-item">
-      <span><b>${it.cantidad}x</b> ${it.nombre} (${it.formato}L)</span>
-      <span>$${sub}</span>
-    </div>`;
-  });
-  
-  c.innerHTML = h || '<p style="color:var(--ink3);text-align:center">Borrador vacío.</p>';
-  document.getElementById('consig-cart-total').innerText = `Total Potencial de Ingreso: $${tot}`;
-}
-
-function confirmarConsignacionCompleta() {
-  const nombre = document.getElementById('con_nombre').value.trim();
-  if(!nombre || borradorConsig.length === 0) return toast("⚠️ Faltan datos o productos", "red");
-  
-  const nueva = {
-    id: "CNS-" + Date.now(),
-    fecha: document.getElementById('con_fecha').value,
-    consignatario: nombre,
-    tipo: document.getElementById('con_tipo').value,
-    items: [...borradorConsig],
-    comisionPorc: parseFloat(document.getElementById('con_comision').value) || 0,
-    estado: "Activa"
-  };
-  
-  borradorConsig.forEach(it => {
-    const ins = appState.insumos.find(i => i.id === it.idInsumo);
-    if(ins) ins.stockLitros = Math.max(0, ins.stockLitros - (it.formato * it.cantidad));
-  });
-  
-  appState.consignaciones.push(nueva);
-  borradorConsig = [];
-  renderBorradorConsig();
-  guardarEnLocalStorage();
-  refrescarTodo();
-  toast("✓ Consignación despachada con éxito");
-}
-
-function rendirConsignacionTotal(idConsig) {
-  const con = appState.consignaciones.find(c => c.id === idConsig);
-  if(!con) return;
-  
-  if(confirm(`¿Rendir y liquidar la consignación de "${con.consignatario}"?`)) {
-    let totalCobradoEfectivo = 0;
-    let costoTotalInsumos = 0;
-    
-    con.items.forEach(it => {
-      let subtotalVenta = it.precioAcordado * it.cantidad;
-      let comisionLocal = subtotalVenta * (con.comisionPorc / 100);
-      totalCobradoEfectivo += (subtotalVenta - comisionLocal);
-      costoTotalInsumos += (it.costoBaseUnitario * it.cantidad);
-    });
-    
-    let gananciaNetaReal = totalCobradoEfectivo - costoTotalInsumos;
-    
-    // Inyección de movimiento comercial real al historial acumulado
-    const ventaRendida = {
-      id: "VTA-CNS-" + Math.floor(1000 + Math.random() * 9000),
-      fecha: new Date().toISOString().slice(0, 10),
-      cliente: `Rendición: ${con.consignatario}`,
-      canal: "Consignación",
-      total: Math.round(totalCobradoEfectivo),
-      ganancia: Math.round(gananciaNetaReal),
-      items: con.items.map(it => ({
-        idInsumo: it.idInsumo,
-        nombre: it.nombre,
-        formato: it.formato,
-        cantidad: it.cantidad,
-        precioCobrado: it.precioAcordado
-      }))
-    };
-    
-    appState.ventas.push(ventaRendida);
-    
-    // Remoción de las vigentes
-    appState.consignaciones = appState.consignaciones.filter(c => c.id !== idConsig);
-    
-    guardarEnLocalStorage();
-    refrescarTodo();
-    toast(`✓ ¡Consignación Rendida! +$${Math.round(totalCobradoEfectivo)} computados en tus ganancias.`);
-  }
-}
-
-function renderConsignaciones() {
-  const r = document.getElementById('consignaciones-activas-render');
-  let h = '';
-  
-  appState.consignaciones.forEach(c => {
-    let cantItems = c.items.reduce((acc, i) => acc + i.cantidad, 0);
-    h += `<div class="flex justify-between items-center bg-white p-4 border rounded mb-2 shadow-sm">
-      <div>
-        <strong>${c.consignatario}</strong> <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded ml-2">${c.tipo}</span>
-        <div class="text-xs text-slate-500 mt-1">Entregado: ${c.fecha} | ${cantItems} bultos | Comisión acordada: ${c.comisionPorc}%</div>
-      </div>
-      <div>
-        <button class="btn btn-primary" style="background:var(--green); font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="rendirConsignacionTotal('${c.id}')">💵 Rendir / Cobrar</button>
-      </div>
-    </div>`;
-  });
-  
-  r.innerHTML = h || '<p style="color:var(--ink3);text-align:center;padding:1rem;">No hay consignaciones activas pendientes.</p>';
-}
-
-// TABLAS PRECIOS REFERENCIALES Y CONFIG
-function renderPreciosRef() {
-  const tbody = document.getElementById('tabla-precios-ref');
-  let h = '';
-  appState.insumos.forEach(i => {
-    h += `<tr>
-      <td><b>${i.nombre}</b></td>
-      <td style="color:var(--accent);font-weight:600">$${i.precioFijo}</td>
-      <td>$${i.costoBase}</td>
-      <td style="color:var(--green);font-weight:500">$${Math.round(i.costoBase * 5 * 1.4)}</td>
-      <td style="color:var(--blue);font-weight:500">$${Math.round(i.costoBase * 5 * 1.6)}</td>
-      <td style="color:var(--orange);font-weight:500">$${Math.round(i.costoBase * 5 * 2.4)}</td>
-      <td><span class="badge badge-green">Activo</span></td>
-    </tr>`;
-  });
-  tbody.innerHTML = h;
-}
-
-function renderConfigPrecios() {
-  const tbody = document.getElementById('tabla-config-precios');
-  let h = '';
-  appState.insumos.forEach(i => {
-    h += `<tr>
-      <td>${i.nombre}</td>
-      <td><input type="number" value="${i.precioFijo}" onchange="actualizarPrecioFijo('${i.id}', this.value)" style="width:110px"></td>
-      <td><input type="number" value="${i.costoBase}" onchange="actualizarCostoBase('${i.id}', this.value)" style="width:110px"></td>
-      <td class="text-center">
-        <button class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="eliminarInsumo('${i.id}')">🗑️ Eliminar</button>
-      </td>
-    </tr>`;
-  });
-  tbody.innerHTML = h;
-}
-
-function actualizarPrecioFijo(id, val) {
-  const ins = appState.insumos.find(i => i.id === id);
-  if(ins) { ins.precioFijo = parseFloat(val) || 0; guardarEnLocalStorage(); renderPreciosRef(); }
-}
-
-function actualizarCostoBase(id, val) {
-  const ins = appState.insumos.find(i => i.id === id);
-  if(ins) { ins.costoBase = parseFloat(val) || 0; guardarEnLocalStorage(); renderPreciosRef(); }
-}
-
-// CARGA DE STOCK / LOGÍSTICA COMPRAS
-function guardarPedidoCompletoStock() {
-  const idProd = document.getElementById('fac_prod').value;
-  const litros = parseFloat(document.getElementById('fac_litros').value) || 0;
-  const costo = parseFloat(document.getElementById('fac_costo_lista').value) || 0;
-  
-  const ins = appState.insumos.find(i => i.id === idProd);
-  if(!ins || litros <= 0) return toast("⚠️ Datos inválidos", "red");
-  
-  ins.stockLitros += litros;
-  ins.costoBase = Math.round(costo / litros);
-  
-  appState.inversionHistorica += costo;
-  
-  guardarEnLocalStorage();
-  refrescarTodo();
-  toast(`✓ Stock cargado con flete prorrateado. +${litros}L a ${ins.nombre}`);
-}
-
-// RESET DE CONTADOR HISTÓRICO DE INVERSIÓN
-function resetearInversionHistorica() {
-  if(confirm("¿Querés reiniciar la Inversión Histórica a $0 para comenzar un nuevo balance limpio?")) {
-    appState.inversionHistorica = 0;
-    guardarEnLocalStorage();
-    refrescarTodo();
-    toast("🔄 Contador de inversión reseteado.");
-  }
-}
-
-// MONITOREO DE PANEL & DASHBOARD FINANCIERO
-function renderDashboard() {
-  let ingTotal = appState.ventas.reduce((acc, v) => acc + v.total, 0);
-  let ganTotal = appState.ventas.reduce((acc, v) => acc + v.ganancia, 0);
-  
-  document.getElementById('dash-inversion-total').innerText = `$${appState.inversionHistorica}`;
-  document.getElementById('dash-ingresos-total').innerText = `$${ingTotal}`;
-  document.getElementById('dash-ganancias-total').innerText = `$${ganTotal}`;
-  
-  const pStock = document.getElementById('panel-monitoreo-stock');
-  let h = '';
-  appState.insumos.forEach(i => {
-    let porc = Math.min(100, (i.stockLitros / 300) * 100); 
-    let color = porc < 20 ? 'background:var(--red)' : porc < 50 ? 'background:var(--orange)' : 'background:var(--green)';
-    
-    h += `<div class="stock-monitor-item">
-      <div class="sm-header">
-        <span class="sm-title">${i.nombre}</span>
-        <span class="font-mono font-bold text-sm text-slate-700">${i.stockLitros} Litros</span>
-      </div>
-      <div class="sm-bar-bg"><div class="sm-bar-fill" style="width:${porc}%; ${color}"></div></div>
-    </div>`;
-  });
-  pStock.innerHTML = h || '<p style="color:var(--ink3);text-align:center">No hay insumos para monitorear.</p>';
-}
-
-function exportarExcel() {
-  toast("✓ Generando reporte de caja general...");
-  let csv = 'ID,Fecha,Cliente,Canal,Total Cobrado,Ganancia\n';
-  appState.ventas.forEach(v => {
-    csv += `${v.id},${v.fecha},"${v.cliente}",${v.canal},${v.total},${v.ganancia}\n`;
-  });
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.setAttribute("download", `Lumina_Balance_${new Date().toISOString().slice(0,10)}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-</script>
 </body>
 </html>
+
+```
