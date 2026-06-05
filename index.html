@@ -12,9 +12,9 @@
 
 <style>
 :root {
-  --ink:      #111d26;
-  --ink2:     #1b3241;
-  --ink3:     #4a677a;
+  --ink:     #111d26;
+  --ink2:    #1b3241;
+  --ink3:    #4a677a;
   --bg:      #f0f6fa;
   --bg2:     #dcecf5;
   --bg3:     #ffffff;
@@ -292,7 +292,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   <p class="text-[10px] text-slate-400 mt-6 tracking-wide">PIN Predeterminado: 1234 (Podés usar el teclado de la PC)</p>
 </div>
 
-<!-- SCRIPT INSTANTÁNEO DE PIN -->
+<!-- SCRIPT INSTANTÁNEO DE PIN (Evita retrasos de carga de Firebase y soporta teclado físico de PC) -->
 <script>
   let pinIngresado = "";
   const PIN_CORRECTO = "1234";
@@ -308,6 +308,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
       }
     }
     
+    // Actualizar UI del PIN
     for (let i = 0; i < 4; i++) {
       const dot = document.getElementById(`dot-${i}`);
       if (dot) {
@@ -324,6 +325,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
       document.getElementById('main-nav').classList.remove('hidden');
       document.getElementById('main-content').classList.remove('hidden');
       
+      // Mostrar alerta visual rápida
       const toastEl = document.getElementById('toast');
       if (toastEl) {
         toastEl.textContent = "🔓 Acceso Correcto a Lumina";
@@ -331,6 +333,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
         setTimeout(() => toastEl.classList.remove('show'), 2000);
       }
       
+      // Lanzamos la autenticación de Firebase que está cargando de fondo
       if (window.iniciarAutenticacion) {
         window.iniciarAutenticacion();
       }
@@ -347,6 +350,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
     }
   };
 
+  // Agregar soporte de teclado para PC (Ingreso rápido por teclado numérico o estándar)
   window.addEventListener('keydown', (e) => {
     const lockScreen = document.getElementById('lock-screen');
     if (lockScreen && lockScreen.style.display !== 'none') {
@@ -370,7 +374,6 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
 
 <nav class="hidden" id="main-nav">
   <div class="logo">
-    <!-- Ícono definitivo: gota limpia sin destellos -->
     <svg class="w-5 h-5 text-[#00a8e8]" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
     Lumin<span>a</span>
   </div>
@@ -484,6 +487,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
         <button class="btn btn-secondary" onclick="limpiarFormularioPOS()">✕ Limpiar</button>
       </div>
 
+      <!-- STREAMING_CHUNK: Carrito de compras... -->
       <!-- Carrito Virtual de Ventas -->
       <div class="cart-area">
         <div class="cart-title">
@@ -557,6 +561,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   </div>
 </div>
 
+<!-- STREAMING_CHUNK: Setting up History Page... -->
 <!-- ═══════════ HISTORIAL DE OPERACIONES ═══════════ -->
 <div id="page-historial" class="page" style="display: none;">
   <div class="section">
@@ -624,6 +629,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   </div>
 </div>
 
+<!-- STREAMING_CHUNK: Setting up Customers Page... -->
 <!-- ═══════════ CLIENTES ═══════════ -->
 <div id="page-clientes" class="page" style="display: none;">
   <div class="section">
@@ -639,6 +645,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   </div>
 </div>
 
+<!-- STREAMING_CHUNK: Setting up Consignments Page... -->
 <!-- ═══════════ CONSIGNACIONES ═══════════ -->
 <div id="page-consignaciones" class="page" style="display: none;">
   <div class="section">
@@ -723,6 +730,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   </div>
 </div>
 
+<!-- STREAMING_CHUNK: Setting up Catalogs Page... -->
 <!-- ═══════════ CATALOGO DE PRECIOS Y COMBOS ═══════════ -->
 <div id="page-promos" class="page" style="display: none;">
   <div class="section">
@@ -758,6 +766,7 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
   </div>
 </div>
 
+<!-- STREAMING_CHUNK: Setting up Purchases Page... -->
 <!-- ═══════════ COMPRAS Y GASTOS ═══════════ -->
 <div id="page-compras" class="page" style="display: none;">
   <div class="section">
@@ -773,16 +782,2058 @@ td{padding:.6rem .75rem;border-bottom:1px solid var(--bg2);vertical-align:middle
         <div class="form-group">
           <label>Esquema de Formato</label>
           <select id="ins_estilo_formatos">
-            <option value="estandar">Bidón de 5L</option>
+            <option value="estandar">Bidón de 5L únicamente</option>
+            <option value="lavandinas">Formato Lavandinas (1L, 3L, 5L)</option>
+            <option value="detergentes">Formato Detergentes (500ml, 1L, 2L)</option>
           </select>
+        </div>
+      </div>
+      <button class="btn btn-primary w-full mt-3" onclick="crearInsumoNuevo()">➕ Dar de Alta Insumo</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <h3>Registrar Compra y Cargar Stock</h3>
+    </div>
+    <div class="section-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Flete del Pedido ($)</label>
+          <input type="number" id="fac_flete" value="0" min="0" oninput="calcularProrrateoCompra()">
+        </div>
+        <div class="form-group">
+          <label>Descuentos Obtenidos ($)</label>
+          <input type="number" id="fac_descuentos" value="0" min="0" oninput="calcularProrrateoCompra()">
+        </div>
+        <div class="form-group">
+          <label>Otros Gastos Extra ($)</label>
+          <input type="number" id="fac_otros" value="0" min="0" oninput="calcularProrrateoCompra()">
+        </div>
+      </div>
+
+      <div class="bg-slate-50 p-3 rounded-xl mt-3 border border-slate-200">
+        <label class="block mb-2 text-xs font-bold text-slate-500">Cargar Línea de Compra</label>
+        <div class="form-grid">
+          <div class="form-group sm:col-span-2">
+            <label>Insumo Adquirido</label>
+            <select id="fac_prod"></select>
+          </div>
+          <div class="form-group">
+            <label>Litros Totales</label>
+            <input type="number" id="fac_litros" value="50" min="1">
+          </div>
+          <div class="form-group">
+            <label>Costo de Lista Total ($)</label>
+            <input type="number" id="fac_costo_lista" value="10000" min="1">
+          </div>
+        </div>
+        <button class="btn btn-secondary w-full mt-3" onclick="agregarLineaFactura()">➕ Añadir Línea al Pedido</button>
+      </div>
+
+      <!-- Detalle de la factura armada -->
+      <div class="tbl-wrap mt-4">
+        <table class="min-w-full">
+          <thead>
+            <tr>
+              <th>Insumo</th>
+              <th>Litros</th>
+              <th>Costo Lista</th>
+              <th>Costo Real / Litro</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-lineas-compra"></tbody>
+        </table>
+      </div>
+
+      <!-- Control de Pagos al Proveedor -->
+      <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl mt-4 flex flex-wrap justify-between items-center gap-3">
+        <div class="form-group">
+          <label class="text-amber-800">Estado del Pago</label>
+          <select id="fac_estado_pago" class="border-amber-300">
+            <option value="Pagado">✓ Todo Pagado (Efectivo/Transferencia)</option>
+            <option value="Pendiente">⚠️ Queda Pendiente (Deuda / Proveedor)</option>
+          </select>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-semibold text-slate-500 block">TOTAL A REGISTRAR</span>
+          <span id="compra-total-final" class="text-xl font-bold text-amber-800">$0</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary w-full mt-3 bg-teal-700 hover:bg-teal-800" onclick="guardarPedidoCompletoStock()">✓ Confirmar Pedido y Cargar al Inventario</button>
+    </div>
+  </div>
+
+  <!-- STREAMING_CHUNK: Past Purchases History... -->
+  <!-- Historial de Pedidos de Insumos -->
+  <div class="section mt-4">
+    <div class="section-head">
+      <h3>Historial de Pedidos Recientes (Insumos)</h3>
+    </div>
+    <div class="section-body">
+      <div class="tbl-wrap">
+        <table class="min-w-full">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Detalle Compra</th>
+              <th>Total Gasto</th>
+              <th>Estado de Pago</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-historial-compras">
+            <!-- Dinámico -->
+          </tbody>
+        </table>
+      </div>
+      <div id="compras-vacio" class="text-center py-6 text-slate-400 text-xs">No hay pedidos registrados todavía.</div>
+    </div>
+  </div>
+</div>
+
+<!-- STREAMING_CHUNK: Setting up Dashboard Page... -->
+<!-- ═══════════ MONITOREO DE STOCK & DASHBOARD ═══════════ -->
+<div id="page-dashboard" class="page" style="display: none;">
+  <!-- Inversión vs Retorno -->
+  <div class="section">
+    <div class="section-head">
+      <h3>Resumen del Capital</h3>
+    </div>
+    <div class="section-body">
+      <div class="kpi-grid" style="margin-bottom:0">
+        <div class="kpi">
+          <div class="kpi-label">Inversión Insumos</div>
+          <div class="kpi-val" id="dash-inversion-total">$0</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Ingresos Recaudados</div>
+          <div class="kpi-val green" id="dash-ingresos-total">$0</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Ganancia Real</div>
+          <div class="kpi-val accent" id="dash-ganancias-total">$0</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Capital en la Calle</div>
+          <div class="kpi-val text-amber-700" id="dash-capital-calle">$0</div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Monitoreo y Ajustes manuales -->
+  <div class="section">
+    <div class="section-head">
+      <h3>Monitoreo de Litros y Corrección de Stock Manual</h3>
+    </div>
+    <div class="section-body">
+      <p class="text-slate-400 text-xs mb-4">Ajustá manualmente los niveles en litros si detectás diferencias reales con el tanque físico, y definí la capacidad de referencia para que los porcentajes tengan sentido.</p>
+      <div id="panel-monitoreo-stock" class="flex flex-col gap-3">
+        <!-- Dinámico con inputs de corrección rápida -->
+      </div>
+    </div>
+  </div>
+
+  <!-- STREAMING_CHUNK: Sheets Cloud Integration Card... -->
+  <!-- Sincronización con Google Sheets -->
+  <div class="section">
+    <div class="section-head">
+      <h3>Sincronización Cloud con Google Sheets</h3>
+      <span class="badge badge-green" id="sheet-sync-status">Soporte Activo</span>
+    </div>
+    <div class="section-body">
+      <p class="text-xs text-slate-500 mb-3">Ingresá la URL de tu Google Apps Script para sincronizar automáticamente tus Ventas, Compras y Consignaciones cada vez que se guarden en el sistema.</p>
+      <div class="flex flex-col md:flex-row gap-2">
+        <input type="text" id="google_sheet_url" placeholder="https://script.google.com/macros/s/..." class="flex-1">
+        <button class="btn btn-primary" onclick="guardarGoogleSheetUrl()">💾 Guardar URL</button>
+      </div>
+      
+      <!-- Collapsible de ayuda técnica -->
+      <details class="mt-4 bg-slate-50 p-3 rounded-xl border text-xs">
+        <summary class="font-bold text-slate-700 cursor-pointer">🛠️ ¿Cómo obtener esta URL en 2 minutos? (Instrucciones)</summary>
+        <div class="mt-2 space-y-2 text-slate-600">
+          <p>1. Creá una hoja de cálculo en Google Drive.</p>
+          <p>2. Andá a <strong>Extensiones > Apps Script</strong>.</p>
+          <p>3. Borrá todo el código y pega exactamente esto:</p>
+          <pre class="bg-slate-800 text-slate-200 p-2 rounded font-mono text-[10px] overflow-x-auto">
+function doPost(e) {
+  var data = JSON.parse(e.postData.contents);
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(data.tipo) || ss.insertSheet(data.tipo);
+  
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["Fecha de Registro", "Tipo Evento", "Detalle JSON"]);
+  }
+  
+  sheet.appendRow([new Date(), data.tipo, JSON.stringify(data.datos)]);
+  return ContentService.createTextOutput("Sincronizado");
+}</pre>
+          <p>4. Haz clic en <strong>Implementar > Nueva implementación</strong>.</p>
+          <p>5. Tipo: <strong>Aplicación web</strong>. Ejecutar como: <strong>Tú</strong>. Quién tiene acceso: <strong>Cualquiera</strong>.</p>
+          <p>6. Copia la URL de la aplicación web que te da Google y pegala arriba.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- Notas de Gestión -->
+  <div class="section">
+    <div class="section-head">
+      <h3>Notas Administrativas y de Gestión</h3>
+    </div>
+    <div class="section-body">
+      <textarea id="notas_admin" rows="5" class="bg-slate-50 border border-slate-200" placeholder="Escribí notas importantes acá..."></textarea>
+      <button class="btn btn-primary mt-2" onclick="guardarNotasAdmin()">💾 Guardar Notas</button>
+    </div>
+  </div>
 </div>
+
 </main>
+
+<!-- STREAMING_CHUNK: Overlays and Modal content... -->
+<!-- ═══════════ MODALES DE INTERFAZ (FUERTEMENTE PROTEGIDOS CONTRA FUGAS) ═══════════ -->
+<!-- Ticket Modal -->
+<div class="modal-overlay" id="modal-ticket" style="display: none !important;">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <h3>Recibo Lumina</h3>
+      <button onclick="cerrarModal('modal-ticket')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-ticket-content"></div>
+  </div>
+</div>
+
+<!-- Modal Detalle de Compra Insumos -->
+<div class="modal-overlay" id="modal-compra-detalle" style="display: none !important;">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <h3>Detalle del Pedido de Insumos</h3>
+      <button onclick="cerrarModal('modal-compra-detalle')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-compra-detalle-content"></div>
+  </div>
+</div>
+
+<!-- Nuevo/Editar Cliente Modal -->
+<div class="modal-overlay" id="modal-cliente" style="display: none !important;">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <h3>Ficha del Cliente</h3>
+      <button onclick="cerrarModal('modal-cliente')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="flex flex-col gap-3">
+        <div class="form-group">
+          <label>Nombre y Apellido / Local</label>
+          <input type="text" id="cl_nombre" placeholder="Ej: Kiosco Belgrano">
+        </div>
+        <div class="form-group">
+          <label>Dirección</label>
+          <input type="text" id="cl_direccion" placeholder="Calle y N°">
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="text" id="cl_telefono" placeholder="2901...">
+        </div>
+        <div class="form-group">
+          <label>Envío Predeterminado</label>
+          <select id="cl_envio">
+            <option value="No">No requiere</option>
+            <option value="Sí">Sí, requiere envío</option>
+          </select>
+        </div>
+        <button class="btn btn-primary mt-2" onclick="guardarClienteFicha()">✓ Sincronizar Ficha</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Crear Combo Modal -->
+<div class="modal-overlay" id="modal-combo" style="display: none !important;">
+  <div class="modal-card">
+    <div class="modal-hdr">
+      <h3>Configurar Combo Promocional</h3>
+      <button onclick="cerrarModal('modal-combo')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="flex flex-col gap-3">
+        <div class="form-group">
+          <label>Nombre del Combo</label>
+          <input type="text" id="comb_nombre" placeholder="Combo Semanal Limpieza">
+        </div>
+        
+        <label class="text-[10px] font-bold">Componentes del Combo</label>
+        <div id="combo-componentes-list" class="flex flex-col gap-2"></div>
+        <button class="btn btn-secondary text-xs" onclick="agregarLineaCombo()">➕ Añadir Insumo</button>
+
+        <div class="grid grid-cols-2 gap-2 mt-2">
+          <div class="form-group">
+            <label>Tipo Descuento</label>
+            <select id="comb_tipo_desc" onchange="calcularPrevisualizacionCombo()">
+              <option value="porc">% Porcentual</option>
+              <option value="fijo">$ Monto Fijo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Valor de Descuento</label>
+            <input type="number" id="comb_descuento" value="10" min="0" oninput="calcularPrevisualizacionCombo()">
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-3 rounded-xl mt-2 text-xs">
+          <div class="flex justify-between mb-1"><span>Suma Normal:</span><span id="comb-previsualizacion-suma">$0</span></div>
+          <div class="flex justify-between font-bold text-teal-600"><span>Precio Final Combo:</span><span id="comb-previsualizacion-final">$0</span></div>
+        </div>
+
+        <button class="btn btn-primary mt-2" onclick="guardarComboPromocional()">✓ Guardar Combo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmación Sin Bloqueo de Alertas Browser -->
+<div class="modal-overlay" id="modal-confirmacion" style="display: none !important;">
+  <div class="modal-card" style="max-width:340px">
+    <div class="modal-hdr" style="background:var(--accent)">
+      <h3>Confirmar Cambio</h3>
+    </div>
+    <div class="modal-body text-center">
+      <p id="confirmacion-mensaje" class="text-sm text-slate-600 mb-6"></p>
+      <div class="flex gap-2">
+        <button class="btn btn-primary flex-1" id="confirm-btn-si">Aceptar</button>
+        <button class="btn btn-secondary flex-1" onclick="cerrarModal('modal-confirmacion')">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div id="toast" class="toast"></div>
 
+<!-- STREAMING_CHUNK: Initializing Firebase and App Logic... -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+// Inicializaciones de la App de Lumina
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'lumina-v5-cloud';
+const firebaseConfig = {
+  apiKey: "AIzaSyBWOe2ieEEGuB-t-IhL8QZhwqqORkqVYJI",
+  authDomain: "lumina-sistema-cloud.firebaseapp.com",
+  projectId: "lumina-sistema-cloud",
+  storageBucket: "lumina-sistema-cloud.firebasestorage.app",
+  messagingSenderId: "840497272146",
+  appId: "1:840497272146:web:bfbf0b8774218bdda1968b"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Estado Local Inicial de respaldo
+const DATOS_INICIALES = {
+  insumos: {
+    "Pisos Lavanda": { costoL: 180, stockL: 120, estilo: "estandar", capacidadMax: 150 },
+    "Pisos Bebé": { costoL: 195, stockL: 80, estilo: "estandar", capacidadMax: 150 },
+    "Jabón Verde": { costoL: 450, stockL: 100, estilo: "estandar", capacidadMax: 150 },
+    "Jabón Azul": { costoL: 450, stockL: 90, estilo: "estandar", capacidadMax: 150 },
+    "Suavizante Celeste": { costoL: 430, stockL: 100, estilo: "estandar", capacidadMax: 150 },
+    "Suavizante Lila": { costoL: 430, stockL: 100, estilo: "estandar", capacidadMax: 150 },
+    "Lavandina": { costoL: 110, stockL: 200, estilo: "lavandinas", capacidadMax: 200 },
+    "Detergente Manzana": { costoL: 1482, stockL: 50, estilo: "detergentes", capacidadMax: 100 }
+  },
+  preciosFijos: {
+    "Pisos Lavanda_5": { venta: 4500, envase: 800 },
+    "Pisos Bebé_5": { venta: 4800, envase: 800 },
+    "Jabón Verde_5": { venta: 7800, envase: 800 },
+    "Jabón Azul_5": { venta: 7800, envase: 800 },
+    "Suavizante Celeste_5": { venta: 7500, envase: 800 },
+    "Suavizante Lila_5": { venta: 7500, envase: 800 },
+    "Lavandina_5": { venta: 2200, envase: 800 },
+    "Lavandina_1": { venta: 700, envase: 150 },
+    "Detergente Manzana_1": { venta: 2800, envase: 200 },
+    "Detergente Manzana_0.5": { venta: 1500, envase: 100 }
+  },
+  combos: [
+    { id: "c1", nombre: "Combo Lavandería Eco", items: [{ prod: "Jabón Verde", form: 5, cant: 1 }, { prod: "Suavizante Celeste", form: 5, cant: 1 }], tipo: "porc", desc: 10 },
+    { id: "c2", nombre: "Pack Limpieza Completa", items: [{ prod: "Pisos Lavanda", form: 5, cant: 1 }, { prod: "Lavandina", form: 5, cant: 1 }], tipo: "fijo", desc: 500 }
+  ],
+  ventas: [],
+  consignaciones: [],
+  compras: [],
+  clientes: [
+    { nombre: "Consumidor Final", direccion: "Retira en Local", telefono: "", envio: "No" }
+  ],
+  canales: ["Venta Directa", "Pedido WhatsApp", "Feria / Evento", "Vecinos"],
+  inversionHistorica: 169657,
+  notas: "",
+  googleSheetsUrl: ""
+};
+
+let appState = JSON.parse(JSON.stringify(DATOS_INICIALES));
+
+// Conectar con Firebase una vez verificado el PIN
+window.iniciarAutenticacion = async () => {
+  try {
+    await signInAnonymously(auth);
+  } catch (error) {
+    console.error("Fallo de conexión:", error);
+    toast("⚠️ Trabajando en modo local desconectado", "red");
+    document.getElementById("app-loader").style.display = "none";
+  }
+};
+
+// Sincronizador de Loader (Cierra el loader a los 4 seg si falla la sincronización o cookies en PC)
+setTimeout(() => {
+  const loader = document.getElementById("app-loader");
+  if (loader && loader.style.display !== "none") {
+    loader.style.display = "none";
+    toast("⚠️ Sincronizando respaldo local sin demoras", "orange");
+    actualizarAppUI();
+  }
+}, 4000);
+
+onAuthStateChanged(auth, (user) => {
+  const indicador = document.getElementById("cloud-status");
+  if (user) {
+    indicador.classList.add("online");
+    indicador.title = "Sincronizado con la nube";
+    document.getElementById("app-loader").style.display = "none";
+    escucharCambiosNube();
+  }
+});
+
+// STREAMING_CHUNK: Synchronization logic with Cloud DB...
+// Sincronización de base de datos en la nube
+const escucharCambiosNube = () => {
+  const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appState', 'main');
+  onSnapshot(docRef, (snap) => {
+    if (snap.exists()) {
+      const dbData = snap.data();
+      appState.insumos = dbData.insumos || appState.insumos;
+      appState.preciosFijos = dbData.preciosFijos || appState.preciosFijos;
+      appState.combos = dbData.combos || appState.combos;
+      appState.ventas = dbData.ventas || appState.ventas;
+      appState.consignaciones = dbData.consignaciones || appState.consignaciones;
+      appState.compras = dbData.compras || appState.compras;
+      appState.clientes = dbData.clientes || appState.clientes;
+      appState.canales = dbData.canales || appState.canales;
+      appState.inversionHistorica = dbData.inversionHistorica || appState.inversionHistorica;
+      appState.notas = dbData.notas || "";
+      appState.googleSheetsUrl = dbData.googleSheetsUrl || "";
+    } else {
+      guardarEstadoEnNube();
+    }
+    actualizarAppUI();
+  }, (err) => {
+    console.error("Error en nube:", err);
+  });
+};
+
+const guardarEstadoEnNube = async () => {
+  const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appState', 'main');
+  try {
+    await setDoc(docRef, appState);
+  } catch (error) {
+    console.error("Error al guardar:", error);
+  }
+};
+
+const actualizarAppUI = () => {
+  inicializarCombosSelects();
+  renderHistorial();
+  renderClientes();
+  renderConsig();
+  renderConfigPrecios();
+  renderCombosDisponibles();
+  renderCompras();
+  renderDashboard();
+  
+  if (document.getElementById('notas_admin') && !document.getElementById('notas_admin').value) {
+    document.getElementById('notas_admin').value = appState.notas || "";
+  }
+  if (document.getElementById('google_sheet_url') && !document.getElementById('google_sheet_url').value) {
+    document.getElementById('google_sheet_url').value = appState.googleSheetsUrl || "";
+  }
+};
+
+// STREAMING_CHUNK: Sheets Sincronizacion trigger...
+const dispararSincronizacionSheets = async (tipo, datos) => {
+  if (!appState.googleSheetsUrl) return;
+  try {
+    await fetch(appState.googleSheetsUrl, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ tipo, datos })
+    });
+    console.log("Sincronización enviada a Google Sheets:", tipo);
+  } catch (err) {
+    console.warn("Fallo de envío a Google Sheets (común bajo no-cors o configuración errónea):", err);
+  }
+};
+
+window.guardarGoogleSheetUrl = () => {
+  const url = document.getElementById('google_sheet_url').value.trim();
+  appState.googleSheetsUrl = url;
+  guardarEstadoEnNube();
+  toast("✓ URL de Google Sheets guardada en la nube", "green");
+};
+
+// STREAMING_CHUNK: Page navigation helper...
+// ═══════════════════════════════════════════════════════════
+// NAVEGACIÓN Y CONFIGURACIÓN INICIAL
+// ═══════════════════════════════════════════════════════════
+window.showPage = (id) => {
+  document.querySelectorAll('.page').forEach(p => {
+    p.style.display = 'none';
+    p.classList.remove('active');
+  });
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  
+  const selectedPage = document.getElementById('page-' + id);
+  if (selectedPage) {
+    selectedPage.style.display = 'block';
+    selectedPage.classList.add('active');
+  }
+  
+  const currentTab = Array.from(document.querySelectorAll('.tab')).find(t => t.onclick.toString().includes(id));
+  if (currentTab) currentTab.classList.add('active');
+  
+  if (id === 'ventas') { actualizarSimuladorMargen(); }
+  if (id === 'historial') renderHistorial();
+  if (id === 'clientes') renderClientes();
+  if (id === 'consignaciones') renderConsig();
+  if (id === 'promos') { renderConfigPrecios(); renderCombosDisponibles(); }
+  if (id === 'compras') renderCompras();
+  if (id === 'dashboard') renderDashboard();
+};
+
+document.getElementById('v_fecha').value = new Date().toISOString().slice(0, 10);
+document.getElementById('con_fecha').value = new Date().toISOString().slice(0, 10);
+
+let callbackConfirmacion = null;
+window.pedirConfirmacion = (mensaje, accion) => {
+  document.getElementById('confirmacion-mensaje').textContent = mensaje;
+  abrirModal('modal-confirmacion');
+  callbackConfirmacion = accion;
+};
+
+document.getElementById('confirm-btn-si').onclick = () => {
+  if (callbackConfirmacion) callbackConfirmacion();
+  cerrarModal('modal-confirmacion');
+  callbackConfirmacion = null;
+};
+
+// STREAMING_CHUNK: POS Engine logic...
+// ═══════════════════════════════════════════════════════════
+// LOGICA DE CAJA, VENTAS Y CARRITO
+// ═══════════════════════════════════════════════════════════
+let carritoActual = [];
+
+const inicializarCombosSelects = () => {
+  const selectPOS = document.getElementById('v_producto');
+  const selectConsig = document.getElementById('con_producto');
+  const selectFactura = document.getElementById('fac_prod');
+  const selectSim = document.getElementById('sim_producto');
+  const datalist = document.getElementById('lista-clientes');
+  
+  if (!selectPOS) return;
+  
+  selectPOS.innerHTML = '<option value="">— elegí un producto o combo promocional —</option>';
+  selectConsig.innerHTML = '<option value="">— seleccionar —</option>';
+  selectFactura.innerHTML = '';
+  selectSim.innerHTML = '';
+  
+  Object.keys(appState.insumos).forEach(ins => {
+    selectPOS.innerHTML += `<option value="prod_${ins}">📦 ${ins}</option>`;
+    selectConsig.innerHTML += `<option value="${ins}">${ins}</option>`;
+    selectFactura.innerHTML += `<option value="${ins}">${ins}</option>`;
+    selectSim.innerHTML += `<option value="${ins}">${ins}</option>`;
+  });
+  
+  appState.combos.forEach(c => {
+    selectPOS.innerHTML += `<option value="combo_${c.id}">🎁 Combo: ${c.nombre}</option>`;
+  });
+  
+  const selectCanal = document.getElementById('v_canal');
+  selectCanal.innerHTML = '';
+  appState.canales.forEach(canal => {
+    selectCanal.innerHTML += `<option value="${canal}">${canal}</option>`;
+  });
+
+  datalist.innerHTML = appState.clientes.map(c => `<option value="${c.nombre}">`).join('');
+};
+
+window.seleccionarProductoPOS = () => {
+  const val = document.getElementById('v_producto').value;
+  const formatSelector = document.getElementById('v_formato');
+  
+  if (!val) return;
+  
+  if (val.startsWith('combo_')) {
+    formatSelector.style.display = 'none';
+    formatSelector.value = "0";
+  } else {
+    formatSelector.style.display = 'block';
+    const insumoNombre = val.replace('prod_', '');
+    const insumo = appState.insumos[insumoNombre];
+    
+    formatSelector.innerHTML = '';
+    if (insumo.estilo === 'lavandinas') {
+      formatSelector.innerHTML = `<option value="5">Bidón 5 Litros</option><option value="3">Botella 3 Litros</option><option value="1">Botella 1 Litro</option>`;
+    } else if (insumo.estilo === 'detergentes') {
+      formatSelector.innerHTML = `<option value="0.5">Botella 500ml</option><option value="1">Botella 1 Litro</option><option value="2">Botella 2 Litros</option>`;
+    } else {
+      formatSelector.innerHTML = `<option value="5">Bidón 5 Litros</option>`;
+    }
+  }
+  calcularPreciosFormatosPOS();
+};
+
+window.calcularPreciosFormatosPOS = () => {
+  const val = document.getElementById('v_producto').value;
+  if (!val) return;
+  
+  const retEnvase = document.getElementById('v_envase').value === 'si';
+  const priceSourceTag = document.getElementById('pos-price-source');
+  
+  let precioUnitarioCalculado = 0;
+  
+  if (val.startsWith('combo_')) {
+    const comboId = val.replace('combo_', '').trim();
+    const combo = appState.combos.find(c => c.id === comboId);
+    if (combo) {
+      let sumaBase = 0;
+      combo.items.forEach(item => {
+        const key = `${item.prod}_${item.form}`;
+        const costoBase = appState.insumos[item.prod] ? appState.insumos[item.prod].costoL * item.form : 0;
+        const precioFijo = appState.preciosFijos[key] ? appState.preciosFijos[key].venta : (costoBase * 1.8);
+        sumaBase += (precioFijo * item.cant);
+      });
+      
+      if (combo.tipo === 'porc') {
+        precioUnitarioCalculado = sumaBase * (1 - combo.desc / 100);
+      } else {
+        precioUnitarioCalculado = Math.max(0, sumaBase - combo.desc);
+      }
+      
+      priceSourceTag.style.display = 'inline-block';
+      priceSourceTag.className = 'badge badge-green';
+      priceSourceTag.textContent = `🎁 COMBO SUGERIDO`;
+    }
+  } else {
+    const insNombre = val.replace('prod_', '');
+    const formVol = parseFloat(document.getElementById('v_formato').value);
+    const key = `${insNombre}_${formVol}`;
+    const insumo = appState.insumos[insNombre];
+    
+    const costoL = insumo ? insumo.costoL : 0;
+    const costoFormato = costoL * formVol;
+    
+    if (appState.preciosFijos[key] && appState.preciosFijos[key].venta > 0) {
+      precioUnitarioCalculado = appState.preciosFijos[key].venta;
+      priceSourceTag.style.display = 'inline-block';
+      priceSourceTag.className = 'badge badge-blue';
+      priceSourceTag.textContent = `🏷️ PRECIO FIJO`;
+    } else {
+      precioUnitarioCalculado = Math.round(costoFormato * 1.80);
+      priceSourceTag.style.display = 'inline-block';
+      priceSourceTag.className = 'badge badge-purple';
+      priceSourceTag.textContent = `💡 SUGERIDO (80%)`;
+    }
+    
+    if (retEnvase) {
+      const descuentoEnvase = appState.preciosFijos[key] ? (appState.preciosFijos[key].envase || 0) : 0;
+      precioUnitarioCalculado = Math.max(0, precioUnitarioCalculado - descuentoEnvase);
+    }
+  }
+  
+  if (document.activeElement.id !== 'v_precio') {
+    document.getElementById('v_precio').value = Math.round(precioUnitarioCalculado);
+  }
+  aplicarFinanzasCarrito();
+};
+
+window.crearCanalPersonalizado = () => {
+  const nuevoCanal = prompt("Escribí el nombre del nuevo canal de venta (ej: Instagram):");
+  if (nuevoCanal && nuevoCanal.trim()) {
+    if (!appState.canales.includes(nuevoCanal.trim())) {
+      appState.canales.push(nuevoCanal.trim());
+      guardarEstadoEnNube();
+      toast("✓ Nuevo canal añadido", "green");
+    }
+  }
+};
+
+window.autocompletarCliente = (nombre) => {
+  const cl = appState.clientes.find(c => c.nombre.toLowerCase() === nombre.toLowerCase());
+  if (cl) {
+    document.getElementById('v_cliente_dir').value = cl.direccion || '';
+    document.getElementById('v_cliente_tel').value = cl.telefono || '';
+    document.getElementById('v_cliente_envio').value = cl.envio || 'No';
+    toast("👤 Datos del cliente cargados");
+  }
+};
+
+// STREAMING_CHUNK: Carrito handling...
+window.agregarAlCarrito = () => {
+  const val = document.getElementById('v_producto').value;
+  const cant = parseFloat(document.getElementById('v_cantidad').value) || 1;
+  const precioUnit = parseFloat(document.getElementById('v_precio').value) || 0;
+  const envaseDevuelto = document.getElementById('v_envase').value === 'si';
+  
+  if (!val) { toast("⚠️ Selecciona un producto", "red"); return; }
+  
+  let labelItem = "";
+  let idReferencia = "";
+  let litrosDescuento = 0;
+  let descuentoFijoEnvase = 0;
+  
+  if (val.startsWith('combo_')) {
+    const comboId = val.replace('combo_', '').trim();
+    const combo = appState.combos.find(c => c.id === comboId);
+    labelItem = `Combo: ${combo.nombre}`;
+    idReferencia = combo.id;
+    
+    combo.items.forEach(it => {
+      litrosDescuento += (it.form * it.cant) * cant;
+    });
+  } else {
+    const insNombre = val.replace('prod_', '');
+    const formVol = parseFloat(document.getElementById('v_formato').value);
+    labelItem = `${insNombre} (${formVol >= 1 ? formVol+'L' : '500ml'})`;
+    idReferencia = insNombre;
+    litrosDescuento = formVol * cant;
+    
+    if (envaseDevuelto) {
+      const key = `${insNombre}_${formVol}`;
+      descuentoFijoEnvase = appState.preciosFijos[key] ? (appState.preciosFijos[key].envase || 0) : 0;
+    }
+  }
+  
+  carritoActual.push({
+    nombre: labelItem,
+    idRef: idReferencia,
+    cantidad: cant,
+    precioUnitario: precioUnit,
+    litros: litrosDescuento,
+    descuentoEnvase: descuentoFijoEnvase,
+    tipo: val.startsWith('combo_') ? 'combo' : 'unitario',
+    envaseDevuelto
+  });
+  
+  toast("🛒 Añadido al Carrito", "green");
+  renderCarrito();
+  limpiarFormularioPOS();
+};
+
+const renderCarrito = () => {
+  const container = document.getElementById('cart-items-render');
+  const countSpan = document.getElementById('cart-item-count');
+  
+  if (carritoActual.length === 0) {
+    container.innerHTML = '<p class="text-slate-400 text-xs text-center py-4">El carrito está vacío. Añadí un producto arriba.</p>';
+    countSpan.textContent = "0 artículos";
+    document.getElementById('v_total_calculado').value = 0;
+    document.getElementById('v_total_manual').value = 0;
+    return;
+  }
+  
+  countSpan.textContent = `${carritoActual.length} artículo${carritoActual.length > 1 ? 's' : ''}`;
+  
+  container.innerHTML = carritoActual.map((item, i) => `
+    <div class="cart-item border-b py-2 flex justify-between items-center text-xs">
+      <div>
+        <strong>${item.nombre}</strong> <span class="text-slate-500">x${item.cantidad}</span>
+        ${item.envaseDevuelto ? `<br><small class="text-amber-700">✓ Retorna Envase (-$${item.descuentoEnvase * item.cantidad})</small>` : ''}
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-mono font-bold">$${((item.precioUnitario * item.cantidad) - (item.descuentoEnvase * item.cantidad)).toLocaleString('es-AR')}</span>
+        <button class="btn btn-danger px-2 py-1" style="min-height:unset" onclick="removerItemCarrito(${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+  
+  aplicarFinanzasCarrito();
+};
+
+window.removerItemCarrito = (index) => {
+  carritoActual.splice(index, 1);
+  renderCarrito();
+};
+
+window.vaciarCarrito = () => {
+  carritoActual = [];
+  renderCarrito();
+};
+
+window.aplicarFinanzasCarrito = () => {
+  const dtoGlobal = parseFloat(document.getElementById('v_dto_global').value) || 0;
+  let suma = 0;
+  carritoActual.forEach(item => {
+    suma += ((item.precioUnitario * item.cantidad) - (item.descuentoEnvase * item.cantidad));
+  });
+  
+  const totalConDto = suma * (1 - dtoGlobal / 100);
+  document.getElementById('v_total_calculado').value = Math.round(totalConDto);
+  if (document.activeElement.id !== 'v_total_manual') {
+    document.getElementById('v_total_manual').value = Math.round(totalConDto);
+  }
+};
+
+window.aplicarTotalManual = () => {
+  // Manejador del total manual si el usuario desea sobreescribirlo directamente
+};
+
+window.limpiarFormularioPOS = () => {
+  document.getElementById('v_producto').value = '';
+  document.getElementById('v_cantidad').value = 1;
+  document.getElementById('v_precio').value = '';
+  document.getElementById('v_envase').value = 'no';
+  document.getElementById('pos-price-source').style.display = 'none';
+};
+
+// STREAMING_CHUNK: Processing sale and Triggering Sheets Sincronizacion...
+window.procesarVentaCarrito = () => {
+  const cliente = document.getElementById('v_cliente').value.trim();
+  const fecha = document.getElementById('v_fecha').value;
+  const canal = document.getElementById('v_canal').value;
+  const totalCobrado = parseFloat(document.getElementById('v_total_manual').value) || 0;
+  
+  const direccion = document.getElementById('v_cliente_dir').value.trim();
+  const telefono = document.getElementById('v_cliente_tel').value.trim();
+  const envio = document.getElementById('v_cliente_envio').value;
+  
+  if (carritoActual.length === 0) { toast("⚠️ Carrito vacío", "red"); return; }
+  if (!cliente) { toast("⚠️ El nombre del cliente es obligatorio", "red"); return; }
+  
+  let clExistente = appState.clientes.find(c => c.nombre.toLowerCase() === cliente.toLowerCase());
+  if (!clExistente) {
+    appState.clientes.push({ nombre: cliente, direccion, telefono, envio });
+  } else {
+    clExistente.direccion = direccion;
+    clExistente.telefono = telefono;
+    clExistente.envio = envio;
+  }
+  
+  let costoTotalOperacion = 0;
+  carritoActual.forEach(item => {
+    if (item.tipo === 'combo') {
+      const combo = appState.combos.find(c => c.id === item.idRef);
+      if (combo) {
+        combo.items.forEach(ci => {
+          const costoLitro = appState.insumos[ci.prod] ? appState.insumos[ci.prod].costoL : 0;
+          costoTotalOperacion += (costoLitro * ci.form * ci.cant) * item.cantidad;
+          
+          const insumo = appState.insumos[ci.prod];
+          if (insumo) {
+            insumo.stockL = Math.max(0, insumo.stockL - ((ci.form * ci.cant) * item.cantidad));
+          }
+        });
+      }
+    } else {
+      const costoLitro = appState.insumos[item.idRef] ? appState.insumos[item.idRef].costoL : 0;
+      costoTotalOperacion += (costoLitro * item.litros);
+      
+      const insumo = appState.insumos[item.idRef];
+      if (insumo) {
+        insumo.stockL = Math.max(0, insumo.stockL - item.litros);
+      }
+    }
+  });
+  
+  const gananciaNeta = totalCobrado - costoTotalOperacion;
+  
+  const nuevaVenta = {
+    id: Date.now(),
+    fecha,
+    cliente,
+    canal,
+    items: JSON.parse(JSON.stringify(carritoActual)),
+    total: Math.round(totalCobrado),
+    ganancia: Math.round(gananciaNeta),
+    envio,
+    telefono,
+    direccion
+  };
+  
+  appState.ventas.unshift(nuevaVenta);
+  
+  // Sincronizar con Google Sheets
+  dispararSincronizacionSheets("Ventas", nuevaVenta);
+  
+  carritoActual = [];
+  renderCarrito();
+  document.getElementById('v_cliente').value = '';
+  document.getElementById('v_cliente_dir').value = '';
+  document.getElementById('v_cliente_tel').value = '';
+  document.getElementById('v_cliente_envio').value = 'No';
+  document.getElementById('v_dto_global').value = 0;
+  
+  guardarEstadoEnNube();
+  toast("✓ Venta Sincronizada y Guardada", "green");
+};
+
+window.actualizarSimuladorMargen = () => {
+  const prodName = document.getElementById('sim_producto').value;
+  if (!prodName) return;
+  
+  const formVol = parseFloat(document.getElementById('sim_formato').value);
+  const margenDeseado = parseFloat(document.getElementById('sim_slider').value);
+  
+  const ins = appState.insumos[prodName];
+  if (!ins) return;
+  
+  const costoTotalFormato = ins.costoL * formVol;
+  const precioSugerido = costoTotalFormato * (1 + margenDeseado / 100);
+  
+  document.getElementById('sim-margen-porc').textContent = `${margenDeseado}%`;
+  document.getElementById('sim-costo').textContent = `$${Math.round(costoTotalFormato)}`;
+  document.getElementById('sim-precio').textContent = `$${Math.round(precioSugerido)}`;
+};
+
+// STREAMING_CHUNK: History filter rendering...
+// ═══════════ HISTORIAL CON FILTRO DE FECHA Y CSV EXCEL ═══════════
+let filtradoFechaDesde = null;
+let filtradoFechaHasta = null;
+
+window.aplicarFiltroFechas = () => {
+  filtradoFechaDesde = document.getElementById('filtro_desde').value;
+  filtradoFechaHasta = document.getElementById('filtro_hasta').value;
+  renderHistorial();
+  toast("✓ Historial Filtrado");
+};
+
+window.limpiarFiltrosHistorial = () => {
+  document.getElementById('filtro_desde').value = "";
+  document.getElementById('filtro_hasta').value = "";
+  document.getElementById('filtro-historial').value = "";
+  filtradoFechaDesde = null;
+  filtradoFechaHasta = null;
+  renderHistorial();
+};
+
+window.renderHistorial = () => {
+  const tbody = document.getElementById('tabla-historial');
+  const vacio = document.getElementById('historial-vacio');
+  const filtro = document.getElementById('filtro-historial').value.toLowerCase();
+  
+  let filtradas = appState.ventas || [];
+  
+  if (filtradoFechaDesde) {
+    filtradas = filtradas.filter(v => v.fecha >= filtradoFechaDesde);
+  }
+  if (filtradoFechaHasta) {
+    filtradas = filtradas.filter(v => v.fecha <= filtradoFechaHasta);
+  }
+  
+  if (filtro) {
+    filtradas = filtradas.filter(v => 
+      v.cliente.toLowerCase().includes(filtro) ||
+      v.items.some(item => item.nombre.toLowerCase().includes(filtro))
+    );
+  }
+  
+  if (filtradas.length === 0) {
+    tbody.innerHTML = '';
+    vacio.style.display = 'block';
+  } else {
+    vacio.style.display = 'none';
+    tbody.innerHTML = filtradas.map((v) => {
+      const detalleItems = v.items.map(it => `${it.cantidad}x ${it.nombre}`).join('<br>');
+      return `
+        <tr class="border-b text-xs">
+          <td class="font-mono text-[10px] text-slate-500">#${v.id.toString().slice(-5)}</td>
+          <td>${v.fecha}</td>
+          <td><strong>${v.cliente}</strong></td>
+          <td class="text-slate-600">${detalleItems}</td>
+          <td class="font-bold text-teal-700">$${v.total.toLocaleString()}</td>
+          <td class="text-emerald-700">$${v.ganancia.toLocaleString()}</td>
+          <td>
+            <div class="flex gap-1">
+              <button class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded" onclick="verDetalleTicket(${v.id})">👁️</button>
+              <button class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded" onclick="eliminarVenta(${v.id})">✕</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+  
+  // Calcular KPI sumatorias agregando rendimiento parcial de consignaciones activas
+  let consignacionRendidoExtraIngresos = 0;
+  let consignacionRendidoExtraGanancias = 0;
+  
+  if (appState.consignaciones) {
+    appState.consignaciones.filter(c => c.estado === 'Activa').forEach(c => {
+      c.items.forEach(it => {
+        const rendido = it.rendido || 0;
+        if (rendido > 0) {
+          consignacionRendidoExtraIngresos += (rendido * it.netoUnitario);
+          const costoEst = (appState.insumos[it.producto] ? appState.insumos[it.producto].costoL : 0) * it.formato;
+          consignacionRendidoExtraGanancias += (rendido * (it.netoUnitario - costoEst));
+        }
+      });
+    });
+  }
+
+  const totalIngresos = filtradas.reduce((acc, v) => acc + v.total, 0) + consignacionRendidoExtraIngresos;
+  const totalGanancias = filtradas.reduce((acc, v) => acc + v.ganancia, 0) + consignacionRendidoExtraGanancias;
+  const envasesDevueltos = filtradas.reduce((acc, v) => acc + v.items.filter(it => it.envaseDevuelto).reduce((sum, it) => sum + it.cantidad, 0), 0);
+  
+  document.getElementById('kpi-ingresos').textContent = `$${Math.round(totalIngresos).toLocaleString('es-AR')}`;
+  document.getElementById('kpi-ganancias').textContent = `$${Math.round(totalGanancias).toLocaleString('es-AR')}`;
+  document.getElementById('kpi-ventas-cant').textContent = filtradas.length;
+  document.getElementById('kpi-envases-cant').textContent = envasesDevueltos;
+};
+
+// STREAMING_CHUNK: Export spreadsheet report...
+window.exportarExcel = () => {
+  if (appState.ventas.length === 0) { toast("⚠️ No hay datos para exportar", "red"); return; }
+  
+  const totalIng = appState.ventas.reduce((acc, v) => acc + v.total, 0);
+  const totalGan = appState.ventas.reduce((acc, v) => acc + v.ganancia, 0);
+  
+  let csv = 'LUMINA REPORTE FINANCIERO GENERAL Y AUDITORIA\n';
+  csv += `Ingresos Acumulados,$${totalIng},Ganancia Acumulada,$${totalGan}\n\n`;
+  csv += 'ID Operación,Fecha,Cliente,Direccion,Telefono,Canal,Productos,Total,Ganancia,Envio\n';
+  
+  appState.ventas.forEach(v => {
+    const detalleStr = v.items.map(it => `${it.cantidad}x ${it.nombre}`).join(' | ');
+    csv += `"${v.id}","${v.fecha}","${v.cliente}","${v.direccion || ''}","${v.telefono || ''}","${v.canal}","${detalleStr}",${v.total},${v.ganancia},"${v.envio}"\n`;
+  });
+  
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `Lumina_Finanzas_${new Date().toISOString().slice(0,10)}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+  toast("✓ Reporte CSV Descargado", "green");
+};
+
+// ═══════════════════════════════════════════════════════════
+// REGISTRO DE CLIENTES DYNAMIC
+// ═══════════════════════════════════════════════════════════
+window.renderClientes = () => {
+  const container = document.getElementById('lista-clientes-render');
+  if (appState.clientes.length === 0) {
+    container.innerHTML = '<p class="text-slate-400 text-xs col-span-2">No hay clientes agregados.</p>';
+    return;
+  }
+  
+  container.innerHTML = appState.clientes.map((c, i) => {
+    const compras = appState.ventas.filter(v => v.cliente.toLowerCase() === c.nombre.toLowerCase());
+    const totalComprado = compras.reduce((sum, v) => sum + v.total, 0);
+    return `
+      <div class="mobile-card flex flex-col justify-between text-xs">
+        <div>
+          <h4 class="font-bold text-slate-800 text-sm mb-1">${c.nombre}</h4>
+          <p class="text-[11px] text-slate-500">📍 Dir: ${c.direccion || 'Sin registrar'}</p>
+          <p class="text-[11px] text-slate-500">📞 Tel: ${c.telefono || 'Sin registrar'}</p>
+        </div>
+        <div class="mt-2 pt-2 border-t flex justify-between items-center">
+          <span class="text-xs text-emerald-700 font-bold">$${totalComprado.toLocaleString()} (${compras.length} compras)</span>
+          <div class="flex gap-1">
+            <button class="bg-slate-100 px-2 py-1 rounded text-xs" onclick="abrirFichaClienteEditar(${i})">✏️</button>
+            <button class="bg-red-50 text-red-600 px-2 py-1 rounded text-xs" onclick="eliminarCliente(${i})">✕</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
+// STREAMING_CHUNK: Consignment logic, reabrir and calculations...
+// ═══════════════════════════════════════════════════════════
+// MÓDULO CONSIGNACIONES CON LOGICA REABRIBLE
+// ═══════════════════════════════════════════════════════════
+window.calcularPreciosFormatosConsig = () => {
+  const prod = document.getElementById('con_producto').value;
+  if (!prod) return;
+  const form = parseFloat(document.getElementById('con_formato').value);
+  const key = `${prod}_${form}`;
+  
+  let precioUnit = 0;
+  if (appState.preciosFijos[key] && appState.preciosFijos[key].venta > 0) {
+    precioUnit = appState.preciosFijos[key].venta;
+  } else {
+    precioUnit = Math.round((appState.insumos[prod] ? appState.insumos[prod].costoL : 0) * form * 1.80);
+  }
+  
+  document.getElementById('con_precio_vta').value = Math.round(precioUnit);
+};
+
+let carritoConsig = [];
+
+window.agregarAlCarritoConsig = () => {
+  const prod = document.getElementById('con_producto').value;
+  const form = parseFloat(document.getElementById('con_formato').value);
+  const cant = parseFloat(document.getElementById('con_cantidad').value) || 1;
+  const precioVenta = parseFloat(document.getElementById('con_precio_vta').value) || 0;
+  const comision = parseFloat(document.getElementById('con_comision').value) || 0;
+  
+  if (!prod) { toast("⚠️ Elegí un producto", "red"); return; }
+  
+  const netoUnitario = precioVenta * (1 - comision / 100);
+  
+  carritoConsig.push({
+    producto: prod,
+    formato: form,
+    cantidad: cant,
+    precioVenta: Math.round(precioVenta),
+    comision,
+    netoUnitario: Math.round(netoUnitario),
+    rendido: 0
+  });
+  
+  toast("🤝 Añadido al envío");
+  renderCarritoConsig();
+  
+  document.getElementById('con_producto').value = '';
+  document.getElementById('con_cantidad').value = 5;
+  document.getElementById('con_precio_vta').value = '';
+};
+
+const renderCarritoConsig = () => {
+  const container = document.getElementById('consig-cart-items');
+  const totalDiv = document.getElementById('consig-cart-total');
+  
+  if (carritoConsig.length === 0) {
+    container.innerHTML = '<p class="text-slate-400 text-xs text-center py-4">No hay productos en el borrador.</p>';
+    totalDiv.textContent = "Total Potencial Neto: $0";
+    return;
+  }
+  
+  container.innerHTML = carritoConsig.map((item, i) => `
+    <div class="cart-item border-l-4 border-amber-600 pl-2 py-2 flex justify-between items-center text-xs">
+      <div>
+        <strong>${item.producto} (${item.formato}L)</strong> x${item.cantidad}u.
+        <br><small class="text-slate-500">Neto acordado: $${item.netoUnitario}/u</small>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-amber-700">$${(item.netoUnitario * item.cantidad).toLocaleString()}</span>
+        <button class="btn btn-danger px-2 py-1" style="min-height:unset" onclick="removerItemConsigCarrito(${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+  
+  const totalPotencial = carritoConsig.reduce((sum, item) => sum + (item.netoUnitario * item.cantidad), 0);
+  totalDiv.textContent = `Total Potencial Neto: $${totalPotencial.toLocaleString()}`;
+};
+
+window.removerItemConsigCarrito = (index) => {
+  carritoConsig.splice(index, 1);
+  renderCarritoConsig();
+};
+
+window.confirmarConsignacionCompleta = () => {
+  const nombre = document.getElementById('con_nombre').value.trim();
+  const fecha = document.getElementById('con_fecha').value;
+  const tipo = document.getElementById('con_tipo').value;
+  
+  if (carritoConsig.length === 0) { toast("⚠️ No hay elementos en el envío", "red"); return; }
+  if (!nombre) { toast("⚠️ Nombre de consignatario requerido", "red"); return; }
+  
+  let clExistente = appState.clientes.find(c => c.nombre.toLowerCase() === nombre.toLowerCase());
+  if (!clExistente) {
+    appState.clientes.push({ nombre, direccion: "", telefono: "", envio: "No" });
+  }
+
+  carritoConsig.forEach(item => {
+    const insumo = appState.insumos[item.producto];
+    if (insumo) {
+      insumo.stockL = Math.max(0, insumo.stockL - (item.formato * item.cantidad));
+    }
+  });
+  
+  const nuevaConsig = {
+    id: Date.now(),
+    fecha,
+    nombre,
+    tipo,
+    items: JSON.parse(JSON.stringify(carritoConsig)),
+    estado: 'Activa'
+  };
+  
+  appState.consignaciones.unshift(nuevaConsig);
+  
+  // Sincronizar Google Sheets
+  dispararSincronizacionSheets("Consignaciones", nuevaConsig);
+  
+  carritoConsig = [];
+  renderCarritoConsig();
+  document.getElementById('con_nombre').value = '';
+  
+  guardarEstadoEnNube();
+  toast("✓ Consignación en la calle creada", "green");
+};
+
+window.renderConsig = () => {
+  const container = document.getElementById('consignaciones-activas-render');
+  if (!appState.consignaciones || appState.consignaciones.length === 0) {
+    container.innerHTML = '<p class="text-slate-400 text-xs text-center py-6">No hay registros de consignación.</p>';
+    return;
+  }
+  
+  container.innerHTML = appState.consignaciones.map(con => {
+    const totalRendido = con.items.reduce((sum, it) => sum + (it.rendido * it.netoUnitario), 0);
+    return `
+      <div class="consignatario-card bg-white p-3 rounded-xl border border-slate-200 mb-3 text-xs">
+        <div class="flex justify-between items-start border-b pb-2 mb-2">
+          <div>
+            <h4 class="font-bold text-teal-800 text-sm">${con.nombre}</h4>
+            <span class="text-[10px] text-slate-500">${con.fecha} · Canal: ${con.tipo}</span>
+          </div>
+          <span class="badge ${con.estado === 'Activa' ? 'badge-gold' : 'badge-green'}">${con.estado}</span>
+        </div>
+        
+        <div class="tbl-wrap">
+          <table class="w-full text-xs">
+            <thead>
+              <tr class="bg-slate-50">
+                <th>Producto</th>
+                <th>Cant</th>
+                <th>Rendido</th>
+                <th>Sobrante</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${con.items.map((it, i) => `
+                <tr class="border-b">
+                  <td>${it.producto} (${it.formato}L)</td>
+                  <td>${it.cantidad}u</td>
+                  <td>
+                    <input type="number" min="0" max="${it.cantidad}" value="${it.rendido}" 
+                      class="w-12 text-center p-1 border rounded bg-slate-50"
+                      ${con.estado === 'Cerrada' ? 'disabled' : ''}
+                      onchange="actualizarRendicionItem(${con.id}, ${i}, this.value)">
+                  </td>
+                  <td class="text-slate-500">${it.cantidad - it.rendido}u</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="flex justify-between items-center mt-3 flex-wrap gap-2 text-xs">
+          <span>Acumulado cobrado: <strong class="text-emerald-700 font-bold">$${totalRendido.toLocaleString()}</strong></span>
+          <div class="flex gap-1">
+            ${con.estado === 'Activa' ? `
+              <button class="bg-teal-50 hover:bg-teal-100 text-teal-700 font-semibold px-2 py-1 rounded" onclick="cerrarYDevolverStockConsig(${con.id})">🔒 Cerrar</button>
+            ` : `
+              <button class="bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold px-2 py-1 rounded" onclick="reabrirConsignacion(${con.id})">🔓 Reabrir</button>
+            `}
+            <button class="bg-red-50 text-red-600 px-2 py-1 rounded" onclick="eliminarConsig(${con.id})">🗑 Delete</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
+window.reabrirConsignacion = (conId) => {
+  pedirConfirmacion("¿Deseas volver a abrir esta consignación? El stock de los sobrantes será retirado del inventario para volver a ponerlos en la calle.", () => {
+    const con = appState.consignaciones.find(c => c.id === conId);
+    if (!con) return;
+    
+    con.items.forEach(item => {
+      const sobranteUnidades = item.cantidad - item.rendido;
+      if (sobranteUnidades > 0) {
+        const insumo = appState.insumos[item.producto];
+        if (insumo) {
+          const lARetirar = item.formato * sobranteUnidades;
+          insumo.stockL = Math.max(0, insumo.stockL - lARetirar);
+        }
+      }
+    });
+    
+    appState.ventas = appState.ventas.filter(v => v.cliente !== `Consignación Rendida: ${con.nombre}`);
+    
+    con.estado = 'Activa';
+    guardarEstadoEnNube();
+    toast("✓ Consignación reabierta");
+  });
+};
+
+// STREAMING_CHUNK: Setting up catalogs and prices...
+// ═══════════════════════════════════════════════════════════
+// CATALOGO DE CONFIGURACIÓN DE PRECIOS FIJOS Y COMBOS
+// ═══════════════════════════════════════════════════════════
+window.renderConfigPrecios = () => {
+  const tbody = document.getElementById('tabla-config-precios');
+  tbody.innerHTML = '';
+  
+  Object.entries(appState.insumos).forEach(([nombre, ins]) => {
+    let formatos = [5];
+    if (ins.estilo === 'lavandinas') formatos = [5, 3, 1];
+    if (ins.estilo === 'detergentes') formatos = [2, 1, 0.5];
+    
+    formatos.forEach(form => {
+      const key = `${nombre}_${form}`;
+      const costoCalculado = Math.round(ins.costoL * form);
+      const precioVenta = appState.preciosFijos[key] ? appState.preciosFijos[key].venta : 0;
+      const envaseVal = appState.preciosFijos[key] ? appState.preciosFijos[key].envase : 0;
+      
+      tbody.innerHTML += `
+        <tr class="border-b text-xs">
+          <td><strong>${nombre} (${form}L)</strong></td>
+          <td class="font-mono text-slate-500">$${costoCalculado}</td>
+          <td>
+            <input type="number" id="cfg_vta_${key}" value="${precioVenta}" class="w-16 p-1 border rounded text-right">
+          </td>
+          <td>
+            <input type="number" id="cfg_env_${key}" value="${envaseVal}" class="w-16 p-1 border rounded text-right">
+          </td>
+          <td>
+            <button class="bg-teal-600 text-white px-2 py-1 rounded" onclick="guardarPrecioFijo('${key}')">✓</button>
+          </td>
+        </tr>
+      `;
+    });
+  });
+};
+
+let comboEditarId = null;
+
+window.editarComboPromo = (comboId) => {
+  const combo = appState.combos.find(c => c.id === comboId);
+  if (!combo) return;
+  
+  comboEditarId = combo.id;
+  document.getElementById('comb_nombre').value = combo.nombre;
+  document.getElementById('comb_tipo_desc').value = combo.tipo;
+  document.getElementById('comb_descuento').value = combo.desc;
+  
+  comboComponentesEdicion = JSON.parse(JSON.stringify(combo.items));
+  renderLineasComboEdicion();
+  abrirModal('modal-combo');
+};
+
+window.renderCombosDisponibles = () => {
+  const container = document.getElementById('lista-combos-render');
+  if (!appState.combos || appState.combos.length === 0) {
+    container.innerHTML = '<p class="text-slate-400 text-xs">No hay combos registrados.</p>';
+    return;
+  }
+  
+  container.innerHTML = appState.combos.map((c) => {
+    const itemsList = c.items.map(it => `• ${it.cant}u. ${it.prod} (${it.form}L)`).join('<br>');
+    return `
+      <div class="mobile-card border-l-4 border-teal-600 flex justify-between items-center mb-2 bg-white text-xs">
+        <div>
+          <h4 class="font-bold text-sm text-teal-800">${c.nombre}</h4>
+          <p class="text-[10px] text-slate-500 my-1">${itemsList}</p>
+          <span class="badge badge-gold">Descuento: ${c.tipo === 'porc' ? c.desc+'%' : '$'+c.desc}</span>
+        </div>
+        <div class="flex gap-1">
+          <button class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded text-xs" onclick="editarComboPromo('${c.id}')">✏️ Editar</button>
+          <button class="bg-red-50 text-red-600 px-2 py-1 rounded text-xs" onclick="eliminarCombo('${c.id}')">✕</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+};
+
+// STREAMING_CHUNK: Past Purchases detailing and payments...
+// ═══════════════════════════════════════════════════════════
+// COMPRAS Y FACTURACIÓN CON CONTROL DE DEUDAS
+// ═══════════════════════════════════════════════════════════
+window.guardarPedidoCompletoStock = () => {
+  if (lineasCompraFactura.length === 0) { toast("⚠️ Carga alguna línea", "red"); return; }
+  
+  const estadoPago = document.getElementById('fac_estado_pago').value;
+  
+  lineasCompraFactura.forEach(linea => {
+    const ins = appState.insumos[linea.producto];
+    if (ins) {
+      const stockAnterior = ins.stockL;
+      const costoAnterior = ins.costoL;
+      const stockNuevo = stockAnterior + linea.litros;
+      
+      const nuevoCostoL = stockNuevo > 0 ? (((stockAnterior * costoAnterior) + (linea.litros * linea.costoProrrateadoLitro)) / stockNuevo) : linea.costoProrrateadoLitro;
+      
+      ins.stockL = stockNuevo;
+      ins.costoL = Math.round(nuevoCostoL);
+    }
+  });
+  
+  const flete = parseFloat(document.getElementById('fac_flete').value) || 0;
+  const dtos = parseFloat(document.getElementById('fac_descuentos').value) || 0;
+  const otros = parseFloat(document.getElementById('fac_otros').value) || 0;
+  const totalCostoLista = lineasCompraFactura.reduce((sum, item) => sum + item.costoLista, 0);
+  const totalGastoFactura = (totalCostoLista + flete + otros) - dtos;
+  
+  if (estadoPago === 'Pagado') {
+    appState.inversionHistorica += Math.round(totalGastoFactura);
+  }
+  
+  // Registrar en Historial de compras
+  const nuevaCompra = {
+    id: Date.now(),
+    fecha: new Date().toISOString().slice(0, 10),
+    lineas: JSON.parse(JSON.stringify(lineasCompraFactura)),
+    flete,
+    descuentos: dtos,
+    otros,
+    total: Math.round(totalGastoFactura),
+    estadoPago
+  };
+  
+  if (!appState.compras) appState.compras = [];
+  appState.compras.unshift(nuevaCompra);
+  
+  // Sincronizar Google Sheets
+  dispararSincronizacionSheets("Compras", nuevaCompra);
+  
+  lineasCompraFactura = [];
+  document.getElementById('fac_flete').value = 0;
+  document.getElementById('fac_descuentos').value = 0;
+  document.getElementById('fac_otros').value = 0;
+  calcularProrrateoCompra();
+  
+  guardarEstadoEnNube();
+  toast("✓ Pedido Ingresado y Sincronizado", "green");
+};
+
+window.cambiarEstadoPagoCompra = (compraId) => {
+  const compra = appState.compras.find(c => c.id === compraId);
+  if (!compra) return;
+  
+  const nuevoEstado = compra.estadoPago === 'Pagado' ? 'Pendiente' : 'Pagado';
+  
+  if (nuevoEstado === 'Pagado') {
+    appState.inversionHistorica += compra.total;
+  } else {
+    appState.inversionHistorica = Math.max(0, appState.inversionHistorica - compra.total);
+  }
+  
+  compra.estadoPago = nuevoEstado;
+  guardarEstadoEnNube();
+  toast(`✓ Pago de compra marcado como: ${nuevoEstado}`, "green");
+};
+
+window.verDetalleCompraInsumos = (compraId) => {
+  const compra = appState.compras.find(c => c.id === compraId);
+  if (!compra) return;
+  
+  const content = document.getElementById('modal-compra-detalle-content');
+  content.innerHTML = `
+    <div class="ticket text-xs">
+      <div style="text-align:center;margin-bottom:1rem">
+        <h4 style="font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--accent)">Detalle de Pedido</h4>
+        <p style="font-size:.78rem;color:var(--ink3)">Compra de Insumos / Concentrados</p>
+      </div>
+      <div class="ticket-row"><span class="lbl">ID Compra</span><span>#${compra.id.toString().slice(-6)}</span></div>
+      <div class="ticket-row"><span class="lbl">Fecha</span><span>${compra.fecha}</span></div>
+      <div class="ticket-row"><span class="lbl">Estado de Pago</span><span class="badge ${compra.estadoPago === 'Pagado' ? 'badge-green' : 'badge-red'}">${compra.estadoPago}</span></div>
+      
+      <h5 style="font-size:.78rem;margin:1rem 0 0.5rem 0;color:var(--accent);text-transform:uppercase">Líneas Adquiridas</h5>
+      ${compra.lineas.map(linea => `
+        <div style="font-size:.82rem;margin-bottom:0.4rem;padding-bottom:0.4rem;border-bottom:1px dashed #eee">
+          <div style="display:flex;justify-content:space-between">
+            <span><strong>${linea.producto}</strong></span>
+            <span>$${linea.costoLista.toLocaleString('es-AR')}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;color:var(--ink3);font-size:.75rem">
+            <span>${linea.litros} Litros</span>
+            <span>Costo Neto: $${linea.costoProrrateadoLitro}/Litro</span>
+          </div>
+        </div>
+      `).join('')}
+      
+      <div style="margin-top:1rem;background:var(--bg);padding:0.5rem;border-radius:var(--r)">
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--ink3)">
+          <span>Flete prorrateado:</span><span>$${compra.flete || 0}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--ink3)">
+          <span>Descuentos obtenidos:</span><span>-$${compra.descuentos || 0}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-weight:700;font-size:1rem;color:var(--ink2);margin-top:0.25rem">
+          <span>Gasto Total:</span>
+          <span style="font-family:'DM Mono',monospace">$${compra.total.toLocaleString('es-AR')}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  abrirModal('modal-compra-detalle');
+};
+
+window.eliminarPedidoCompraInsumos = (compraId) => {
+  pedirConfirmacion("¿Deseas eliminar permanentemente esta compra del historial? (El stock no será descontado de forma automática)", () => {
+    const compra = appState.compras.find(c => c.id === compraId);
+    if (compra && compra.estadoPago === 'Pagado') {
+      appState.inversionHistorica = Math.max(0, appState.inversionHistorica - compra.total);
+    }
+    appState.compras = appState.compras.filter(c => c.id !== compraId);
+    guardarEstadoEnNube();
+    toast("✕ Registro de compra eliminado", "red");
+  });
+};
+
+// STREAMING_CHUNK: Dashboard rendering, calculating street capital in real-time...
+// ═══════════════════════════════════════════════════════════
+// MONITOREO DE STOCK & DASHBOARD
+// ═══════════════════════════════════════════════════════════
+window.renderDashboard = () => {
+  const directSalesIngresos = appState.ventas.reduce((sum, v) => sum + v.total, 0);
+  const directSalesGanancias = appState.ventas.reduce((sum, v) => sum + v.ganancia, 0);
+  
+  // Calcular rendimiento y capital en la calle de forma dinamica (tiempo real)
+  let totalConsigCalle = 0;
+  let consignacionRendidoExtraIngresos = 0;
+  let consignacionRendidoExtraGanancias = 0;
+  
+  if (appState.consignaciones) {
+    appState.consignaciones.filter(c => c.estado === 'Activa').forEach(c => {
+      c.items.forEach(it => {
+        const restan = it.cantidad - it.rendido;
+        const rendido = it.rendido || 0;
+        
+        // Capital en la calle = Lo que resta por cobrar
+        totalConsigCalle += (restan * it.netoUnitario);
+        
+        // Rendidos = Ingresos ya cobrados en la calle aunque siga activa
+        if (rendido > 0) {
+          consignacionRendidoExtraIngresos += (rendido * it.netoUnitario);
+          const costoEst = (appState.insumos[it.producto] ? appState.insumos[it.producto].costoL : 0) * it.formato;
+          consignacionRendidoExtraGanancias += (rendido * (it.netoUnitario - costoEst));
+        }
+      });
+    });
+  }
+  
+  const inversionTotal = appState.inversionHistorica;
+  const ingresosTotales = directSalesIngresos + consignacionRendidoExtraIngresos;
+  const gananciasTotales = directSalesGanancias + consignacionRendidoExtraGanancias;
+  
+  document.getElementById('dash-inversion-total').textContent = `$${inversionTotal.toLocaleString('es-AR')}`;
+  document.getElementById('dash-ingresos-total').textContent = `$${Math.round(ingresosTotales).toLocaleString('es-AR')}`;
+  document.getElementById('dash-ganancias-total').textContent = `$${Math.round(gananciasTotales).toLocaleString('es-AR')}`;
+  document.getElementById('dash-capital-calle').textContent = `$${Math.round(totalConsigCalle).toLocaleString('es-AR')}`;
+  
+  const container = document.getElementById('panel-monitoreo-stock');
+  container.innerHTML = '';
+  
+  Object.entries(appState.insumos).forEach(([nombre, ins]) => {
+    const capMax = ins.capacidadMax || 150;
+    const porcLlenado = Math.min(100, Math.max(0, Math.round((ins.stockL / capMax) * 100)));
+    
+    let colorBarra = "var(--green)";
+    let badgeStyle = "badge-green";
+    
+    if (porcLlenado >= 76) {
+      colorBarra = "var(--green)"; badgeStyle = "badge-green";
+    } else if (porcLlenado >= 51) {
+      colorBarra = "var(--blue)"; badgeStyle = "badge-blue";
+    } else if (porcLlenado >= 31) {
+      colorBarra = "var(--gold)"; badgeStyle = "badge-gold";
+    } else {
+      colorBarra = "var(--orange)"; badgeStyle = "badge-orange";
+    }
+    
+    container.innerHTML += `
+      <div class="mobile-card flex flex-col gap-2 bg-white text-xs">
+        <div class="flex justify-between items-center">
+          <strong>${nombre}</strong>
+          <span class="badge ${badgeStyle}">${porcLlenado}%</span>
+        </div>
+        <div class="bg-slate-100 h-2 rounded-full overflow-hidden w-full">
+          <div class="h-full rounded-full transition-all duration-300" style="width:${porcLlenado}%;background:${colorBarra}"></div>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mt-1">
+          <div class="flex gap-1 items-center">
+            <span class="text-slate-500">Corregir stock (Lts):</span>
+            <input type="number" step="0.1" value="${Math.round(ins.stockL)}" 
+              class="w-16 p-1 border rounded text-right bg-slate-50 font-bold text-slate-800"
+              onchange="corregirStockManual('${nombre}', this.value)">
+          </div>
+          <div class="flex gap-1 items-center justify-end">
+            <span class="text-slate-500">Capacidad Ref (Lts):</span>
+            <input type="number" value="${capMax}" 
+              class="w-16 p-1 border rounded text-right bg-slate-50 font-bold text-slate-800"
+              onchange="cambiarCapacidadMaxInsumo('${nombre}', this.value)">
+          </div>
+        </div>
+      </div>
+    `;
+  });
+};
+
+window.cambiarCapacidadMaxInsumo = (nombre, valor) => {
+  const cap = parseFloat(valor) || 150;
+  if (appState.insumos[nombre]) {
+    appState.insumos[nombre].capacidadMax = cap;
+    guardarEstadoEnNube();
+    toast(`✓ Capacidad de referencia para ${nombre} cambiada a ${cap}L`);
+  }
+};
+
+window.corregirStockManual = (nombre, valor) => {
+  const lts = parseFloat(valor) || 0;
+  if (appState.insumos[nombre]) {
+    appState.insumos[nombre].stockL = lts;
+    guardarEstadoEnNube();
+    toast(`✓ Stock de ${nombre} corregido manual`);
+  }
+};
+
+window.guardarNotasAdmin = () => {
+  const nota = document.getElementById('notas_admin').value;
+  appState.notas = nota;
+  guardarEstadoEnNube();
+  toast("✓ Notas administrativas guardadas", "green");
+};
+
+// STREAMING_CHUNK: Past Purchases lists rendering...
+// ═══════════════════════════════════════════════════════════
+// DETALLES ADICIONALES DE SOPORTE E INTERFAZ CON PROTECCIÓN DE RENDER
+// ═══════════════════════════════════════════════════════════
+let comboComponentesEdicion = [];
+
+window.actualizarLineaComboEdic = (index, campo, valor) => {
+  comboComponentesEdicion[index][campo] = valor;
+  calcularPrevisualizacionCombo();
+};
+
+window.removerLineaComboEdic = (index) => {
+  comboComponentesEdicion.splice(index, 1);
+  renderLineasComboEdicion();
+};
+
+window.actualizarRendicionItem = (conId, itemIndex, valor) => {
+  const con = appState.consignaciones.find(c => c.id === conId);
+  if (!con) return;
+  const cant = parseInt(valor) || 0;
+  
+  con.items[itemIndex].rendido = cant;
+  
+  const todoRendido = con.items.every(it => it.rendido === it.cantidad);
+  if (todoRendido) {
+    con.estado = 'Cerrada';
+  }
+  
+  guardarEstadoEnNube();
+  toast("✓ Rendición actualizada", "green");
+};
+
+window.cerrarYDevolverStockConsig = (conId) => {
+  pedirConfirmacion("¿Deseas cerrar esta consignación? Las botellas sobrantes que NO fueron vendidas volverán de forma automática al stock de litros disponibles.", () => {
+    const con = appState.consignaciones.find(c => c.id === conId);
+    if (!con) return;
+    
+    con.items.forEach(item => {
+      const sobranteUnidades = item.cantidad - item.rendido;
+      if (sobranteUnidades > 0) {
+        const insumo = appState.insumos[item.producto];
+        if (insumo) {
+          const lADevolver = item.formato * sobranteUnidades;
+          insumo.stockL += lADevolver;
+        }
+      }
+    });
+    
+    const montoEfectivo = con.items.reduce((sum, it) => sum + (it.rendido * it.netoUnitario), 0);
+    
+    if (montoEfectivo > 0) {
+      appState.ventas.unshift({
+        id: Date.now(),
+        fecha: new Date().toISOString().slice(0, 10),
+        cliente: `Consignación Rendida: ${con.nombre}`,
+        canal: 'Consignación',
+        items: con.items.filter(it => it.rendido > 0).map(it => ({
+          nombre: `${it.producto} (Rendido)`,
+          cantidad: it.rendido,
+          precioUnitario: it.netoUnitario,
+          litros: it.formato * it.rendido,
+          descuentoEnvase: 0,
+          tipo: 'unitario'
+        })),
+        total: montoEfectivo,
+        ganancia: montoEfectivo - con.items.filter(it => it.rendido > 0).reduce((sum, it) => sum + ((appState.insumos[it.producto] ? appState.insumos[it.producto].costoL : 0) * it.formato * it.rendido), 0),
+        envio: 'No',
+        telefono: '',
+        direccion: ''
+      });
+    }
+    
+    con.estado = 'Cerrada';
+    guardarEstadoEnNube();
+    toast("✓ Consignación Cerrada de forma segura", "green");
+  });
+};
+
+window.eliminarConsig = (conId) => {
+  pedirConfirmacion("¿Deseas eliminar permanentemente esta consignación?", () => {
+    appState.consignaciones = appState.consignaciones.filter(c => c.id !== conId);
+    guardarEstadoEnNube();
+    toast("✕ Consignación eliminada");
+  });
+};
+
+window.guardarPrecioFijo = (key) => {
+  const venta = parseFloat(document.getElementById(`cfg_vta_${key}`).value) || 0;
+  const envase = parseFloat(document.getElementById(`cfg_env_${key}`).value) || 0;
+  
+  appState.preciosFijos[key] = { venta, envase };
+  guardarEstadoEnNube();
+  toast("✓ Precios guardados");
+};
+
+window.abrirModalComboNuevo = () => {
+  comboEditarId = null;
+  document.getElementById('comb_nombre').value = '';
+  document.getElementById('comb_descuento').value = 10;
+  comboComponentesEdicion = [];
+  agregarLineaCombo();
+  abrirModal('modal-combo');
+};
+
+window.agregarLineaCombo = () => {
+  comboComponentesEdicion.push({ prod: Object.keys(appState.insumos)[0], form: 5, cant: 1 });
+  renderLineasComboEdicion();
+};
+
+const renderLineasComboEdicion = () => {
+  const container = document.getElementById('combo-componentes-list');
+  container.innerHTML = comboComponentesEdicion.map((item, i) => `
+    <div class="flex gap-1 items-center text-xs">
+      <select class="p-1 border rounded" style="flex:2" onchange="actualizarLineaComboEdic(${i}, 'prod', this.value)">
+        ${Object.keys(appState.insumos).map(n => `<option value="${n}" ${item.prod === n ? 'selected' : ''}>${n}</option>`).join('')}
+      </select>
+      <select class="p-1 border rounded" style="flex:1" onchange="actualizarLineaComboEdic(${i}, 'form', parseFloat(this.value))">
+        <option value="5" ${item.form === 5 ? 'selected' : ''}>5L</option>
+        <option value="3" ${item.form === 3 ? 'selected' : ''}>3L</option>
+        <option value="1" ${item.form === 1 ? 'selected' : ''}>1L</option>
+        <option value="0.5" ${item.form === 0.5 ? 'selected' : ''}>500ml</option>
+      </select>
+      <input type="number" value="${item.cant}" min="1" class="w-12 p-1 border rounded text-center" oninput="actualizarLineaComboEdic(${i}, 'cant', parseInt(this.value)||1)">
+      <button class="bg-red-50 text-red-600 p-1 rounded" onclick="removerLineaComboEdic(${i})">✕</button>
+    </div>
+  `).join('');
+  calcularPrevisualizacionCombo();
+};
+
+window.calcularPrevisualizacionCombo = () => {
+  let totalSuma = 0;
+  comboComponentesEdicion.forEach(item => {
+    const key = `${item.prod}_${item.form}`;
+    const costoEst = (appState.insumos[item.prod] ? appState.insumos[item.prod].costoL : 0) * item.form;
+    const precioFijo = appState.preciosFijos[key] ? appState.preciosFijos[key].venta : (costoEst * 1.80);
+    totalSuma += (precioFijo * item.cant);
+  });
+  
+  const desc = parseFloat(document.getElementById('comb_descuento').value) || 0;
+  const tipo = document.getElementById('comb_tipo_desc').value;
+  
+  let totalFinal = 0;
+  if (tipo === 'porc') {
+    totalFinal = totalSuma * (1 - desc / 100);
+  } else {
+    totalFinal = Math.max(0, totalSuma - desc);
+  }
+  
+  document.getElementById('comb-previsualizacion-suma').textContent = `$${Math.round(totalSuma)}`;
+  document.getElementById('comb-previsualizacion-final').textContent = `$${Math.round(totalFinal)}`;
+};
+
+window.guardarComboPromocional = () => {
+  const nombre = document.getElementById('comb_nombre').value.trim();
+  const tipo = document.getElementById('comb_tipo_desc').value;
+  const desc = parseFloat(document.getElementById('comb_descuento').value) || 0;
+  
+  if (!nombre) { toast("⚠️ Escribe un nombre", "red"); return; }
+  if (comboComponentesEdicion.length === 0) { toast("⚠️ Sin componentes", "red"); return; }
+  
+  if (comboEditarId) {
+    const index = appState.combos.findIndex(c => c.id === comboEditarId);
+    if (index >= 0) {
+      appState.combos[index] = { id: comboEditarId, nombre, items: JSON.parse(JSON.stringify(comboComponentesEdicion)), tipo, desc };
+    }
+  } else {
+    const nuevoCombo = {
+      id: 'combo_' + Date.now(),
+      nombre,
+      items: JSON.parse(JSON.stringify(comboComponentesEdicion)),
+      tipo,
+      desc
+    };
+    appState.combos.push(nuevoCombo);
+  }
+  
+  cerrarModal('modal-combo');
+  guardarEstadoEnNube();
+  toast("✓ Combo promocional configurado", "green");
+};
+
+window.eliminarCombo = (comboId) => {
+  pedirConfirmacion("¿Deseas eliminar permanentemente esta oferta?", () => {
+    appState.combos = appState.combos.filter(c => c.id !== comboId);
+    guardarEstadoEnNube();
+    toast("✕ Oferta eliminada");
+  });
+};
+
+window.crearInsumoNuevo = () => {
+  const nombre = document.getElementById('ins_nombre').value.trim();
+  const estilo = document.getElementById('ins_estilo_formatos').value;
+  
+  if (!nombre) { toast("⚠️ El nombre es obligatorio", "red"); return; }
+  if (appState.insumos[nombre]) { toast("⚠️ El insumo ya existe", "red"); return; }
+  
+  appState.insumos[nombre] = {
+    costoL: 0,
+    stockL: 0,
+    estilo,
+    capacidadMax: 150
+  };
+  
+  document.getElementById('ins_nombre').value = '';
+  guardarEstadoEnNube();
+  toast("✓ Nuevo insumo creado", "green");
+};
+
+window.renderCompras = () => {
+  const selectFactura = document.getElementById('fac_prod');
+  if (!selectFactura) return;
+  selectFactura.innerHTML = '';
+  Object.keys(appState.insumos).forEach(n => {
+    selectFactura.innerHTML += `<option value="${n}">${n}</option>`;
+  });
+  
+  // Render de historial de compras de insumos
+  const tbody = document.getElementById('tabla-historial-compras');
+  const vacio = document.getElementById('compras-vacio');
+  
+  if (!appState.compras || appState.compras.length === 0) {
+    tbody.innerHTML = '';
+    vacio.style.display = 'block';
+  } else {
+    vacio.style.display = 'none';
+    tbody.innerHTML = appState.compras.map(c => {
+      const itemsListStr = c.lineas.map(l => `${l.litros}L ${l.producto}`).join(', ');
+      return `
+        <tr class="border-b text-xs">
+          <td>${c.fecha}</td>
+          <td class="text-slate-600 truncate max-w-[200px]" title="${itemsListStr}">${itemsListStr}</td>
+          <td class="font-bold text-amber-800">$${c.total.toLocaleString()}</td>
+          <td>
+            <button class="badge ${c.estadoPago === 'Pagado' ? 'badge-green' : 'badge-red'}" 
+              onclick="cambiarEstadoPagoCompra(${c.id})">
+              ${c.estadoPago}
+            </button>
+          </td>
+          <td>
+            <div class="flex gap-1">
+              <button class="bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded" onclick="verDetalleCompraInsumos(${c.id})">👁️</button>
+              <button class="bg-red-50 text-red-600 hover:bg-red-100 px-2 py-1 rounded" onclick="eliminarPedidoCompraInsumos(${c.id})">✕</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+};
+
+let lineasCompraFactura = [];
+window.agregarLineaFactura = () => {
+  const prod = document.getElementById('fac_prod').value;
+  const lts = parseFloat(document.getElementById('fac_litros').value) || 0;
+  const costoLista = parseFloat(document.getElementById('fac_costo_lista').value) || 0;
+  
+  if (!prod || lts <= 0 || costoLista <= 0) { toast("⚠️ Datos incorrectos", "red"); return; }
+  
+  lineasCompraFactura.push({
+    producto: prod,
+    litros: lts,
+    costoLista,
+    costoProrrateadoLitro: 0
+  });
+  
+  toast("＋ Línea añadida");
+  calcularProrrateoCompra();
+};
+
+const calcularProrrateoCompra = () => {
+  const flete = parseFloat(document.getElementById('fac_flete').value) || 0;
+  const dtos = parseFloat(document.getElementById('fac_descuentos').value) || 0;
+  const otros = parseFloat(document.getElementById('fac_otros').value) || 0;
+  
+  const totalLitrosFactura = lineasCompraFactura.reduce((sum, item) => sum + item.litros, 0);
+  const totalCostoLista = lineasCompraFactura.reduce((sum, item) => sum + item.costoLista, 0);
+  
+  lineasCompraFactura.forEach(linea => {
+    const porcentajeLitro = totalLitrosFactura > 0 ? (linea.litros / totalLitrosFactura) : 0;
+    const fleteProrrateado = flete * porcentajeLitro;
+    const otrosGastosProrrateados = otros * porcentajeLitro;
+    const dtoProrrateado = dtos * porcentajeLitro;
+    
+    const costoNetoTotal = (linea.costoLista + fleteProrrateado + otrosGastosProrrateados) - dtoProrrateado;
+    linea.costoProrrateadoLitro = linea.litros > 0 ? Math.round(costoNetoTotal / linea.litros) : 0;
+  });
+  
+  const tbody = document.getElementById('tabla-lineas-compra');
+  if (tbody) {
+    tbody.innerHTML = lineasCompraFactura.map((linea, i) => `
+      <tr class="border-b text-xs">
+        <td><strong>${linea.producto}</strong></td>
+        <td>${linea.litros}L</td>
+        <td>$${linea.costoLista}</td>
+        <td class="font-bold text-teal-700">$${linea.costoProrrateadoLitro}/L</td>
+        <td><button class="text-red-500 font-bold" onclick="removerLineaFactura(${i})">✕</button></td>
+      </tr>
+    `).join('');
+  }
+  
+  const totalFacturaFinal = (totalCostoLista + flete + otros) - dtos;
+  document.getElementById('compra-total-final').textContent = `$${Math.round(totalFacturaFinal).toLocaleString()}`;
+};
+
+window.removerLineaFactura = (index) => {
+  lineasCompraFactura.splice(index, 1);
+  calcularProrrateoCompra();
+};
+
+window.abrirModalClienteNuevo = () => {
+  document.getElementById('cl_nombre').value = '';
+  document.getElementById('cl_direccion').value = '';
+  document.getElementById('cl_telefono').value = '';
+  document.getElementById('cl_envio').value = 'No';
+  indexClienteEditar = -1;
+  abrirModal('modal-cliente');
+};
+
+let indexClienteEditar = -1;
+window.abrirFichaClienteEditar = (index) => {
+  const c = appState.clientes[index];
+  document.getElementById('cl_nombre').value = c.nombre;
+  document.getElementById('cl_direccion').value = c.direccion || '';
+  document.getElementById('cl_telefono').value = c.telefono || '';
+  document.getElementById('cl_envio').value = c.envio || 'No';
+  indexClienteEditar = index;
+  abrirModal('modal-cliente');
+};
+
+window.guardarClienteFicha = () => {
+  const nombre = document.getElementById('cl_nombre').value.trim();
+  const direccion = document.getElementById('cl_direccion').value.trim();
+  const telefono = document.getElementById('cl_telefono').value.trim();
+  const envio = document.getElementById('cl_envio').value;
+  
+  if (!nombre) { toast("⚠️ Nombre es obligatorio", "red"); return; }
+  
+  const cData = { nombre, direccion, telefono, envio };
+  
+  if (indexClienteEditar >= 0) {
+    appState.clientes[indexClienteEditar] = cData;
+  } else {
+    appState.clientes.push(cData);
+  }
+  
+  cerrarModal('modal-cliente');
+  guardarEstadoEnNube();
+  toast("✓ Ficha guardada", "green");
+};
+
+window.eliminarCliente = (index) => {
+  pedirConfirmacion("¿Deseas borrar esta ficha de cliente?", () => {
+    appState.clientes.splice(index, 1);
+    guardarEstadoEnNube();
+    toast("✕ Ficha borrada");
+  });
+};
+
+window.verDetalleTicket = (id) => {
+  const v = appState.ventas.find(x => x.id === id);
+  if (!v) return;
+  
+  const content = document.getElementById('modal-ticket-content');
+  content.innerHTML = `
+    <div class="ticket">
+      <div style="text-align:center;margin-bottom:1rem">
+        <h4 style="font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--accent)">Lumina</h4>
+        <p style="font-size:.78rem;color:var(--ink3)">Punto de Venta · Ushuaia</p>
+      </div>
+      <div class="ticket-row"><span class="lbl">ID Venta</span><span style="font-family:'DM Mono',monospace">#${v.id}</span></div>
+      <div class="ticket-row"><span class="lbl">Fecha</span><span>${v.fecha}</span></div>
+      <div class="ticket-row"><span class="lbl">Cliente</span><span><strong>${v.cliente}</strong></span></div>
+      ${v.telefono ? `<div class="ticket-row"><span class="lbl">Teléfono</span><span>${v.telefono}</span></div>` : ''}
+      ${v.direccion ? `<div class="ticket-row"><span class="lbl">Dirección</span><span>${v.direccion}</span></div>` : ''}
+      <div class="ticket-row"><span class="lbl">Canal</span><span>${v.canal}</span></div>
+      
+      <h5 style="font-size:.78rem;margin:1rem 0 0.5rem 0;color:var(--accent);text-transform:uppercase">Items cobrados</h5>
+      ${v.items.map(it => `
+        <div style="font-size:.82rem;margin-bottom:0.4rem;padding-bottom:0.4rem;border-bottom:1px dashed #eee">
+          <div style="display:flex;justify-content:space-between">
+            <span><strong>${it.nombre}</strong></span>
+            <span>$${((it.precioUnitario * it.cantidad) - (it.descuentoEnvase * it.cantidad)).toLocaleString('es-AR')}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;color:var(--ink3);font-size:.75rem">
+            <span>${it.cantidad}u x $${it.precioUnitario}/u</span>
+            ${it.envaseDevuelto ? `<span>Envase ret. (-$${it.descuentoEnvase * it.cantidad})</span>` : ''}
+          </div>
+        </div>
+      `).join('')}
+      
+      <div style="margin-top:1rem;background:var(--bg);padding:0.5rem;border-radius:var(--r)">
+        <div style="display:flex;justify-content:space-between;font-weight:700;font-size:1rem;color:var(--ink2)">
+          <span>Total Cobrado:</span>
+          <span style="font-family:'DM Mono',monospace">$${v.total.toLocaleString('es-AR')}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  abrirModal('modal-ticket');
+};
+
+window.eliminarVenta = (id) => {
+  pedirConfirmacion("¿Deseas anular esta venta? (El inventario no regresará automáticamente)", () => {
+    appState.ventas = appState.ventas.filter(v => v.id !== id);
+    guardarEstadoEnNube();
+    toast("✕ Venta eliminada");
+  });
+};
+
+window.eliminarHistorialCompleto = () => {
+  pedirConfirmacion("⚠️ ¿Estás seguro de borrar TODO el historial de Lumina?", () => {
+    appState.ventas = [];
+    guardarEstadoEnNube();
+    toast("🗑 Base de historial vacía", "green");
+  });
+};
+
+/* CONTROLADORES ABSOLUTOS DE MODALES CON CONTROL DIRECTO DE DISPLAY */
+window.abrirModal = (id) => {
+  const element = document.getElementById(id);
+  if (element) {
+    element.style.setProperty('display', 'flex', 'important');
+    element.classList.add('active');
+  }
+};
+
+window.cerrarModal = (id) => {
+  const element = document.getElementById(id);
+  if (element) {
+    element.style.setProperty('display', 'none', 'important');
+    element.classList.remove('active');
+  }
+};
+
+window.toast = (msg, tipo = '') => {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + tipo;
+  setTimeout(() => t.classList.remove('show'), 3500);
+};
+
+</script>
 </body>
 </html>
